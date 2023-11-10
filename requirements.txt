@@ -1,0 +1,8 @@
+bs4
+discord
+gspread
+lxml
+psycopg2
+python-dotenv
+PyYAML
+requests
