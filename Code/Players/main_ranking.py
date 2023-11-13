@@ -1,3 +1,5 @@
+from copy import copy
+
 from Code.Utilities.escape_markdown import escape_markdown
 
 import discord
@@ -70,7 +72,7 @@ class Ranking:
         return rank if rank is not None else self.ranks_by_names['None']
     
 
-    def get_rank_embed(self, client : discord.Client, rank_value : int) -> tuple[discord.Embed, int]:
+    def get_rank_embed(self, guild : discord.Guild, rank_value : int) -> tuple[discord.Embed, int]:
         """
         Return:
         - A discord Embed containing the rank name and all the players with that rank.
@@ -97,10 +99,20 @@ class Ranking:
         all_players_in_rank = sorted(list(all_players_in_rank))
 
         # Get all the players identification: "amq_name (discord_user)"
-        all_discords_in_rank = [client.get_user(player.discord_id) for player in all_players_in_rank]
+        all_discords_in_rank : list[discord.Member] = []
+        all_players_in_rank_copy = copy(all_players_in_rank)
+
+        # NOTE we don't show those players who left the server (not present in the guild where the command is being executed)
+        for player in all_players_in_rank_copy:
+            member = guild.get_member(player.discord_id)
+            if member is not None:
+                all_discords_in_rank.append(member)
+            else:
+                all_players_in_rank.remove(player)
+
         all_names_in_rank = [
-            f'**{escape_markdown(player.amq_name)}** ({escape_markdown(discord_user.display_name)})'
-        for player, discord_user in zip(all_players_in_rank, all_discords_in_rank)]
+            f'**{escape_markdown(player.amq_name)}** ({escape_markdown(discord_member.display_name)})'
+        for player, discord_member in zip(all_players_in_rank, all_discords_in_rank)]
 
         # Create the embed
         embed = discord.Embed(title=selected_rank.name, description='\n'.join(all_names_in_rank), colour=discord.Colour.green())

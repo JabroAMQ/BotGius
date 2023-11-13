@@ -213,19 +213,19 @@ async def player_show_ranking(interaction : discord.Interaction, rank_page : str
 
         @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.green)
         async def show_previous_page(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
-            embed, self.current_page = Ranking().get_rank_embed(new_interaction.client, self.current_page - 1)
+            embed, self.current_page = Ranking().get_rank_embed(new_interaction.guild, self.current_page - 1)
             await new_interaction.response.edit_message(embed=embed)
 
         @discord.ui.button(emoji='➡️', style=discord.ButtonStyle.green)
         async def show_next_page(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
-            embed, self.current_page = Ranking().get_rank_embed(new_interaction.client, self.current_page + 1)
+            embed, self.current_page = Ranking().get_rank_embed(new_interaction.guild, self.current_page + 1)
             await new_interaction.response.edit_message(embed=embed)
 
 
     await interaction.response.defer(ephemeral=False)
 
     rank = Ranking().get_rank(rank_page)
-    embed, initial_page = Ranking().get_rank_embed(interaction.client, rank.value)
+    embed, initial_page = Ranking().get_rank_embed(interaction.guild, rank.value)
     view = Player_Show_Ranking_View(initial_page)
 
     await interaction.followup.send(embed=embed, view=view, ephemeral=False)
