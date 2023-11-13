@@ -15,9 +15,9 @@ CREATE TABLE IF NOT EXISTS gamemodes(
 	watched BOOL NOT NULL,
 	random BOOL NOT NULL,
 	weighted BOOL NOT NULL,
-	equal BOOL NOT NULL
+	equal BOOL NOT NULL,
 
-    id SERIAL PRIMARY KEY,    
+    id SERIAL PRIMARY KEY
 );
 """
 
