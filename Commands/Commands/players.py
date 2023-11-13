@@ -65,6 +65,7 @@ class Players_Commands(Commands):
         @client.tree.command(name='player_change_mode', description='Update your favourite or most hated gamemodes')
         @app_commands.describe(type='Which gamemode to update')
         @app_commands.choices(type=[app_commands.Choice(name=option.name, value=option.value) for option in Prefered_Gamemode_Options])
+        @app_commands.guild_only
         async def player_change_mode(interaction : discord.Interaction, type : app_commands.Choice[int]):
             await interactions.player_change_mode(interaction, type)
 
@@ -84,5 +85,6 @@ class Players_Commands(Commands):
         @client.tree.command(name='player_show_ranking', description='Display the ranking of all the players')
         @app_commands.describe(rank_page='Initial page of the ranking to display')
         @app_commands.choices(rank_page = [app_commands.Choice(name=rank_name, value=rank_name) for rank_name in Ranking().rank_names])
+        @app_commands.guild_only
         async def player_show_ranking(interaction : discord.Interaction, rank_page : app_commands.Choice[str]):
             await interactions.player_show_ranking(interaction, rank_page.name)

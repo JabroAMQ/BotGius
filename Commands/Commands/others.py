@@ -29,11 +29,13 @@ class Others_Commands(Commands):
 
 
         @client.tree.command(name='feedback', description='Send a feedback message to admins and tour helpers')
+        @app_commands.guild_only
         async def feedback(interaction : discord.Interaction):
             await interactions.feedback(interaction)
         
         @client.tree.command(name='pick', description='Send a tour decision message to a channel that can only be seen by admins and tour helpers')
         @app_commands.describe(decision='The decision you want to send')
+        @app_commands.guild_only
         async def pick(interaction : discord.Interaction, decision : str):
             await interactions.pick(interaction, decision)
 
