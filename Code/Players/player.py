@@ -158,6 +158,22 @@ class Player:
         info += f'- **Hated 2v2 Gamemode:** {self.hated_2v2_gamemode.name if self.hated_2v2_gamemode is not None else None}\n'
         info += f'- **Hated 4v4 Gamemode:** {self.hated_4v4_gamemode.name if self.hated_4v4_gamemode is not None else None}'
         return info
+    
+
+    def has_gamemode_referenced(self, gamemode : Gamemode) -> bool:
+        """Return whether the player has referenced a gamemode as one of their favourite/most hated gamemodes."""
+        match gamemode.size:
+            case 1:
+                referenced = True if gamemode.id == self._fav_1v1_gamemode_id or gamemode.id == self._hated_1v1_gamemode_id else False
+                return referenced
+            case 2:
+                referenced = True if gamemode.id == self._fav_2v2_gamemode_id or gamemode.id == self._hated_2v2_gamemode_id else False
+                return referenced
+            case 4:
+                referenced = True if gamemode.id == self._fav_4v4_gamemode_id or gamemode.id == self._hated_4v4_gamemode_id else False
+                return referenced
+            case _:
+                return False
 
 
     def get_profile_embed(self, client : discord.Client, page : int = 0) -> discord.Embed:

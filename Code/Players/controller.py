@@ -5,6 +5,7 @@ import discord
 from Code.Players.player import Player
 from Code.Players.database import Players_Database
 from Code.Players.enums import Prefered_Gamemode_Options
+from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 
 class Players_Controller:
     """Controller to encapsule the Players Logic from the rest of the application."""
@@ -108,7 +109,12 @@ class Players_Controller:
         discord_id = possibilities.get(closest_match)
         return self.players_by_ids.get(discord_id) if discord_id is not None else None
 
-        
+
+    def get_all_players_with_gamemode_referenced(self, gamemode : Gamemode) -> list[Player]:
+        """Return a list with all the players that have referenced the gamemode as one of their favourite/most hated gamemodes."""
+        return [player for player in self.players_by_ids.values() if player.has_gamemode_referenced(gamemode)]
+
+
     def register_player(self, discord_id : int, amq_name : str) -> tuple[bool, str | None]:
         """
         Add a player to the Players's Database and Catalogs (by `discord_id` and `amq_name`).\n

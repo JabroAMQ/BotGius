@@ -5,6 +5,7 @@ from Code.Gamemodes.controller import Main_Controller
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 from Code.Rolls.basic_rolls import Roll
 from Code.Rolls.enums import Rolls_Enum, Roll_Gamemode
+from Code.Players.controller import Players_Controller
 from Code.Others.channels import Channels
 
 @error_handler_decorator()
@@ -59,8 +60,26 @@ async def gamemode_delete(interaction : discord.Interaction, gamemode_name : str
                 return
 
             self.already_deleted = True
+
+            # Get the players that have the gamemode that is going to be deleted set as favourite/most hated mode
+            content = f'**{self.gamemode.name}**, which you set it as your favourite or most hated gamemode, has just been deleted'
+            players = Players_Controller().get_all_players_with_gamemode_referenced(self.gamemode)
+
+            # Delete the gamemode
             Main_Controller().delete_gamemode(self.gamemode)
 
+            # Inform tha players that their favourite/most hated gamemode was deleted
+            for player in players:
+                try:
+                    user = interaction.client.get_user(player.discord_id)
+                    if user is not None:
+                        await user.send(content=content)
+
+                except discord.errors.Forbidden:
+                    # Player has dms closed, we don't send the message then
+                    continue
+
+            # Send log and confirmation messages
             log_thread = await Channels().get_gamemode_delete_thread(new_interaction.client)
             content = f'Deleted gamemode by {new_interaction.user.mention}:\n{gamemode.display_all_details()}'
             await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
