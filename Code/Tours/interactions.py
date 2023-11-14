@@ -7,6 +7,7 @@ from Code.Utilities.error_handler import error_handler_decorator
 from Code.Utilities.escape_markdown import escape_markdown
 from Code.Tours.controller import Tours_Controller
 from Code.Tours.tour import Tour
+from Code.Tours.team import Team
 from Code.Players.controller import Players_Controller
 from Code.Players.player import Player
 from Code.Rolls.teams import Teams_Roll
@@ -617,6 +618,55 @@ async def roll_groups(interaction : discord.Interaction, number_of_groups : int,
 @error_handler_decorator()
 async def roll_blind_crews(interaction : discord.Interaction, criteria : int):
     """Interaction to handle the `/roll_blind_crews` command. It rolls a blind crews round."""
+    
+
+    class Teams_Dropdown(discord.ui.Select):
+        
+        def __init__(self, criteria : int, active_teams : list[Team]):
+            options = [discord.SelectOption(label=team.name, value=str(i)) for i, team in enumerate(active_teams)]
+            super().__init__(placeholder='Choose 2 teams', options=options, min_values=2, max_values=2)
+            self.teams = active_teams
+            self.criteria = criteria
+
+        async def callback(self, new_interaction: discord.Interaction):
+            await new_interaction.response.defer(ephemeral=True)
+            team_1 = self.teams[int(self.values[0])]
+            team_2 = self.teams[int(self.values[1])]
+            await roll_bc(new_interaction, self.criteria, team_1.players, team_2.players)
+    
+
+    class Teams_Dropdown_View(discord.ui.View):
+        
+        def __init__(self, criteria : int, active_teams : list[Team]):
+            super().__init__(timeout=180)
+            self.add_item(Teams_Dropdown(criteria, active_teams))
+            
+
+    async def roll_bc(interaction : discord.Interaction, criteria : int, team_1 : list[Player], team_2 : list[Player]):
+        """Roll a blind crews round for 2 teams."""
+        # Create the BlindCrews
+        type = Roll_Gamemode(criteria)
+        blind_crews = Blind_Crews(type=type, team_1=team_1, team_2=team_2)
+
+        # Roll the blindcrews round
+        blind_crews.roll_blind_crews()
+        round_info = blind_crews.get_round_information()
+        additional_rolls = blind_crews.special_rolls_list
+        results_template = blind_crews.get_results_template()
+
+        # Send the roll information
+        main_message = await interaction.channel.send(round_info)
+        [await main_message.reply(additional_roll) for additional_roll in additional_rolls]
+        content = f'Blind Crews with {type.name.replace("_", " ").capitalize()} rolled successfully!'
+        await interaction.followup.send(content=content, ephemeral=True)
+
+        try:
+            await interaction.user.send(results_template)
+        except discord.errors.Forbidden:
+            # host has dms closed, we don't send them the template then
+            pass
+
+        
     await interaction.response.defer(ephemeral=True)
 
     tour = Tours_Controller().get_current_tour()
@@ -626,35 +676,18 @@ async def roll_blind_crews(interaction : discord.Interaction, criteria : int):
         return
     
     # Check that the tour has two teams with players
-    active_teams = []
+    active_teams : list[Team] = []
     for team in tour.teams:
         if len(team.players) > 0:
-            active_teams.append(team.players)
+            active_teams.append(team)
     
-    if len(active_teams) != 2:
-        content = 'Blind Crews requires players to be splitted into 2 teams!'
+    if len(active_teams) < 2:
+        content = 'Blind Crews requires players to be splitted into at least 2 teams!'
         await interaction.followup.send(content=content, ephemeral=True)
-        return
-
-    # Create the BlindCrews
-    type = Roll_Gamemode(criteria)
-    team_1, team_2 = active_teams
-    blind_crews = Blind_Crews(type=type, team_1=team_1, team_2=team_2)
-
-    # Roll the blindcrews round
-    blind_crews.roll_blind_crews()
-    round_info = blind_crews.get_round_information()
-    additional_rolls = blind_crews.special_rolls_list
-    results_template = blind_crews.get_results_template()
-
-    # Send the roll information
-    main_message = await interaction.channel.send(round_info)
-    [await main_message.reply(additional_roll) for additional_roll in additional_rolls]
-    content = f'Blind Crews with {type.name.replace("_", " ").capitalize()} rolled successfully!'
-    await interaction.followup.send(content=content, ephemeral=True)
-
-    try:
-        await interaction.user.send(results_template)
-    except discord.errors.Forbidden:
-        # host has dms closed, we don't send them the template then
-        pass
+    
+    elif len(active_teams) == 2:
+        await roll_bc(interaction, criteria, active_teams[0].players, active_teams[1].players)
+    
+    else:
+        view = Teams_Dropdown_View(criteria, active_teams)
+        await interaction.followup.send(view=view, ephemeral=True)

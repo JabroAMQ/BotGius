@@ -15,6 +15,10 @@ class Team:
 
 
     @property
+    def name(self) -> str:
+        return self._name
+
+    @property
     def players(self) -> list[Player]:
         return self._players
 
@@ -49,5 +53,5 @@ class Team:
         players = sorted(self.players) if sort else self.players
         players_list = [f'{player.amq_name} ({player.rank.name})' for player in players]
         players_data = escape_markdown(", ".join(players_list))
-        summary = f'**{self._name} ({players_count}):** {players_data}'
+        summary = f'**{self.name} ({players_count}):** {players_data}'
         return summary
