@@ -62,7 +62,7 @@ async def gamemode_delete(interaction : discord.Interaction, gamemode_name : str
             self.already_deleted = True
 
             # Get the players that have the gamemode that is going to be deleted set as favourite/most hated mode
-            content = f'**{self.gamemode.name}**, which you set it as your favourite or most hated gamemode, has just been deleted'
+            content = f'**{self.gamemode.name}**, which you set as your favourite or most hated gamemode, has just been deleted'
             players = Players_Controller().get_all_players_with_gamemode_referenced(self.gamemode)
 
             # Delete the gamemode
