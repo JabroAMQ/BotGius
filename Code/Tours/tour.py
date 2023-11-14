@@ -161,7 +161,8 @@ class Tour:
         """Inform the host that the timer has ended."""
         await asyncio.sleep(timer)
         try:
-            await self.host.send(f'Timer ended!\n{self.join_message.jump_url}')
+            if self.is_tour_active and self.is_tour_open:
+                await self.host.send(f'Timer ended!\n{self.join_message.jump_url}')
         except discord.errors.Forbidden:
             # Host has dm closed, we don't send the message then
             pass
@@ -169,7 +170,8 @@ class Tour:
     async def _inform_host_players_limit_reached(self):
         """Inform the host that the timer has ended."""
         try:
-            await self.host.send(f'Max number of players reached!\n{self.join_message.jump_url}')
+            if self.is_tour_active and self.is_tour_open:
+                await self.host.send(f'Max number of players reached!\n{self.join_message.jump_url}')
         except discord.errors.Forbidden:
             # Host has dm closed, we don't send the message then
             pass
