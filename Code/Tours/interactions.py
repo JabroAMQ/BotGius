@@ -92,7 +92,7 @@ async def tour_create(interaction : discord.Interaction, timer : int = None, siz
         info=info
     )
 
-    pings = Roles().get_ping_roles(interaction.client)
+    pings = Roles().get_ping_roles()
     emoji = Emojis().get_other_emoji('20espiando')
     content = f'{pings} {emoji}'
     embed = tour.generate_join_embed()
@@ -365,7 +365,7 @@ async def tour_end(interaction : discord.Interaction):
         await interaction.followup.send(content=content, ephemeral=True)
         return
     
-    await Tours_Controller().end_current_tour(client=interaction.client)
+    await Tours_Controller().end_current_tour(guild=interaction.guild)
 
     # Modify the "Looking for players" join embed's field to False
     embed = tour.generate_join_embed()
@@ -556,7 +556,7 @@ async def team_randomize(interaction : discord.Interaction, number_of_teams : in
 async def team_get_all_roles(interaction : discord.Interaction):
     """Interaction to handle the `/team_get_all_roles` command. It adds all team roles to the interaction's user."""
     await interaction.response.defer(ephemeral=True)
-    await Roles().add_all_team_roles(interaction.client, interaction.user.id, interaction.guild.id)
+    await Roles().add_all_team_roles(interaction.guild, interaction.user.id)
     content = 'All roles added successfully!'
     await interaction.followup.send(content=content, ephemeral=True)
 

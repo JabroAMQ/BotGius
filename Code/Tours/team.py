@@ -24,7 +24,8 @@ class Team:
         if player in self.players:
             return False
         
-        await Roles().add_team_role(client, player.discord_id, self._guild_id, self._role_index)
+        guild = client.get_guild(self._guild_id)
+        await Roles().add_team_role(guild, player.discord_id, self._role_index)
         self.players.append(player)
         return True
 
@@ -33,13 +34,14 @@ class Team:
         if player not in self.players:
             return False
         
-        await Roles().remove_team_roles(client, player.discord_id, self._guild_id)
+        guild = client.get_guild(self._guild_id)
+        await Roles().remove_team_roles(guild, player.discord_id)
         self.players.remove(player)
         return True
 
-    async def reset_roles(self, client : discord.Client) -> None:
+    async def reset_roles(self, guild : discord.Guild) -> None:
         """Clear all the roles from the players without removing them from their team."""
-        [await Roles().remove_team_roles(client, player.discord_id, self._guild_id) for player in self.players]
+        [await Roles().remove_team_roles(guild, player.discord_id) for player in self.players]
 
     def display_team(self, sort : bool = True) -> str:
         """Return a `str` with the information about the team's players list escaping markdown characters."""

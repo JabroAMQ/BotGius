@@ -45,14 +45,14 @@ class Tours_Controller:
         return self.tours_active.get(tour_id)
     
 
-    async def end_current_tour(self, client : discord.Client) -> None:
+    async def end_current_tour(self, guild : discord.Guild) -> None:
         """Ends the tour that is currently active."""
         # TODO Tour ID
         tour_id = 0
         tour : Tour = self.tours_active.get(tour_id)
         
         # Remove the roles from the players
-        [await team.reset_roles(client) for team in tour.teams]
+        [await team.reset_roles(guild) for team in tour.teams]
         
         # Prevent people for joining the ended tour
         tour.is_tour_active = False
