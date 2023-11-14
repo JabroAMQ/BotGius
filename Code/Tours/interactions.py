@@ -632,7 +632,7 @@ async def roll_blind_crews(interaction : discord.Interaction, criteria : int):
             await new_interaction.response.defer(ephemeral=True)
             team_1 = self.teams[int(self.values[0])]
             team_2 = self.teams[int(self.values[1])]
-            await roll_bc(new_interaction, self.criteria, team_1.players, team_2.players)
+            await roll_bc(new_interaction, self.criteria, team_1, team_2, add_team_names=True)
     
 
     class Teams_Dropdown_View(discord.ui.View):
@@ -642,11 +642,11 @@ async def roll_blind_crews(interaction : discord.Interaction, criteria : int):
             self.add_item(Teams_Dropdown(criteria, active_teams))
             
 
-    async def roll_bc(interaction : discord.Interaction, criteria : int, team_1 : list[Player], team_2 : list[Player]):
+    async def roll_bc(interaction : discord.Interaction, criteria : int, team_1 : Team, team_2 : Team, add_team_names : bool = False):
         """Roll a blind crews round for 2 teams."""
         # Create the BlindCrews
         type = Roll_Gamemode(criteria)
-        blind_crews = Blind_Crews(type=type, team_1=team_1, team_2=team_2)
+        blind_crews = Blind_Crews(type=type, team_1=team_1.players, team_2=team_2.players)
 
         # Roll the blindcrews round
         blind_crews.roll_blind_crews()
@@ -655,6 +655,8 @@ async def roll_blind_crews(interaction : discord.Interaction, criteria : int):
         results_template = blind_crews.get_results_template()
 
         # Send the roll information
+        if add_team_names:
+            round_info = f'Blind Crews rolled for **{team_1.name}** vs **{team_2.name}**:\n\n' + round_info
         main_message = await interaction.channel.send(round_info)
         [await main_message.reply(additional_roll) for additional_roll in additional_rolls]
         content = f'Blind Crews with {type.name.replace("_", " ").capitalize()} rolled successfully!'
@@ -686,7 +688,7 @@ async def roll_blind_crews(interaction : discord.Interaction, criteria : int):
         await interaction.followup.send(content=content, ephemeral=True)
     
     elif len(active_teams) == 2:
-        await roll_bc(interaction, criteria, active_teams[0].players, active_teams[1].players)
+        await roll_bc(interaction, criteria, active_teams[0], active_teams[1])
     
     else:
         view = Teams_Dropdown_View(criteria, active_teams)
