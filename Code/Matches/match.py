@@ -56,7 +56,15 @@ class Match:
 
         # Random Metronome
         elif 'metronome' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.METRONOME, as_str=True)
+            # Rolling 1 different metronome per player
+            metronomes = ''
+            # Team 1
+            for player in self.team_1:
+                metronomes += f'**Metronome for {player.amq_name} ->** {Roll.roll(Rolls_Enum.METRONOME, as_str=False)}\n'
+            # Team 2
+            for player in self.team_2:
+                metronomes += f'**Metronome for {player.amq_name} ->** {Roll.roll(Rolls_Enum.METRONOME, as_str=False)}\n'
+            return content + metronomes
 
 
         # If the gamemode isn't special, we return None
