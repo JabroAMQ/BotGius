@@ -97,7 +97,7 @@ class Blind_Crews:
             # 4. Add team_2 players 
             team_2_names = [player.amq_name for player in match.team_2]
             team_2_names = ' '.join(team_2_names)
-            content += f'**Team 1:** {team_2_names}\n\n'
+            content += f'**Team 2:** {team_2_names}\n\n'
 
         return content
     
