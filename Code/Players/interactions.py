@@ -73,12 +73,12 @@ async def player_get_profile(interaction : discord.Interaction, amq_name : str, 
 
         @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.green)
         async def previous_profile_page(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
-            embed, self.current_page = self.player.get_profile_embed(new_interaction.client, self.current_page - 1)
+            embed, self.current_page = await self.player.get_profile_embed(new_interaction.client, self.current_page - 1)
             await new_interaction.response.edit_message(embed=embed)
 
         @discord.ui.button(emoji='➡️', style=discord.ButtonStyle.green)
         async def next_profile_page(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
-            embed, self.current_page = self.player.get_profile_embed(new_interaction.client, self.current_page + 1)
+            embed, self.current_page = await self.player.get_profile_embed(new_interaction.client, self.current_page + 1)
             await new_interaction.response.edit_message(embed=embed)
 
 
@@ -100,7 +100,7 @@ async def player_get_profile(interaction : discord.Interaction, amq_name : str, 
         await interaction.followup.send(content=content, ephemeral=False)
         return
 
-    embed, initial_page = player.get_profile_embed(interaction.client)
+    embed, initial_page = await player.get_profile_embed(interaction.client)
     view = Player_Get_Profile_View(player=player, initial_page=initial_page)
     await interaction.followup.send(embed=embed, view=view, ephemeral=False)
 

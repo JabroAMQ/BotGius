@@ -176,7 +176,7 @@ class Player:
                 return False
 
 
-    def get_profile_embed(self, client : discord.Client, page : int = 0) -> discord.Embed:
+    async def get_profile_embed(self, client : discord.Client, page : int = 0) -> discord.Embed:
         """
         Return:
         - A discord Embed containing the profile page for the `page` value provided.
@@ -192,7 +192,7 @@ class Player:
         # Set shared data among profile pages
         embed = discord.Embed(title=self.amq_name, color=discord.Colour.green())
         embed.set_footer(text=f'Page {page+1} / {max_value+1}')
-        embed_user = client.get_user(self.discord_id)
+        embed_user = await client.fetch_user(self.discord_id)
         embed_url = 'https://animemusicquiz.com'
         embed_icon_url = 'https://animemusicquiz.com/favicon-32x32.png'
 
