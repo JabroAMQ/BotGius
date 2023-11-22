@@ -26,7 +26,7 @@ async def player_register(interaction : discord.Interaction, amq_name : str):
 
     log_thread = await Channels().get_player_register_thread(interaction.client)
     content = f'{interaction.user.mention} registered as **{amq_name}**'
-    await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
+    await log_thread.send(content=discord.utils.escape_mentions(content))
     await interaction.followup.send(content='Registration complete successfully!', ephemeral=True)
 
 @error_handler_decorator()
@@ -53,7 +53,7 @@ async def player_change_amq(interaction : discord.Interaction, new_amq_name : st
     content = f'{interaction.user.mention} changed their AMQ name:\n'
     content += f'Old AMQ Name: **{discord.utils.escape_markdown(log_value)}**\n'
     content += f'New AMQ Name: **{discord.utils.escape_markdown(new_amq_name)}**'
-    await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
+    await log_thread.send(content=discord.utils.escape_mentions(content))
     await interaction.followup.send(content='AMQ name changed successfully!', ephemeral=True)
 
 
@@ -194,7 +194,7 @@ async def player_change_rank(interaction : discord.Interaction, amq_name : str, 
     content = f'{interaction.user.mention} modified the rank of {player.discord_ping} ({player.amq_name})\n'
     content += f'- **Old Rank:** {old_rank}\n'
     content += f'- **New Rank:** {player.rank.name}'
-    await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
+    await log_thread.send(content=discord.utils.escape_mentions(content))
     await interaction.followup.send(content='Rank modified successfully!', ephemeral=True)
 
 
