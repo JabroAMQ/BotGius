@@ -7,7 +7,6 @@ import discord
 from Code.Players.player import Player
 from Code.Tours.team import Team
 from Code.Tours.enums import Teams
-from Code.Utilities.escape_markdown import escape_markdown
 
 class Tour:
     """Class that instanciates a Tour object."""
@@ -214,7 +213,7 @@ class Tour:
         players_count = len(self.players)
         players = sorted(self.players) if sort else self.players
         players_list = [f'{player.amq_name} ({player.rank.name})' for player in players]
-        players_data = escape_markdown(", ".join(players_list))
+        players_data = discord.utils.escape_markdown(', '.join(players_list))
         summary = f'**Players ({players_count}):** {players_data}'
         return summary
     
@@ -223,7 +222,7 @@ class Tour:
         queue_count = len(self.queue)
         queue = sorted(self.queue) if sort else self.queue
         queue_list = [f'{player.amq_name} ({player.rank.name})' for player in queue]
-        queue_data = escape_markdown(", ".join(queue_list))
+        queue_data = discord.utils.escape_markdown(', '.join(queue_list))
         summary = f'**Queue ({queue_count}):** {queue_data}'
         return summary
     
@@ -374,7 +373,7 @@ class Tour:
                 players.append(player)
         
         players = sorted(players)
-        players_data = [f'{escape_markdown(player.amq_name)} ({player.rank.name})' for player in players]
+        players_data = [f'{discord.utils.escape_markdown(player.amq_name)} ({player.rank.name})' for player in players]
         players_str = ', '.join(players_data)
         answer = f'**Not in team ({len(players)})**: {players_str}'
         return answer

@@ -1,7 +1,6 @@
 import discord
 
 from Code.Utilities.error_handler import error_handler_decorator
-from Code.Utilities.escape_markdown import escape_markdown
 from Code.Players.controller import Players_Controller
 from Code.Players.player import Player
 from Code.Players.main_ranking import Ranking
@@ -15,17 +14,18 @@ async def player_register(interaction : discord.Interaction, amq_name : str):
     """Interaction to handle the `/player_register` command. It stores in the player's Database and Catalog the new player created with the provided information."""
     await interaction.response.defer(ephemeral=True)
     register_ok, other_player_ping = Players_Controller().register_player(discord_id=interaction.user.id, amq_name=amq_name)
-    
+    amq_name = discord.utils.escape_markdown(amq_name)
+
     if not register_ok:
         if other_player_ping is None:
             content = 'You are already registered!\nIf you want to change your amq name use `/player_change_amq` instead'
         else:
-            content = f'`{escape_markdown(amq_name)}` is already used as the `amq_name` of {other_player_ping}.'
+            content = f'`{amq_name}` is already used as the `amq_name` of {other_player_ping}.'
         await interaction.followup.send(content=content, ephemeral=True)
         return
 
     log_thread = await Channels().get_player_register_thread(interaction.client)
-    content = f'{interaction.user.mention} registered as **{escape_markdown(amq_name)}**'
+    content = f'{interaction.user.mention} registered as **{amq_name}**'
     await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
     await interaction.followup.send(content='Registration complete successfully!', ephemeral=True)
 
@@ -45,14 +45,14 @@ async def player_change_amq(interaction : discord.Interaction, new_amq_name : st
         if log_value is None:
             content = 'You are not registered in the players\'s database. Use `/player_register` instead.'
         else:
-            content = f'The change couldn\'t be applied as `{escape_markdown(new_amq_name)}` is already used as the `amq_name` of {log_value}.'
+            content = f'The change couldn\'t be applied as `{discord.utils.escape_markdown(new_amq_name)}` is already used as the `amq_name` of {log_value}.'
         await interaction.followup.send(content=content, ephemeral=True)
         return
 
     log_thread = await Channels().get_player_change_amq_thread(interaction.client)
     content = f'{interaction.user.mention} changed their AMQ name:\n'
-    content += f'Old AMQ Name: **{escape_markdown(log_value)}**\n'
-    content += f'New AMQ Name: **{escape_markdown(new_amq_name)}**'
+    content += f'Old AMQ Name: **{discord.utils.escape_markdown(log_value)}**\n'
+    content += f'New AMQ Name: **{discord.utils.escape_markdown(new_amq_name)}**'
     await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
     await interaction.followup.send(content='AMQ name changed successfully!', ephemeral=True)
 

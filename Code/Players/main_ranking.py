@@ -1,7 +1,5 @@
 from copy import copy
 
-from Code.Utilities.escape_markdown import escape_markdown
-
 import discord
 
 class Rank:
@@ -111,7 +109,7 @@ class Ranking:
                 all_players_in_rank.remove(player)
 
         all_names_in_rank = [
-            f'**{escape_markdown(player.amq_name)}** ({escape_markdown(discord_member.display_name)})'
+            f'**{discord.utils.escape_markdown(player.amq_name)}** ({discord.utils.escape_markdown(discord_member.display_name)})'
         for player, discord_member in zip(all_players_in_rank, all_discords_in_rank)]
 
         # Create the embed

@@ -4,7 +4,6 @@ from copy import copy
 import discord
 
 from Code.Utilities.error_handler import error_handler_decorator
-from Code.Utilities.escape_markdown import escape_markdown
 from Code.Tours.controller import Tours_Controller
 from Code.Tours.tour import Tour
 from Code.Tours.team import Team
@@ -209,7 +208,7 @@ async def _inform_host_player_left(interaction : discord.Interaction, tour : Tou
     embed = discord.Embed(colour=discord.Colour.green())
     embed.set_author(name=interaction.user.global_name, icon_url=interaction.user.display_avatar)
     embed.add_field(name='Discord Nickname', value=interaction.user.display_name, inline=False)
-    embed.add_field(name='AMQ Name', value=escape_markdown(player.amq_name), inline=False)
+    embed.add_field(name='AMQ Name', value=discord.utils.escape_markdown(player.amq_name), inline=False)
     embed.add_field(name='From', value=player_from, inline=False)
     
     try:
@@ -237,17 +236,20 @@ async def tour_players_add(interaction : discord.Interaction, players_str : str)
         # Obtain the players from the input string of the host
         player = Players_Controller().get_player(player_name)
         if player is None:
-            not_found.append(escape_markdown(player_name))
+            player_name = discord.utils.escape_markdown(player_name)
+            not_found.append(player_name)
             continue
 
         # Add the players
         join_ok, in_players_list = tour.add_player(player=player, privileged=True)
+        player_name = discord.utils.escape_markdown(player.amq_name)
+
         if not join_ok:
-            not_added.append(escape_markdown(player.amq_name))
+            not_added.append(player_name)
         elif not in_players_list:
-            queue.append(escape_markdown(player.amq_name))
+            queue.append(player_name)
         else:
-            players_list.append(escape_markdown(player.amq_name))
+            players_list.append(player_name)
 
     # Inform the host
     content = 'This is the result:\n'
@@ -284,17 +286,20 @@ async def tour_players_remove(interaction : discord.Interaction, players_str : s
         # Obtain the players from the input string of the host
         player = Players_Controller().get_player(player_name)
         if player is None:
-            not_found.append(escape_markdown(player_name))
+            player_name = discord.utils.escape_markdown(player_name)
+            not_found.append(player_name)
             continue
 
         # Remove the players
         removed, from_active = await tour.remove_player(client=interaction.client, player=player)
+        player_name = discord.utils.escape_markdown(player.amq_name)
+
         if not removed:
-            not_in_tour.append(escape_markdown(player.amq_name))
+            not_in_tour.append(player_name)
         elif not from_active:
-            from_queue.append(escape_markdown(player.amq_name))
+            from_queue.append(player_name)
         else:
-            from_players_list.append(escape_markdown(player.amq_name))
+            from_players_list.append(player_name)
 
     # Inform the host
     content = 'This is the result:\n'
@@ -412,13 +417,15 @@ async def team_players_add(interaction : discord.Interaction, team_index : int, 
         # Obtain the players from the input string of the host
         player = tour.get_tour_player(player_name)
         if player is None:
-            not_found.append(escape_markdown(player_name))
+            player_name = discord.utils.escape_markdown(player_name)
+            not_found.append(player_name)
             continue
 
         # Add the player
         added_ok = await tour.add_to_team(interaction.client, team_index, player)
         if not added_ok:
-            not_added.append(escape_markdown(player.amq_name))
+            player_name = discord.utils.escape_markdown(player.amq_name)
+            not_added.append(player_name)
 
     # Inform the host
     teams = [team.display_team() for team in tour.teams if len(team.players) > 0]
@@ -449,13 +456,15 @@ async def team_players_remove(interaction : discord.Interaction, team_index : in
         # Obtain the players from the input string of the host
         player = tour.get_tour_player(player_name)
         if player is None:
-            not_found.append(escape_markdown(player_name))
+            player_name = discord.utils.escape_markdown(player_name)
+            not_found.append(player_name)
             continue
 
         # Remove the player
         removed_ok = await tour.remove_from_team(interaction.client, team_index, player)
         if not removed_ok:
-            not_removed.append(escape_markdown(player.amq_name))
+            player_name = discord.utils.escape_markdown(player.amq_name)
+            not_removed.append(player_name)
 
     # Inform the host
     teams = [team.display_team() for team in tour.teams if len(team.players) > 0]

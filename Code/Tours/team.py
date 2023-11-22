@@ -1,6 +1,5 @@
 import discord
 
-from Code.Utilities.escape_markdown import escape_markdown
 from Code.Tours.enums import Teams
 from Code.Players.player import Player
 from Code.Others.roles import Roles
@@ -52,6 +51,6 @@ class Team:
         players_count = len(self.players)
         players = sorted(self.players) if sort else self.players
         players_list = [f'{player.amq_name} ({player.rank.name})' for player in players]
-        players_data = escape_markdown(", ".join(players_list))
+        players_data = discord.utils.escape_markdown(', '.join(players_list))
         summary = f'**{self.name} ({players_count}):** {players_data}'
         return summary
