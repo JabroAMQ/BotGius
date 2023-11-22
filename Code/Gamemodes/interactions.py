@@ -39,7 +39,7 @@ async def gamemode_add(
     # Log the addition of the gamemode
     log_thread = await Channels().get_gamemode_add_thread(interaction.client)
     content = f'Added gamemode by {interaction.user.mention}:\n{log}'
-    await log_thread.send(content=discord.utils.escape_mentions(content))
+    await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
     await interaction.followup.send(content='Gamemode added successfully!', ephemeral=True)
 
 @error_handler_decorator()
@@ -82,7 +82,7 @@ async def gamemode_delete(interaction : discord.Interaction, gamemode_name : str
             # Send log and confirmation messages
             log_thread = await Channels().get_gamemode_delete_thread(new_interaction.client)
             content = f'Deleted gamemode by {new_interaction.user.mention}:\n{gamemode.display_all_details()}'
-            await log_thread.send(content=discord.utils.escape_mentions(content))
+            await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
             await new_interaction.followup.send(content='Gamemode deleted successfully!', ephemeral=True)
     
     await interaction.response.defer(ephemeral=True) 
@@ -154,7 +154,7 @@ async def gamemode_edit(
 
             # Send the log message
             log_thread = await Channels().get_gamemode_edit_thread(new_interaction.client)
-            await log_thread.send(content=discord.utils.escape_mentions(self.log_content))
+            await log_thread.send(content=self.log_content, allowed_mentions=discord.AllowedMentions.none())
             await new_interaction.followup.send(content='Gamemode modified successfully!', ephemeral=True)
 
     await interaction.response.defer(ephemeral=True)
