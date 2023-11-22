@@ -1,4 +1,4 @@
-def to_message_content(initial_list : list[str], limit : int = 2000) -> list[str]:
+def to_chunks(initial_list : list[str], limit : int = 2000) -> list[str]:
     """
     Given a raw list where each list's element is an object, this is, if Artist list then each element of the list is an artist,
     join together the elements of the list to create "discord messages", this is, creates sublists the closest to len `limit` without

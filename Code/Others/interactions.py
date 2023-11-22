@@ -1,7 +1,7 @@
 import discord
 
 from Code.Utilities.error_handler import error_handler_decorator
-from Code.Utilities.to_message_content import to_message_content
+from Code.Utilities.to_chunks import to_chunks
 from Code.Utilities.to_webhook import to_webhook
 from Code.Gamemodes.controller import Main_Controller as Gamemodes_Controller
 from Code.Players.controller import Players_Controller
@@ -13,7 +13,7 @@ async def info(interaction : discord.Interaction, type : discord.app_commands.Ch
     """Interaction to handle the `/info` command. It sends embeds to dm with the information asked for in the `type` command parameter."""
     await interaction.response.defer(ephemeral=True)
     raw_answer = Gamemodes_Controller().info(type.value)
-    answer = to_message_content(raw_answer)
+    answer = to_chunks(raw_answer)
 
     dmchannel = await interaction.user.create_dm()
     for message in answer:
