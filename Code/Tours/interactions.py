@@ -125,39 +125,62 @@ async def tour_edit(interaction : discord.Interaction, timer : int | None, max_s
      
     content = 'This is the result:\n'
     queue_to_player_list = False        # whether to try to move queue to player list after applying the tour changes
+    player_list_to_queue = False        # whether to try to move player list to queue (max size has been reduced to a value lower than the current player list size)
+
 
     if timer is not None:
+        queue_to_player_list = True
         tour.timer = timer
-        queue_to_player_list = True
         content += '- Timer modified successfully.\n'
-    
+
     if max_size is not None:
-        # Make sure the max size is not lower than the current players number (not queue)
         if max_size < len(tour.players):
-            content += '- **Max Size couldn\'t be modified as there are already more players in the player list than the number suggested!**\n'
+            player_list_to_queue = True
         else:
-            tour.max_players_size = max_size
             queue_to_player_list = True
-            content += '- Max Size modified successfully.\n'
-    
+        
+        tour.max_players_size = max_size
+        content += '- Max Size modified successfully.\n'
+
     if is_open is not None:
-        tour.is_tour_open = is_open
         queue_to_player_list = True
+        tour.is_tour_open = is_open
         content += '- "Looking for players" modified successfully.\n'
 
     if info is not None:
         tour.tour_info = info
-        content += '- Info modified successfully'
+        content += '- Info modified successfully\n'
 
-    # Move queue to player list
-    if queue_to_player_list:
+
+    # Move some players to the queue if max size was reduced
+    if player_list_to_queue:
+        content += '\n**These players were moved from the players\'s list to the top of the queue:**\n'
+        moved_players = []
+
+        while len(tour.players) > max_size:
+            # Move the last players that joined the players's list to the top of the queue (priority over other queue people that were never in the players's list)
+            last_player = tour.players[-1]
+            moved_players.insert(0, discord.utils.escape_markdown(last_player.amq_name))
+            await tour.from_player_list_to_queue(interaction.client, last_player)
+        content += ', '.join(moved_players)
+
+        # Display the players's list / queue changes
+        players = tour.display_tour_players_and_queue()
+        await tour.players_message.edit(content=players)
+
+
+    # Move queue to player list if new timer, max size was increased or tour sign ups were reopened
+    elif queue_to_player_list:
         # We need to create a copy as tour.queue is going to be modified in tour.add_player()
         queue_copy = copy(tour.queue)
-
         [tour.add_player(player, privileged=True) for player in queue_copy]
+        
+        # Display the players's list / queue changes
         players = tour.display_tour_players_and_queue()
         await tour.players_message.edit(content=players)
     
+
+    # Display the embed changes and inform the host about the result
     embed = tour.generate_join_embed()
     await tour.join_message.edit(embed=embed)
     await interaction.followup.send(content=content, ephemeral=True)

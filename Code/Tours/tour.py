@@ -335,6 +335,25 @@ class Tour:
         return True, True
     
 
+    async def from_player_list_to_queue(self, client : discord.Client, player : Player) -> bool:
+        """
+        Move a player from the players's list to the top of the queue.\n
+        It also removes the player from the team, if they were in one.\n
+        Return True if the player was moved to the queue, and False otherwise (this is, the player was not in the players's list before).
+        """
+        if player not in self.players:
+            return False
+        
+        # Move the player to the top of the queue
+        self.players.remove(player)
+        self.queue.insert(0, player)
+
+        # Remove the player from the teams
+        [await team.remove_player(client, player) for team in self.teams if player in team.players]
+
+        return True
+    
+
     async def add_to_team(self, client : discord.Client, team_index : int, player : Player) -> bool:
         """Add a player to a team. Return whether the player was added (False if they were already in the team)."""
         # Make sure the player doesn't end up in more than one team
