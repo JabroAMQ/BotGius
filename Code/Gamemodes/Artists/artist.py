@@ -22,7 +22,7 @@ class Artist:
 
     def __str__(self) -> str:
         """Return a string representation of the Artist object. Use it to display artist info in a compressed way (e.g. displaying info from all artists)"""
-        return f'**{self.artist_name}** // {self.author_name} // Score {self.score_range} // {self.list_sections} // {self.list_from}'
+        return f'**{self.artist_name}** // {self.list_name} // Score {self.score_range} // {self.list_sections} // {self.list_from}'
 
     def __repr__(self) -> str:
         """Return a string representation of the Artist object. Use it to display artist info in a extended way (e.g. displaying info from only one artist)"""
