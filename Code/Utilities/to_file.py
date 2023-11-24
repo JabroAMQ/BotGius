@@ -25,13 +25,5 @@ async def send_message_as_file(interaction : discord.Interaction, message : str 
         else:
             await interaction.followup.send(file=file, ephemeral=True)
 
-    # We add error handling manually as this method is referenced from the error_handler_manager itself
-    except Exception as e:
-        if isinstance(e, (discord.errors.HTTPException, discord.errors.NotFound)):
-            await interaction.followup.send(content='There was a error when sending you the answer. Please, try using the command again', ephemeral=True)
-        else:
-            await interaction.followup.send(content='An unknown error occured... Please try again and if the issue persists tell it to Jabro (<@427868172666929160>)', ephemeral=True)
-            raise e
-
     finally:
         os.remove(file_name)

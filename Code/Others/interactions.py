@@ -2,6 +2,7 @@ import discord
 
 from Code.Utilities.error_handler import error_handler_decorator
 from Code.Utilities.to_chunks import to_chunks
+from Code.Utilities.to_file import send_message_as_file
 from Code.Utilities.to_webhook import to_webhook
 from Code.Gamemodes.controller import Main_Controller as Gamemodes_Controller
 from Code.Players.controller import Players_Controller
@@ -15,13 +16,17 @@ async def info(interaction : discord.Interaction, type : discord.app_commands.Ch
     raw_answer = Gamemodes_Controller().info(type.value)
     answer = to_chunks(raw_answer)
 
-    dmchannel = await interaction.user.create_dm()
-    for message in answer:
-        embed = discord.Embed(title=type.name, description=message, color=discord.Color.green())
-        await dmchannel.send(embed=embed)
-    
-    content = 'Info sent correctly!' if interaction.guild else 'I have sent you the response to DM'
-    await interaction.followup.send(content=content, ephemeral=True)
+    try:
+        dmchannel = await interaction.user.create_dm()
+        for message in answer:
+            embed = discord.Embed(title=type.name, description=message, color=discord.Color.green())
+            await dmchannel.send(embed=embed)
+        
+        content = 'Info sent correctly!' if interaction.guild else 'I have sent you the response to DM'
+        await interaction.followup.send(content=content, ephemeral=True)
+
+    except discord.errors.Forbidden:
+        await send_message_as_file(interaction, answer)
         
 
 async def feedback(interaction : discord.Interaction):
