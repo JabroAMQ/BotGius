@@ -8,20 +8,11 @@ from Commands.utilities import load_app_commands, load_controllers
 class BotGius(discord.Client):
     """A custom Discord client class for hosting AMQ tours."""
 
-    def __init__(self, intents: discord.Intents, sync_commands : bool):
-        """
-        Initialize the BotGius client.
-
-        Parameters:
-        -----------
-        - `intents` : `discord.Intents`
-            Permissions that the client has.
-        - `sync_commands` : `bool`
-            Whether to synchronize client commands with Discord.
-        """
-        super().__init__(intents=intents)
+    def __init__(self):
+        """Initialize the BotGius client."""
+        super().__init__(intents=discord.Intents.all())
+        self.sync_commands = False
         self.tree = discord.app_commands.CommandTree(self)
-        self.sync_commands = sync_commands
         load_app_commands(self)
         load_controllers()
     
@@ -36,10 +27,7 @@ class BotGius(discord.Client):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
 
 
-dotenv.load_dotenv('.env')          # Private, it isn't added to the GitHub repository
+dotenv.load_dotenv('.env')
 TOKEN = os.getenv('DISCORD_TOKEN')
-
-sync_commands = False               # Set to True to sync new commands
-client = BotGius(intents=discord.Intents.all(), sync_commands=sync_commands)
-
+client = BotGius()
 client.run(TOKEN)
