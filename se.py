@@ -22,7 +22,7 @@ class BotGius(discord.Client):
             Handler for app commands's highest level errors.\n
             This is, errors that may occure due to checks done before the command's code itself is executed (e.g. syntax errors in the command's header).\n
             For generic error handling that may occure during the command's execution check `Code/Utilities/error_handler/`, which contain a decorator that
-            all commands should call.
+            all commands must call.
             """
             if isinstance(error, discord.app_commands.errors.CheckFailure):
                 await interaction.response.send_message(content='You don\'t have permissions to use this command', ephemeral=True)
