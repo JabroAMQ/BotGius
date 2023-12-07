@@ -73,7 +73,12 @@ async def player_change_other_amq(interaction : discord.Interaction, player_old_
         await interaction.followup.send(content=content, ephemeral=True)
         return
 
-    player_mention = interaction.guild.get_member(player.discord_id).mention
+    try:
+        player_discord = await interaction.client.fetch_user(player.discord_id)
+        player_mention = player_discord.mention if player_discord.mention else player_discord.name
+    except (discord.errors.NotFound, discord.errors.HTTPException):
+        player_mention = '(???)'
+
     change_amq_ok, log_value = Players_Controller().change_player_amq(discord_id=player.discord_id, new_amq_name=player_new_amq)
     
     if not change_amq_ok:
