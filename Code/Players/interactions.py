@@ -58,6 +58,38 @@ async def player_change_amq(interaction : discord.Interaction, new_amq_name : st
 
 
 @error_handler_decorator()
+async def player_change_other_amq(interaction : discord.Interaction, player_old_amq : str, player_new_amq : str):
+    """Interaction to handle the `/player_change_other_amq` command. It modifies the `amq_name` field of the player with `amq_name == player_old_amq`."""
+    await interaction.response.defer(ephemeral=True)
+
+    # NOTE Make sure to match these restrictions with the player_change_amq ones
+    player_new_amq = player_new_amq.replace(' ', '_')
+    
+    # Get the discord id of the player with amq name == player_old_amq
+    player = Players_Controller().get_player(player_old_amq)
+
+    if player is None:
+        content = f'A player with a similar enough amq_name to "**{player_old_amq}**" couldn\'t be found'
+        await interaction.followup.send(content=content, ephemeral=True)
+        return
+
+    player_mention = interaction.guild.get_member(player.discord_id).mention
+    change_amq_ok, log_value = Players_Controller().change_player_amq(discord_id=player.discord_id, new_amq_name=player_new_amq)
+    
+    if not change_amq_ok:
+        content = f'The change couldn\'t be applied as `{discord.utils.escape_markdown(player_new_amq)}` is already used as the `amq_name` of {log_value}.'
+        await interaction.followup.send(content=content, ephemeral=True)
+        return
+
+    log_thread = await Channels().get_player_change_amq_thread(interaction.client)
+    content = f'{interaction.user.mention} changed the AMQ name of {player_mention}:\n'
+    content += f'Old AMQ Name: **{discord.utils.escape_markdown(log_value)}**\n'
+    content += f'New AMQ Name: **{discord.utils.escape_markdown(player_new_amq)}**'
+    await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
+    await interaction.followup.send(content=f'AMQ name of {player_mention} changed successfully!', ephemeral=True)
+
+
+@error_handler_decorator()
 async def player_get_profile(interaction : discord.Interaction, amq_name : str, discord_name : str):
     """
     Interaction to handle the `/player_get_profile` command. It displays an embed with information abou the user

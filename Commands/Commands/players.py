@@ -18,6 +18,7 @@ class Players_Commands(Commands):
         Method that loads the "players" commands into the client's tree.
         - `/player_register`
         - `/player_change_amq`
+        - `/player_change_other_amq`
         - `/player_get_profile`
         - `/player_change_list`
         - `/player_change_mode`
@@ -30,11 +31,19 @@ class Players_Commands(Commands):
         async def player_register(interaction : discord.Interaction, amq_name : str):
             await interactions.player_register(interaction, amq_name)
 
+
         @client.tree.command(name='player_change_amq', description='Update your AMQ name')
         @app_commands.describe(new_amq_name='Your new AMQ name')
         @app_commands.guild_only
         async def player_change_amq(interaction : discord.Interaction, new_amq_name : str):
             await interactions.player_change_amq(interaction, new_amq_name)
+
+        @client.tree.command(name='player_change_other_amq', description='Change the AMQ name of another player')
+        @app_commands.describe(player_old_amq='The player\'s old AMQ name', player_new_amq='The player\'s new AMQ name')
+        @app_commands.guild_only
+        @app_commands.check(self.is_user_tour_helper)
+        async def player_change_old_amq(interaction : discord.Interaction, player_old_amq : str, player_new_amq : str):
+            await interactions.player_change_other_amq(interaction, player_old_amq, player_new_amq)
 
 
         @client.tree.command(name='player_get_profile', description='Get the profile of a given user')
