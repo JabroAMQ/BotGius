@@ -41,7 +41,9 @@ CREATE TABLE IF NOT EXISTS players(
 	hated_4v4 INT,
 	FOREIGN KEY (hated_4v4)
 	REFERENCES gamemodes (id)
-	ON DELETE SET NULL
+	ON DELETE SET NULL,
+
+    is_banned BOOL DEFAULT False
 );
 """
 
@@ -56,7 +58,7 @@ class Players_Database:
     @staticmethod
     @connection_manager
     def get_all_players(cur : psycopg2.extensions.cursor = None) \
-        -> list[tuple[int, str, str, int, str | None, str | None, str | None, int | None, int | None, int | None, int | None, int | None, int | None]]:
+        -> list[tuple[int, str, str, int, str | None, str | None, str | None, int | None, int | None, int | None, int | None, int | None, int | None, bool]]:
         """
         Return a list of tuple containing the Players's data with the following order:
         - `discord_id`
@@ -72,6 +74,7 @@ class Players_Database:
         - `hated_2v2_gamemode_id`
         - `fav_4v4_gamemode_id`
         - `hated_4v4_gamemode_id`
+        - `is_banned`
         
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
         """
@@ -105,12 +108,23 @@ class Players_Database:
     @connection_manager
     def change_player_rank(discord_id : int, new_rank : str, cur : psycopg2.extensions.cursor = None) -> None:
         """
-        Change the Player's rank to `new_rank` from the `discord_id` player in the Playerd's Database.
+        Change the Player's rank to `new_rank` from the `discord_id` player in the Player's Database.
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
         """
         change_player_rank_query = 'UPDATE players SET rank = %s WHERE id = %s'
         player = (new_rank, discord_id)
         cur.execute(change_player_rank_query, player)
+
+    @staticmethod
+    @connection_manager
+    def change_is_baned(discord_id : int, is_banned : bool, cur : psycopg2.extensions.cursor = None) -> None:
+        """
+        Change the Player's "is_banned" attribute to `is_banned` from the `discord_id` player in the Player's Database.
+        Do NOT add a `cur` value, its a placeholder which value will be replaced.
+        """
+        change_player_is_banned_query = 'UPDATE players SET is_banned = %s WHERE id = %s'
+        player = (is_banned, discord_id)
+        cur.execute(change_player_is_banned_query, player)
 
     @staticmethod
     @connection_manager

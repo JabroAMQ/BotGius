@@ -22,6 +22,7 @@ class Players_Commands(Commands):
         - `/player_get_profile`
         - `/player_change_list`
         - `/player_change_mode`
+        - `/player_change_ban`
         - `/player_change_rank`
         - `/player_show_ranking`
         """
@@ -79,9 +80,21 @@ class Players_Commands(Commands):
             await interactions.player_change_mode(interaction, type)
 
         
+        @client.tree.command(name='player_change_ban', description='Ban/Unban a player')
+        @app_commands.describe(
+            amq_name='The AMQ name of the player',
+            is_now_banned='Whether you want to ban (True) or unban (False) the user'    
+        )
+        @app_commands.choices(is_now_banned=[app_commands.Choice(name=str(i), value=int(i)) for i in [True, False]])
+        @app_commands.check(self.is_user_tour_helper)
+        async def player_change_ban(interaction : discord.Interaction, amq_name : str, is_now_banned : app_commands.Choice[int]):
+            is_now_banned = bool(is_now_banned.value)
+            await interactions.player_change_ban(interaction, amq_name, is_now_banned)
+
+
         @client.tree.command(name='player_change_rank', description='Change the rank of a player')
         @app_commands.describe(
-            amq_name='Your AMQ name of the player',
+            amq_name='The AMQ name of the player',
             new_rank = 'The new rank of the player'
         )
         @app_commands.choices(new_rank = [app_commands.Choice(name=rank_name, value=rank_name) for rank_name in Ranking().rank_names])

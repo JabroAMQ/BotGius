@@ -21,7 +21,8 @@ class Player:
         fav_2v2_gamemode_id : int = None,
         hated_2v2_gamemode_id : int = None,
         fav_4v4_gamemode_id : int = None,
-        hated_4v4_gamemode_id : int = None
+        hated_4v4_gamemode_id : int = None,
+        is_banned : bool = False
     ) -> None:
         """Constructor of the Player class."""
         self._discord_id = discord_id
@@ -29,6 +30,7 @@ class Player:
 
         self._elo = elo     # Unused
         self._rank = rank
+        self._is_banned = is_banned
         
         self._list_name = list_name
         self._list_from = list_from
@@ -67,6 +69,14 @@ class Player:
     @rank.setter
     def rank(self, new_rank : str) -> None:
         self._rank = new_rank
+    
+    @property
+    def is_banned(self) -> bool:
+        return self._is_banned
+    
+    @is_banned.setter
+    def is_banned(self, new_is_banned : bool) -> None:
+        self._is_banned = new_is_banned
     
 
     @property

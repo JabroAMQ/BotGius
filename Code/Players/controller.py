@@ -41,7 +41,8 @@ class Players_Controller:
         fav_2v2_gamemode_id : int = None,
         hated_2v2_gamemode_id : int = None,
         fav_4v4_gamemode_id : int = None,
-        hated_4v4_gamemode_id : int = None
+        hated_4v4_gamemode_id : int = None,
+        is_banned : bool = False
     ) -> None:
         """Add a player to the Players's Catalogs (by `discord_id` and `amq_name`)."""
         player = Player(
@@ -57,7 +58,8 @@ class Players_Controller:
             fav_4v4_gamemode_id=fav_4v4_gamemode_id,
             hated_1v1_gamemode_id=hated_1v1_gamemode_id,
             hated_2v2_gamemode_id=hated_2v2_gamemode_id,
-            hated_4v4_gamemode_id=hated_4v4_gamemode_id
+            hated_4v4_gamemode_id=hated_4v4_gamemode_id,
+            is_banned=is_banned
         )
 
         self.players_by_ids[discord_id] = player
@@ -172,7 +174,7 @@ class Players_Controller:
 
     def change_player_rank(self, player_amq_name : str, new_rank : str) -> tuple[bool, Player, str]:
         """
-        Change the rank of a player with name == `player_amq_name`.\n
+        Change the rank of the player with name == `player_amq_name`.\n
         Returns a boolean telling the user whether the change could be applied.\n
         It also return the player object and the old rank that the player used to have (log values). 
         """
@@ -189,6 +191,32 @@ class Players_Controller:
         Players_Database.change_player_rank(player.discord_id, player.rank.name)
 
         return True, player, old_rank
+    
+
+    def change_player_ban(self, player_amq_name : str, new_is_banned : bool) -> tuple[bool, bool, Player | None]:
+        """
+        Change the `is_banned` value of the player with name == `player_amq_name`.\n
+        Returns a tuple:
+        - 1: Whether a player with `player_amq_name` name was found.
+        - 2: Whether the changes could be applied (if the `is_banned` value stored was not `new_is_banned` already).
+        - 3: The player whom changes were applied to.
+        """
+        # Get the player from name
+        player = self._get_player_by_name(player_amq_name)
+        if player is None:
+            return False, False, None
+        
+        # Check if new is_banned value is already the one stored
+        if new_is_banned == player.is_banned:
+            return True, False, player
+        
+        # Update is_banned in memory
+        player.is_banned = new_is_banned
+
+        # Update is_banned in database
+        Players_Database.change_is_baned(player.discord_id, player.is_banned)
+
+        return True, True, player
     
 
     def change_player_list(
