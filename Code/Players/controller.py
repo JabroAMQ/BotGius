@@ -115,6 +115,10 @@ class Players_Controller:
     def get_all_players_with_gamemode_referenced(self, gamemode : Gamemode) -> list[Player]:
         """Return a list with all the players that have referenced the gamemode as one of their favourite/most hated gamemodes."""
         return [player for player in self.players_by_ids.values() if player.has_gamemode_referenced(gamemode)]
+    
+    def get_all_banned_players(self) -> list[Player]:
+        """Return a list wirh all the players that are currently banned."""
+        return [player for player in self.players_by_ids.values() if player.is_banned]
 
 
     def register_player(self, discord_id : int, amq_name : str) -> tuple[bool, str | None]:

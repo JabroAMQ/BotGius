@@ -2,6 +2,8 @@ import discord
 
 from Commands.utilities import Tour_Helpers
 from Code.Utilities.error_handler import error_handler_decorator
+from Code.Utilities.to_chunks import to_chunks
+from Code.Utilities.to_file import send_message_as_file
 from Code.Gamemodes.controller import Main_Controller as Gamemodes_Controller
 from Code.Players.controller import Players_Controller
 from Code.Others.channels import Channels
@@ -50,3 +52,31 @@ async def ban_player(interaction : discord.Interaction, amq_name : str, is_banne
     content = f'{interaction.user.mention} has {banned_value} {player.discord_ping} ({player.amq_name})'
     await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
     await interaction.followup.send(content=f'{player.discord_ping} ({player.amq_name}) has been {banned_value} successfully!', ephemeral=True)
+
+
+@error_handler_decorator()
+async def list_banned_players(interaction : discord.Interaction):
+    """Interaction to handle the `/list_banned_players` command. It sends the user an embed to dm with the names of all the banned players."""
+    await interaction.response.defer(ephemeral=True)
+
+    banned_players = Players_Controller().get_all_banned_players()
+    # Make sure there is at least one player banned to continue
+    if not banned_players:
+        content = 'Banned players list is empty!'
+        await interaction.followup.send(content=content, ephemeral=True)
+        return
+
+    banned_players_info = [f'{player.discord_ping} ({player.amq_name})' for player in banned_players]
+    answer = to_chunks(banned_players_info)
+    
+    try:
+        dmchannel = await interaction.user.create_dm()
+        for message in answer:
+            embed = discord.Embed(title='Banned players', description=message, color=discord.Color.green())
+            await dmchannel.send(embed=embed)
+        
+        content = 'Banned list sent correctly!' if interaction.guild else 'I have sent you the response to DM'
+        await interaction.followup.send(content=content, ephemeral=True)
+
+    except discord.errors.Forbidden:
+        await send_message_as_file(interaction, answer)
