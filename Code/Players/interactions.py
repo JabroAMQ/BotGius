@@ -217,29 +217,6 @@ async def player_change_mode(interaction : discord.Interaction, type : discord.a
 
 
 @error_handler_decorator()
-async def player_change_ban(interaction : discord.Interaction, amq_name : str, is_banned : bool):
-    """Interaction to handle the `/player_change_ban` command. It bans/unbans the `is_banned` field of the player with `name` == `amq_name`."""
-    await interaction.response.defer(ephemeral=True)
-
-    player_found, change_applied, player = Players_Controller().change_player_ban(amq_name, is_banned)
-    if not player_found:
-        content = f'A player with name "{amq_name}" couldn\'t be found'
-        await interaction.followup.send(content=content, ephemeral=True)
-        return
-    
-    if not change_applied:
-        content = f'The change wasn\'t applied since the {player.amq_name}\'s ban value is already {is_banned}'
-        await interaction.followup.send(content=content, ephemeral=True)
-        return
-    
-    log_thread = await Channels().get_player_change_ban_thread(interaction.client)
-    banned_value = "banned" if player.is_banned else "unbanned"
-    content = f'{interaction.user.mention} has {banned_value} {player.discord_ping} ({player.amq_name})'
-    await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
-    await interaction.followup.send(content=f'{player.discord_ping} ({player.amq_name}) has been {banned_value} successfully!', ephemeral=True)
-
-
-@error_handler_decorator()
 async def player_change_rank(interaction : discord.Interaction, amq_name : str, new_rank : str):
     """Interaction to handle the `/player_change_rank` command. It modifies the `rank` field of the player with `name` == `amq_name`."""
     await interaction.response.defer(ephemeral=True)

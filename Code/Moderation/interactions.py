@@ -3,6 +3,7 @@ import discord
 from Commands.utilities import Tour_Helpers
 from Code.Utilities.error_handler import error_handler_decorator
 from Code.Gamemodes.controller import Main_Controller as Gamemodes_Controller
+from Code.Players.controller import Players_Controller
 from Code.Others.channels import Channels
 from Code.Others.emojis import Emojis
 from Code.Others.roles import Roles
@@ -26,3 +27,26 @@ async def reset_data(interaction : discord.Interaction):
 
     content = 'The lists were updated successfully!'
     await interaction.followup.send(content=content, ephemeral=True)
+
+
+@error_handler_decorator()
+async def ban_player(interaction : discord.Interaction, amq_name : str, is_banned : bool):
+    """Interaction to handle the `/ban_player` command. It bans/unbans the `is_banned` field of the player with `name` == `amq_name`."""
+    await interaction.response.defer(ephemeral=True)
+
+    player_found, change_applied, player = Players_Controller().change_player_ban(amq_name, is_banned)
+    if not player_found:
+        content = f'A player with name "{amq_name}" couldn\'t be found'
+        await interaction.followup.send(content=content, ephemeral=True)
+        return
+    
+    if not change_applied:
+        content = f'The change wasn\'t applied since the {player.amq_name}\'s ban value is already {is_banned}'
+        await interaction.followup.send(content=content, ephemeral=True)
+        return
+    
+    log_thread = await Channels().get_player_change_ban_thread(interaction.client)
+    banned_value = 'banned' if player.is_banned else 'unbanned'
+    content = f'{interaction.user.mention} has {banned_value} {player.discord_ping} ({player.amq_name})'
+    await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
+    await interaction.followup.send(content=f'{player.discord_ping} ({player.amq_name}) has been {banned_value} successfully!', ephemeral=True)

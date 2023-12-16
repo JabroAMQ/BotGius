@@ -15,9 +15,22 @@ class Moderation_Commands(Commands):
         """
         Method that loads the "moderation" commands into the client's tree.
         - `/reset_data`
+        - `/ban_player`
         """
         @client.tree.command(name='reset_data', description='Retrieve again the information from the sheets to keep it updated')
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
         async def reset_data(interaction : discord.Interaction):
             await interactions.reset_data(interaction)
+
+        
+        @client.tree.command(name='ban_player', description='Ban/Unban a player')
+        @app_commands.describe(
+            amq_name='The AMQ name of the player',
+            is_now_banned='Whether you want to ban (True) or unban (False) the user'    
+        )
+        @app_commands.choices(is_now_banned=[app_commands.Choice(name=str(i), value=int(i)) for i in [True, False]])
+        @app_commands.check(self.is_user_tour_helper)
+        async def ban_player(interaction : discord.Interaction, amq_name : str, is_now_banned : app_commands.Choice[int]):
+            is_now_banned = bool(is_now_banned.value)
+            await interactions.player_change_ban(interaction, amq_name, is_now_banned)
