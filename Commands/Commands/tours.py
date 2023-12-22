@@ -35,7 +35,8 @@ class Tours_Commands(Commands):
         @app_commands.describe(
             timer='Number of minutes before sign ups get closed',
             size='Maximum number of tour players',
-            info='Tour\'s description'
+            info='Tour\'s description',
+            ping='Custom role ping. Leave it empty for default roles.'
         )
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
@@ -43,9 +44,10 @@ class Tours_Commands(Commands):
             interaction : discord.Interaction,
             timer : app_commands.Range[int, 1, 180] = None,
             size : app_commands.Range[int, 8, 128] = None,
-            info : str = ''
+            info : str = '',
+            ping : str = ''
         ):
-            await interactions.tour_create(interaction, timer, size, info)
+            await interactions.tour_create(interaction, timer, size, info, ping)
 
 
         @client.tree.command(name='tour_edit', description='Edit some parameters from the active tour')

@@ -16,7 +16,7 @@ from Code.Others.emojis import Emojis
 from Code.Others.roles import Roles
 
 @error_handler_decorator()
-async def tour_create(interaction : discord.Interaction, timer : int = None, size : int = None, info : str = ''):
+async def tour_create(interaction : discord.Interaction, timer : int = None, size : int = None, info : str = '', custom_ping : str = ''):
     """Interaction to handle the `/tour_create` command. It creates a new tour and stores it in the tours's catalog."""
     await interaction.response.defer(ephemeral=True)
     join_emoji, leave_emoji = Emojis().get_tour_emojis(interaction.user.id)
@@ -100,7 +100,7 @@ async def tour_create(interaction : discord.Interaction, timer : int = None, siz
         info=info
     )
 
-    pings = Roles().get_ping_roles()
+    pings = Roles().get_ping_roles() if not custom_ping else custom_ping
     emoji = Emojis().get_other_emoji('20espiando')
     content = f'{pings} {emoji}'
     embed = tour.generate_join_embed()
