@@ -22,12 +22,12 @@ class Tours_Controller:
 
     def start_new_tour(
         self,
-        host : discord.User,
-        guild : discord.Guild,
-        timer : int = None,
-        size : int = None,
-        elo : bool = False,
-        info : str = ''
+        host: discord.User,
+        guild: discord.Guild,
+        timer: int = None,
+        size: int = None,
+        elo: bool = False,
+        info: str = ''
     ) -> Tour:
         """Starts a new tour. Returns the tour created."""
         # TODO Tour ID
@@ -45,11 +45,11 @@ class Tours_Controller:
         return self.tours_active.get(tour_id)
     
 
-    async def end_current_tour(self, guild : discord.Guild) -> None:
+    async def end_current_tour(self, guild: discord.Guild) -> None:
         """Ends the tour that is currently active."""
         # TODO Tour ID
         tour_id = 0
-        tour : Tour = self.tours_active.get(tour_id)
+        tour: Tour = self.tours_active.get(tour_id)
         
         # Remove the roles from the players
         [await team.reset_roles(guild) for team in tour.teams]

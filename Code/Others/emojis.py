@@ -24,7 +24,7 @@ class Emojis:
         # NOTE default_tour_emojis: Just 2 emojis, join and leave
         # 'join': <default_join_emoji_str>
         # 'leave:' <default_join_emoji_str>
-        self.default_tour_emojis : dict[str, str] = emojis_data['default']
+        self.default_tour_emojis: dict[str, str] = emojis_data['default']
 
         # NOTE custom_tour_emojis: 2 emojis per host, join and leave
         # <host_id_1>:
@@ -32,20 +32,20 @@ class Emojis:
         #   'leave': <custom_join_moji_str_1>
         # <host_id_2>:
         #   ...
-        self.custom_tour_emojis : dict[int, dict[str, str]] = emojis_data['custom']
+        self.custom_tour_emojis: dict[int, dict[str, str]] = emojis_data['custom']
 
         # NOTE poll_emojis:
         # <poll_emoji_name_1>: <poll_emoji_str_1>
         # <poll_emoji_name_2>: <poll_emoji_str_2>
         # ...
-        self.poll_emojis : dict[str, str] = emojis_data['poll']
+        self.poll_emojis: dict[str, str] = emojis_data['poll']
 
         # NOTE other_emojis: emojis that doesn't fit anywhere else
         # <other_emoji_1>: <other_emoji_str_1>
-        self.other_emojis : dict[str, str] = emojis_data['others']
+        self.other_emojis: dict[str, str] = emojis_data['others']
 
 
-    def get_tour_emojis(self, host_id : int) -> tuple[str, str]:
+    def get_tour_emojis(self, host_id: int) -> tuple[str, str]:
         """
         Return a tuple with 2 emojis (join emoji and leave emoji as raw strings).\n
         These emojis are the custom emojis of the hosts (identified by `host_id`) if exist, otherwise the default ones.
@@ -57,10 +57,10 @@ class Emojis:
         return custom_emojis['join'], custom_emojis['leave']
     
 
-    def get_poll_emojis(self, n : int = -1) -> list[str]:
+    def get_poll_emojis(self, n: int = -1) -> list[str]:
         """Return a list with `n` poll emojis. If `n < 1` then it returns a list with all the emojis."""
         # Get all the poll emojis
-        reactions : list[str] = list(self.poll_emojis.values())
+        reactions: list[str] = list(self.poll_emojis.values())
         
         # Return all the poll emojis if asked for
         if n < 1 or n > len(reactions):
@@ -68,12 +68,12 @@ class Emojis:
         
         # We randomply pop emojis from the list while we have more emojis than the number asked for
         while len(reactions) > n:
-            reaction : str = random.choice(reactions)
+            reaction = random.choice(reactions)
             reactions.remove(reaction)
 
         return reactions
     
 
-    def get_other_emoji(self, emoji_key : str) -> str:
+    def get_other_emoji(self, emoji_key: str) -> str:
         """Return an emoji (raw string) given its name (key in the yaml file) or an empty string if it couldn't be found."""
         return self.other_emojis.get(emoji_key, '')

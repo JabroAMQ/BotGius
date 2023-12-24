@@ -41,11 +41,11 @@ class Tours_Commands(Commands):
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
         async def tour_create(
-            interaction : discord.Interaction,
-            timer : app_commands.Range[int, 1, 180] = None,
-            size : app_commands.Range[int, 8, 128] = None,
-            info : str = '',
-            ping : str = ''
+            interaction: discord.Interaction,
+            timer: app_commands.Range[int, 1, 180] = None,
+            size: app_commands.Range[int, 8, 128] = None,
+            info: str = '',
+            ping: str = ''
         ):
             await interactions.tour_create(interaction, timer, size, info, ping)
 
@@ -60,11 +60,11 @@ class Tours_Commands(Commands):
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
         async def tour_edit(
-            interaction : discord.Interaction,
-            timer : app_commands.Range[int, 1, 180] = None,
-            size : app_commands.Range[int, 8, 128] = None,
-            looking_for_players : bool = None,
-            info : str = None
+            interaction: discord.Interaction,
+            timer: app_commands.Range[int, 1, 180] = None,
+            size: app_commands.Range[int, 8, 128] = None,
+            looking_for_players: bool = None,
+            info: str = None
         ):
             await interactions.tour_edit(interaction, timer, size, looking_for_players, info)
 
@@ -72,7 +72,7 @@ class Tours_Commands(Commands):
         
         @client.tree.command(name='tour_quit', description='Allows you to leave the current tour')
         @app_commands.guild_only
-        async def tour_quit(interaction : discord.Interaction):
+        async def tour_quit(interaction: discord.Interaction):
             await interactions.tour_quit(interaction)
         
 
@@ -80,7 +80,7 @@ class Tours_Commands(Commands):
         @app_commands.describe(players='AMQ name of the player(s) to add')
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def tour_players_add(interaction : discord.Interaction, players : str):
+        async def tour_players_add(interaction: discord.Interaction, players: str):
             await interactions.tour_players_add(interaction, players)
 
         
@@ -88,33 +88,33 @@ class Tours_Commands(Commands):
         @app_commands.describe(players='AMQ name of the player(s) to remove')
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def tour_players_remove(interaction : discord.Interaction, players : str):
+        async def tour_players_remove(interaction: discord.Interaction, players: str):
             await interactions.tour_players_remove(interaction, players)
 
 
         @client.tree.command(name='tour_players_list', description='Return the list of players that joined the tour')
         @app_commands.guild_only
-        async def tour_players_list(interaction : discord.Interaction):
+        async def tour_players_list(interaction: discord.Interaction):
             await interactions.tour_players_list(interaction)
 
 
         @client.tree.command(name='tour_players_ping', description='Ping the players (not queue) that joined the tour')
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def tour_players_ping(interaction : discord.Interaction):
+        async def tour_players_ping(interaction: discord.Interaction):
             await interactions.tour_players_ping(interaction)
 
 
         @client.tree.command(name='tour_end', description='End the tour that is currently active')
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def tour_end(interaction : discord.Interaction):
+        async def tour_end(interaction: discord.Interaction):
             await interactions.tour_end(interaction)
 
 
         @client.tree.command(name='team_players_list', description='Return the list of players from each team')
         @app_commands.guild_only
-        async def team_players_list(interaction : discord.Interaction):
+        async def team_players_list(interaction: discord.Interaction):
             await interactions.team_players_list(interaction)
 
 
@@ -126,7 +126,7 @@ class Tours_Commands(Commands):
         @app_commands.choices(team=[app_commands.Choice(name=team.name.replace('_', ' '), value=team.value) for team in Teams])
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def team_players_add(interaction : discord.Interaction, team : app_commands.Choice[int], players : str):
+        async def team_players_add(interaction: discord.Interaction, team: app_commands.Choice[int], players: str):
             await interactions.team_players_add(interaction, team.value, players)
 
 
@@ -138,7 +138,7 @@ class Tours_Commands(Commands):
         @app_commands.choices(team=[app_commands.Choice(name=team.name.replace('_', ' '), value=team.value) for team in Teams])
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def team_players_remove(interaction : discord.Interaction, team : app_commands.Choice[int], players : str):
+        async def team_players_remove(interaction: discord.Interaction, team: app_commands.Choice[int], players: str):
             await interactions.team_players_remove(interaction, team.value, players)
 
 
@@ -148,14 +148,14 @@ class Tours_Commands(Commands):
         @app_commands.choices(criteria=[app_commands.Choice(name=type.name.replace('_', ' ').capitalize(), value=type.value) for type in Roll_Teams])
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def team_randomize(interaction : discord.Interaction, number_of_teams : app_commands.Choice[int], criteria : app_commands.Choice[int]):
+        async def team_randomize(interaction: discord.Interaction, number_of_teams: app_commands.Choice[int], criteria: app_commands.Choice[int]):
             await interactions.team_randomize(interaction, number_of_teams.value, criteria.value)
 
 
         @client.tree.command(name='team_get_all_roles', description='Add all team roles to the user')
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def team_get_all_roles(interaction : discord.Interaction):
+        async def team_get_all_roles(interaction: discord.Interaction):
             await interactions.team_get_all_roles(interaction)
 
 
@@ -164,7 +164,7 @@ class Tours_Commands(Commands):
         @app_commands.choices(criteria=[app_commands.Choice(name=type.name.replace('_', ' ').capitalize(), value=type.value) for type in Roll_Teams])
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def roll_groups(interaction : discord.Interaction, number_of_groups : int, criteria : app_commands.Choice[int]):
+        async def roll_groups(interaction: discord.Interaction, number_of_groups: int, criteria: app_commands.Choice[int]):
             await interactions.roll_groups(interaction, number_of_groups, criteria.value)
 
 
@@ -173,5 +173,5 @@ class Tours_Commands(Commands):
         @app_commands.choices(gamemodes=[app_commands.Choice(name=type.name.replace('_', ' ').capitalize(), value=type.value) for type in Roll_Gamemode])
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def roll_blind_crews(interaction : discord.Interaction, gamemodes : app_commands.Choice[int]):
+        async def roll_blind_crews(interaction: discord.Interaction, gamemodes: app_commands.Choice[int]):
             await interactions.roll_blind_crews(interaction, gamemodes.value)

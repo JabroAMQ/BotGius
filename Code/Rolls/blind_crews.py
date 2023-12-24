@@ -8,14 +8,14 @@ from Code.Players.player import Player
 
 class Blind_Crews:
     """Class that contains the methods to roll a blind crews round given two teams."""
-    def __init__(self, type : enums.Roll_Gamemode, team_1 : list[Player], team_2 : list[Player]) -> None:
+    def __init__(self, type: enums.Roll_Gamemode, team_1: list[Player], team_2: list[Player]) -> None:
         """Class constructor"""
         self.type = type
         self.team_1 = team_1
         self.team_2 = team_2
         
-        self.matches : list[Match] = []             # List of rolled matches
-        self.special_rolls_list : list[str] = []    # All the additional rolls for special modes (artistmania, random tag, etc.)
+        self.matches: list[Match] = []             # List of rolled matches
+        self.special_rolls_list: list[str] = []    # All the additional rolls for special modes (artistmania, random tag, etc.)
 
 
     def roll_blind_crews(self) -> None:
@@ -33,7 +33,7 @@ class Blind_Crews:
             self._roll_match(team_1, team_2)
 
 
-    def _roll_match(self, team_1 : list[Player], team_2 : list[Player]) -> Match:
+    def _roll_match(self, team_1: list[Player], team_2: list[Player]) -> Match:
         """
         Creates a Match:
         - 1. Roll a gamemode with the constraints `self.type` stablished in the class constructor.

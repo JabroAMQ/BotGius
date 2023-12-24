@@ -2,12 +2,12 @@ import traceback
 
 import discord
 
-def print_exception(error : Exception) -> None:
+def print_exception(error: Exception) -> None:
     """Print a exception to console without raising it."""
     traceback.print_exception(type(error), error, error.__traceback__)
 
 
-async def _interaction_error_handler(interaction : discord.Interaction, error : Exception):
+async def _interaction_error_handler(interaction: discord.Interaction, error: Exception):
     """
     Base error handler for interactions. Supports:    
     - `discord.errors.HTTPException` and `discord.errors.NotFound`: When a HTTP errors occures when sending the response or when discord losses the interaction,

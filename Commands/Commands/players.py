@@ -28,28 +28,28 @@ class Players_Commands(Commands):
         @client.tree.command(name='player_register', description='Register yourself in the player\'s database')
         @app_commands.describe(amq_name='Your AMQ name')
         @app_commands.guild_only
-        async def player_register(interaction : discord.Interaction, amq_name : str):
+        async def player_register(interaction: discord.Interaction, amq_name: str):
             await interactions.player_register(interaction, amq_name)
 
 
         @client.tree.command(name='player_change_amq', description='Update your AMQ name')
         @app_commands.describe(new_amq_name='Your new AMQ name')
         @app_commands.guild_only
-        async def player_change_amq(interaction : discord.Interaction, new_amq_name : str):
+        async def player_change_amq(interaction: discord.Interaction, new_amq_name: str):
             await interactions.player_change_amq(interaction, new_amq_name)
 
         @client.tree.command(name='player_change_other_amq', description='Change the AMQ name of another player')
         @app_commands.describe(player_old_amq='The player\'s old AMQ name', player_new_amq='The player\'s new AMQ name')
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def player_change_old_amq(interaction : discord.Interaction, player_old_amq : str, player_new_amq : str):
+        async def player_change_old_amq(interaction: discord.Interaction, player_old_amq: str, player_new_amq: str):
             await interactions.player_change_other_amq(interaction, player_old_amq, player_new_amq)
 
 
         @client.tree.command(name='player_get_profile', description='Get the profile of a given user')
         @app_commands.describe(amq_name='The amq name of the user', discord_name='The discord name of the user')
         @app_commands.guild_only
-        async def player_get_profile(interaction : discord.Interaction, amq_name : str = '', discord_name : str = ''):
+        async def player_get_profile(interaction: discord.Interaction, amq_name: str = '', discord_name: str = ''):
             await interactions.player_get_profile(interaction, amq_name, discord_name)
 
         @client.tree.command(name='player_change_list', description='Update your list information')
@@ -59,15 +59,15 @@ class Players_Commands(Commands):
             list_sections='The sections of your list to use'
         )
         @app_commands.choices(
-            list_from     = [app_commands.Choice(name=f, value=f) for f in [option.name for option in List_From_Options]],
+            list_from = [app_commands.Choice(name=f, value=f) for f in [option.name for option in List_From_Options]],
             list_sections = [app_commands.Choice(name=c, value=c) for c in [option.name.replace('_', ' / ') for option in List_Sections_Options]]
         )
         @app_commands.guild_only
         async def player_change_list(
-            interaction : discord.Interaction,
-            list_name : str,
-            list_from : app_commands.Choice[str],
-            list_sections : app_commands.Choice[str]
+            interaction: discord.Interaction,
+            list_name: str,
+            list_from: app_commands.Choice[str],
+            list_sections: app_commands.Choice[str]
         ):
             await interactions.player_change_list(interaction, list_name, list_from.value, list_sections.value)
         
@@ -75,7 +75,7 @@ class Players_Commands(Commands):
         @app_commands.describe(type='Which gamemode to update')
         @app_commands.choices(type=[app_commands.Choice(name=option.name, value=option.value) for option in Prefered_Gamemode_Options])
         @app_commands.guild_only
-        async def player_change_mode(interaction : discord.Interaction, type : app_commands.Choice[int]):
+        async def player_change_mode(interaction: discord.Interaction, type: app_commands.Choice[int]):
             await interactions.player_change_mode(interaction, type)
 
 
@@ -87,7 +87,7 @@ class Players_Commands(Commands):
         @app_commands.choices(new_rank = [app_commands.Choice(name=rank_name, value=rank_name) for rank_name in Ranking().rank_names])
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def player_change_rank(interaction : discord.Interaction, amq_name : str, new_rank : app_commands.Choice[str]):
+        async def player_change_rank(interaction: discord.Interaction, amq_name: str, new_rank: app_commands.Choice[str]):
             await interactions.player_change_rank(interaction, amq_name, new_rank.name)
 
         
@@ -95,5 +95,5 @@ class Players_Commands(Commands):
         @app_commands.describe(rank_page='Initial page of the ranking to display')
         @app_commands.choices(rank_page = [app_commands.Choice(name=rank_name, value=rank_name) for rank_name in Ranking().rank_names])
         @app_commands.guild_only
-        async def player_show_ranking(interaction : discord.Interaction, rank_page : app_commands.Choice[str]):
+        async def player_show_ranking(interaction: discord.Interaction, rank_page: app_commands.Choice[str]):
             await interactions.player_show_ranking(interaction, rank_page.name)

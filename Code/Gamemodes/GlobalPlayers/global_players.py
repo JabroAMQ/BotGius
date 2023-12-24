@@ -1,16 +1,21 @@
 class GlobalPlayer:
     """Class that instanciates a GlobalPlayer object containing the information that is stored in the global player's sheet."""
 
-    def __init__(self, player_name : str, list_name : str, list_from : str, list_sections : str, comment : str) -> None:
+    def __init__(self, player_name: str, list_name: str, list_from: str, list_sections: str, comment: str) -> None:
         """
         Constructor of the GlobalPlayer class.\n
         Parameters:
         -----------
-        - player_name : The global player's AMQ name.
-        - list_name : The name of the list (username from Anilist / MyAnimeList) where the shows are stored.
-        - list_from : Where the list is from (Anilist / MyAnimeList).
-        - list_sections : The sections from the list that must be used during the AMQ game that contains the shows from the global player.
-        - comment : A comment that the player has left as additional information.
+        - `player_name`: `str`
+            The global player's AMQ name.
+        - `list_name`: `str`
+            The name of the list (username from Anilist / MyAnimeList) where the shows are stored.
+        - `list_from`: `str`
+            Where the list is from (Anilist / MyAnimeList).
+        - `list_sections`: `str`
+            The sections from the list that must be used during the AMQ game that contains the shows from the global player.
+        - `comment`: `str`
+            A comment that the player has left as additional information.
         """
         self.player_name = player_name
         self.list_name = list_name

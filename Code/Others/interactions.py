@@ -10,7 +10,7 @@ from Code.Others.emojis import Emojis
 from Code.Others.channels import Channels
 
 @error_handler_decorator()
-async def info(interaction : discord.Interaction, type : discord.app_commands.Choice[int]):
+async def info(interaction: discord.Interaction, type: discord.app_commands.Choice[int]):
     """Interaction to handle the `/info` command. It sends embeds to dm with the information asked for in the `type` command parameter."""
     await interaction.response.defer(ephemeral=True)
     raw_answer = Gamemodes_Controller().info(type.value)
@@ -29,7 +29,7 @@ async def info(interaction : discord.Interaction, type : discord.app_commands.Ch
         await send_message_as_file(interaction, answer)
         
 
-async def feedback(interaction : discord.Interaction):
+async def feedback(interaction: discord.Interaction):
     """Interaction to handle the `/feedback` command. It sends the `feedback` to the feedback channel."""
 
     class Feedback_Modal(discord.ui.Modal, title='Feedback'):
@@ -72,7 +72,7 @@ async def feedback(interaction : discord.Interaction):
 
 
 @error_handler_decorator()
-async def pick(interaction : discord.Interaction, decision : str):
+async def pick(interaction: discord.Interaction, decision: str):
     """Interaction to handle the `/pick` command. It sends the `pick` to the pick channel."""
     await interaction.response.defer(ephemeral=True)
 
@@ -88,7 +88,7 @@ async def pick(interaction : discord.Interaction, decision : str):
 
 
 @error_handler_decorator()
-async def poll(interaction : discord.Interaction, poll_name : str, options : list[str]):
+async def poll(interaction: discord.Interaction, poll_name: str, options: list[str]):
     """Interaction to handle the `/poll` command. It sends an embed with the options provided adding one reaction per possible option."""
     await interaction.response.defer(ephemeral=False)
     reactions = Emojis().get_poll_emojis(len(options))

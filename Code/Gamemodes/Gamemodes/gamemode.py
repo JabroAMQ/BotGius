@@ -5,15 +5,15 @@ class Gamemode:
 
     def __init__(
         self,
-        gamemode_id : int,
-        gamemode_name : str,
-        gamemode_size : int,
-        gamemode_code : str,
-        watched_song_selection : bool,
-        random_song_distribution : bool,
-        weighted_song_distribution : bool,
-        equal_song_distribution : bool,
-        gamemode_info : str,
+        gamemode_id: int,
+        gamemode_name: str,
+        gamemode_size: int,
+        gamemode_code: str,
+        watched_song_selection: bool,
+        random_song_distribution: bool,
+        weighted_song_distribution: bool,
+        equal_song_distribution: bool,
+        gamemode_info: str,
     ) -> None:
         """
         Constructor of the Gamemode class.
@@ -53,7 +53,7 @@ class Gamemode:
         return self._name
     
     @name.setter
-    def name(self, new_name : str) -> None:
+    def name(self, new_name: str) -> None:
         self._name = new_name
 
     
@@ -62,7 +62,7 @@ class Gamemode:
         return self._size
 
     @size.setter
-    def size(self, new_size : int) -> None:
+    def size(self, new_size: int) -> None:
         self._size = new_size
 
 
@@ -71,7 +71,7 @@ class Gamemode:
         return self._code
     
     @code.setter
-    def code(self, new_code : str) -> None:
+    def code(self, new_code: str) -> None:
         self._code = new_code
     
 
@@ -80,7 +80,7 @@ class Gamemode:
         return self._info
     
     @info.setter
-    def info(self, new_info : str) -> None:
+    def info(self, new_info: str) -> None:
         self._info = new_info
 
 
@@ -89,7 +89,7 @@ class Gamemode:
         return self._watched_song_selection
 
     @watched_song_selection.setter
-    def watched_song_selection(self, new_watcehd_song_selection : bool) -> None:
+    def watched_song_selection(self, new_watcehd_song_selection: bool) -> None:
         self._watched_song_selection = new_watcehd_song_selection
 
 
@@ -98,7 +98,7 @@ class Gamemode:
         return self._random_song_distribution
     
     @random_song_distribution.setter
-    def random_song_distribution(self, new_random_song_distribution : bool) -> None:
+    def random_song_distribution(self, new_random_song_distribution: bool) -> None:
         self._random_song_distribution = new_random_song_distribution
     
 
@@ -107,7 +107,7 @@ class Gamemode:
         return self._weighted_song_distribution
     
     @weighted_song_distribution.setter
-    def weighted_song_distribution(self, new_weighted_song_distribution : bool) -> None:
+    def weighted_song_distribution(self, new_weighted_song_distribution: bool) -> None:
         self._weighted_song_distribution = new_weighted_song_distribution
 
     
@@ -116,7 +116,7 @@ class Gamemode:
         return self._equal_song_distribution
     
     @equal_song_distribution.setter
-    def equal_song_distribution(self, new_equal_song_distribution : bool) -> None:
+    def equal_song_distribution(self, new_equal_song_distribution: bool) -> None:
         self._equal_song_distribution = new_equal_song_distribution
 
 
@@ -168,7 +168,7 @@ class Gamemode:
         return info
 
 
-    def __eq__(self, other : object) -> bool:
+    def __eq__(self, other: object) -> bool:
         """
         Check whether 2 gamemodes are equal.\n
         Based on the gamemodes ids (database).
@@ -178,7 +178,7 @@ class Gamemode:
         
         return self.id == other.id
     
-    def __lt__(self, other : object) -> bool:
+    def __lt__(self, other: object) -> bool:
         """
         Check whether this gamemode is lower than another one.\n
         Based on the gamemode size and, if equal size, gamemode name (lowercase).

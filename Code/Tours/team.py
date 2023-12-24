@@ -6,7 +6,7 @@ from Code.Others.roles import Roles
 
 class Team:
 
-    def __init__(self, guild_id : int, team_id : int) -> None:
+    def __init__(self, guild_id: int, team_id: int) -> None:
         self._name = Teams(team_id).name.replace('_', ' ')
         self._role_index = team_id
         self._guild_id = guild_id
@@ -22,7 +22,7 @@ class Team:
         return self._players
 
 
-    async def add_player(self, client : discord.Client, player : Player) -> bool:
+    async def add_player(self, client: discord.Client, player: Player) -> bool:
         """Add a player to the team. Return whether the player was added (False if they were already in the team)."""
         if player in self.players:
             return False
@@ -32,7 +32,7 @@ class Team:
         self.players.append(player)
         return True
 
-    async def remove_player(self, client : discord.Client, player : Player) -> bool:
+    async def remove_player(self, client: discord.Client, player: Player) -> bool:
         """Remove a player from the team. Return whether the player was removed (False if they were not in the team)."""
         if player not in self.players:
             return False
@@ -42,11 +42,12 @@ class Team:
         self.players.remove(player)
         return True
 
-    async def reset_roles(self, guild : discord.Guild) -> None:
+    async def reset_roles(self, guild: discord.Guild) -> None:
         """Clear all the roles from the players without removing them from their team."""
-        [await Roles().remove_team_roles(guild, player.discord_id) for player in self.players]
+        for player in self.players:
+            await Roles().remove_team_roles(guild, player.discord_id)
 
-    def display_team(self, sort : bool = True) -> str:
+    def display_team(self, sort: bool = True) -> str:
         """Return a `str` with the information about the team's players list escaping markdown characters."""
         players_count = len(self.players)
         players = sorted(self.players) if sort else self.players

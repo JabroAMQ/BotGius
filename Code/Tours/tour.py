@@ -13,13 +13,13 @@ class Tour:
 
     def __init__(
         self,
-        tour_id : int,
-        host : discord.User,
-        guild : discord.Guild,
-        timer : float = None,
-        max_players_size : int = None,
-        counts_for_elo : bool = False,
-        tour_info : str = ''
+        tour_id: int,
+        host: discord.User,
+        guild: discord.Guild,
+        timer: float = None,
+        max_players_size: int = None,
+        counts_for_elo: bool = False,
+        tour_info: str = ''
     ) -> None:
         """Constructor of the Tour class."""
         self._tour_id = tour_id
@@ -29,7 +29,7 @@ class Tour:
         self._is_tour_active = True
 
         self._timer = None
-        self._task : asyncio.Task = None   # inform host that timer ended task
+        self._task: asyncio.Task = None   # inform host that timer ended task
         self._set_timer(timer)
 
         self._max_players_size = max_players_size
@@ -66,7 +66,7 @@ class Tour:
         return self._is_tour_open
     
     @is_tour_open.setter
-    def is_tour_open(self, new_is_tour_open : bool) -> None:
+    def is_tour_open(self, new_is_tour_open: bool) -> None:
         self._is_tour_open = new_is_tour_open
 
     @property
@@ -74,7 +74,7 @@ class Tour:
         return self._is_tour_active
     
     @is_tour_active.setter
-    def is_tour_active(self, new_is_tour_active : bool) -> None:
+    def is_tour_active(self, new_is_tour_active: bool) -> None:
         self._is_tour_active = new_is_tour_active
     
 
@@ -84,7 +84,7 @@ class Tour:
         return self._timer
     
     @timer.setter
-    def timer(self, new_timer : float | None) -> None:
+    def timer(self, new_timer: float | None) -> None:
         self._set_timer(new_timer=new_timer)
 
     
@@ -93,7 +93,7 @@ class Tour:
         return self._max_players_size
     
     @max_players_size.setter
-    def max_players_size(self, new_max_players_size : int | None) -> None:
+    def max_players_size(self, new_max_players_size: int | None) -> None:
         self._max_players_size = new_max_players_size
 
     
@@ -102,7 +102,7 @@ class Tour:
         return self._counts_for_elo
     
     @counts_for_elo.setter
-    def counts_for_elo(self, new_counts_for_elo : bool) -> None:
+    def counts_for_elo(self, new_counts_for_elo: bool) -> None:
         self._counts_for_elo = new_counts_for_elo
     
 
@@ -111,7 +111,7 @@ class Tour:
         return self._tour_info
     
     @tour_info.setter
-    def tour_info(self, new_tour_info : str) -> None:
+    def tour_info(self, new_tour_info: str) -> None:
         self._tour_info = new_tour_info
 
 
@@ -120,7 +120,7 @@ class Tour:
         return self._join_message
     
     @join_message.setter
-    def join_message(self, new_join_message : discord.Message) -> None:
+    def join_message(self, new_join_message: discord.Message) -> None:
         self._join_message = new_join_message
     
 
@@ -129,7 +129,7 @@ class Tour:
         return self._players_message
     
     @players_message.setter
-    def players_message(self, new_player_message : discord.Message) -> None:
+    def players_message(self, new_player_message: discord.Message) -> None:
         self._players_message = new_player_message
     
 
@@ -156,7 +156,7 @@ class Tour:
         return self.timer is None or self.timer > datetime.now().timestamp()
 
 
-    async def _inform_host_timer_ended(self, timer : float):
+    async def _inform_host_timer_ended(self, timer: float):
         """Inform the host that the timer has ended."""
         await asyncio.sleep(timer)
         try:
@@ -176,7 +176,7 @@ class Tour:
             pass
     
 
-    def _set_timer(self, new_timer : float | None) -> None:
+    def _set_timer(self, new_timer: float | None) -> None:
         """Update the timer and create an asyncio task to send a message to the host's dms once the timer is finished."""
         self._timer = datetime.now().timestamp() + new_timer * 60 if new_timer is not None else None
 
@@ -208,7 +208,7 @@ class Tour:
         return embed
     
 
-    def _display_tour_players(self, sort : bool) -> str:
+    def _display_tour_players(self, sort: bool) -> str:
         """Return a `str` with the information about the players's list escaping markdown characters."""
         players_count = len(self.players)
         players = sorted(self.players) if sort else self.players
@@ -217,7 +217,7 @@ class Tour:
         summary = f'**Players ({players_count}):** {players_data}'
         return summary
     
-    def _display_tour_queue(self, sort : bool) -> str:
+    def _display_tour_queue(self, sort: bool) -> str:
         """Return a `str` with the information about the players's queue escaping markdown characters."""
         queue_count = len(self.queue)
         queue = sorted(self.queue) if sort else self.queue
@@ -226,7 +226,7 @@ class Tour:
         summary = f'**Queue ({queue_count}):** {queue_data}'
         return summary
     
-    def display_tour_players_and_queue(self, sort : bool = False) -> str:
+    def display_tour_players_and_queue(self, sort: bool = False) -> str:
         """Return a `str` with the information about the players's list and queue escaping markdown characters."""
         return f'{self._display_tour_players(sort)}\n{self._display_tour_queue(sort)}'
 
@@ -235,9 +235,9 @@ class Tour:
         return ' '.join([player.discord_ping for player in self.players])
     
 
-    def get_tour_player(self, player_name : str) -> Player | None:
+    def get_tour_player(self, player_name: str) -> Player | None:
         """Given the name of a player, return the closest match among all the tours players to `player.amq_name` (or `None` if a close enough match couldn't be found)."""
-        players_by_names = {player.amq_name.lower() : player for player in self.players}
+        players_by_names = {player.amq_name.lower(): player for player in self.players}
         possibilities = [player.amq_name.lower() for player in self.players]
         closest_matches = difflib.get_close_matches(player_name.lower(), possibilities)
         
@@ -247,7 +247,7 @@ class Tour:
         return closest_match
 
 
-    def add_player(self, player : Player, privileged : bool = False) -> tuple[bool, bool]:
+    def add_player(self, player: Player, privileged: bool = False) -> tuple[bool, bool]:
         """
         Add a player to the tour's player list.\n
         `privileged` value can be set in order to ignore some restrictions (i.e. the timer).\n
@@ -258,7 +258,6 @@ class Tour:
         # NOTE Splitting privileged and not privileged completely for easier understanding
         if not privileged:
             # CASE 1: Player don't join neither players's list nor queue:
-            # TODO Add if player is banned from tours check as well... maybe?
             if not self.is_tour_open or player in self.players:
                 return False, False
 
@@ -304,7 +303,7 @@ class Tour:
             return True, True
     
 
-    async def remove_player(self, client : discord.Client, player : Player) -> tuple[bool, bool]:
+    async def remove_player(self, client: discord.Client, player: Player) -> tuple[bool, bool]:
         """
         Remove a player from the tour.\n
         Return a tuple consisting of 2 booleans:
@@ -335,7 +334,7 @@ class Tour:
         return True, True
     
 
-    async def from_player_list_to_queue(self, client : discord.Client, player : Player) -> bool:
+    async def from_player_list_to_queue(self, client: discord.Client, player: Player) -> bool:
         """
         Move a player from the players's list to the top of the queue.\n
         It also removes the player from the team, if they were in one.\n
@@ -354,7 +353,7 @@ class Tour:
         return True
     
 
-    async def add_to_team(self, client : discord.Client, team_index : int, player : Player) -> bool:
+    async def add_to_team(self, client: discord.Client, team_index: int, player: Player) -> bool:
         """Add a player to a team. Return whether the player was added (False if they were already in the team)."""
         # Make sure the player doesn't end up in more than one team
         for index, team in enumerate(self.teams):
@@ -367,7 +366,7 @@ class Tour:
         return await self.teams[team_index].add_player(client, player)
     
 
-    async def remove_from_team(self, client : discord.Client, team_index : int, player : Player) -> bool:
+    async def remove_from_team(self, client: discord.Client, team_index: int, player: Player) -> bool:
         """Remove a player from a team. Return whether the player was removed (False if they were not in the team)."""
         try:
             team = self.teams[team_index]

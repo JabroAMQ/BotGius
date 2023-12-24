@@ -7,10 +7,10 @@ from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 class Gamemodes_Controller:
     """Controller to encapsule the Gamemodes Logic from the rest of the application."""
 
-    def __init__(self, gamemodes_descriptions : dict[str, str]) -> None:
+    def __init__(self, gamemodes_descriptions: dict[str, str]) -> None:
         """Retrieve all the Gamemodes from the Database and load them into memory through the Gamemodes's Catalogs (by id and name)."""
-        self.gamemodes_by_ids : dict[int, Gamemode] = {}
-        self.gamemodes_by_names : dict[str, Gamemode] = {}
+        self.gamemodes_by_ids: dict[int, Gamemode] = {}
+        self.gamemodes_by_names: dict[str, Gamemode] = {}
 
         for gamemode_data in Gamemodes_Database.get_all_gamemodes():
             name = gamemode_data[0]
@@ -22,15 +22,15 @@ class Gamemodes_Controller:
 
     def _add_gamemode_to_catalogs(
         self,
-        gamemode_name : str,
-        gamemode_size : int,
-        gamemode_code : str,
-        is_gamemode_watched : bool,
-        is_random_dist_rollable : bool,
-        is_weighted_dist_rollable : bool,
-        is_equal_dist_rollable : bool,
-        gamemode_id : int,
-        gamemode_description : str
+        gamemode_name: str,
+        gamemode_size: int,
+        gamemode_code: str,
+        is_gamemode_watched: bool,
+        is_random_dist_rollable: bool,
+        is_weighted_dist_rollable: bool,
+        is_equal_dist_rollable: bool,
+        gamemode_id: int,
+        gamemode_description: str
     ) -> None:
         """Create the gamemode given its data and store it in the Gamemodes catalogs (by id and name (lowercase))."""
         try:
@@ -54,13 +54,13 @@ class Gamemodes_Controller:
         self.gamemodes_by_names[gamemode_name.lower()] = new_gamemode
 
 
-    def _get_gamemode_by_name(self, gamemode_name : str) -> Gamemode | None:
+    def _get_gamemode_by_name(self, gamemode_name: str) -> Gamemode | None:
         """Return the gamemode which name is the most similar to the `gamemode_name` provided as argument (or None if a not close enough match was found)."""
         closest_matches = difflib.get_close_matches(gamemode_name.lower(), self.gamemodes_by_names.keys())
         closest_match = closest_matches[0] if closest_matches else None
         return self.gamemodes_by_names.get(closest_match) if closest_match is not None else None
     
-    def get_gamemode(self, gamemode : int | str) -> Gamemode | None:
+    def get_gamemode(self, gamemode: int | str) -> Gamemode | None:
         """
         Return the gamemode based on either the name or the id provided as argument.\n
         If a string is provided as argument, the gamemode with the closest match to the name provided will be returned.\n
@@ -102,10 +102,10 @@ class Gamemodes_Controller:
 
     def _ensure_valid_gamemode_values(
         self,
-        watched_song_selection : bool,
-        random_song_distribution : bool,
-        weighted_song_distribution : bool,
-        equal_song_distribution : bool
+        watched_song_selection: bool,
+        random_song_distribution: bool,
+        weighted_song_distribution: bool,
+        equal_song_distribution: bool
     ) -> tuple[bool, bool, bool, bool]:
         """Method that make sure that gamemode fields's values are valid, modifying them accordingly in order to ensure this."""
         # Make sure that watched distributions are False if song distribution is not watched (or hybrid)
@@ -121,13 +121,13 @@ class Gamemodes_Controller:
 
     def add_gamemode(
         self,
-        gamemode_name : str,
-        gamemode_size : int,
-        gamemode_code : str,
-        is_watched : bool,
-        is_random_dist_rollable : bool,
-        is_weighted_dist_rollable : bool,
-        is_equal_dist_rollable : bool
+        gamemode_name: str,
+        gamemode_size: int,
+        gamemode_code: str,
+        is_watched: bool,
+        is_random_dist_rollable: bool,
+        is_weighted_dist_rollable: bool,
+        is_equal_dist_rollable: bool
     ) -> tuple[bool, str]:
         """
         Create a gamemode with the provided data, storing it into the database and memory (through the gamemodes's catalogs).\n
@@ -177,7 +177,7 @@ class Gamemodes_Controller:
         return True, log_message
 
 
-    def delete_gamemode(self, gamemode : Gamemode) -> bool:
+    def delete_gamemode(self, gamemode: Gamemode) -> bool:
         """
         Delete the gamemode provided as argument from the database and the catalogs.\n
         Return `True` if the gamemode was deleted successfully, `False` otherwise.
@@ -195,12 +195,12 @@ class Gamemodes_Controller:
 
     def get_gamemode_old_values(
         self,
-        gamemode : Gamemode,
-        new_name : str | None,
-        new_code : str | None,
-        new_random : bool | None,
-        new_weighted : bool | None,
-        new_equal : bool | None
+        gamemode: Gamemode,
+        new_name: str | None,
+        new_code: str | None,
+        new_random: bool | None,
+        new_weighted: bool | None,
+        new_equal: bool | None
     ) -> tuple[bool, str | None, str | None, bool | None, bool | None, bool | None]:
         """
         For each of the gamemode fields editable (those that have a parameter in this function), return `None` if a new value wasn't provided or if the new
@@ -228,12 +228,12 @@ class Gamemodes_Controller:
 
     def edit_gamemode(
         self,
-        gamemode_name : str,
-        new_name : str | None,
-        new_code : str | None,
-        new_random : bool | None,
-        new_weighted : bool | None,
-        new_equal : bool | None
+        gamemode_name: str,
+        new_name: str | None,
+        new_code: str | None,
+        new_random: bool | None,
+        new_weighted: bool | None,
+        new_equal: bool | None
     ) -> bool:
         """
         Edit the gamemode with name `gamemode_name`.

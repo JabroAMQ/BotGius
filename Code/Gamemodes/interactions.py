@@ -10,14 +10,14 @@ from Code.Others.channels import Channels
 
 @error_handler_decorator()
 async def gamemode_add(
-    interaction : discord.Interaction,
-    gamemode_name : str,
-    gamemode_size : int,
-    gamemode_code : str,
-    is_gamemode_watched : bool,
-    is_random_dist_rollable : bool,
-    is_weighted_dist_rollable : bool,
-    is_equal_dist_rollable : bool
+    interaction: discord.Interaction,
+    gamemode_name: str,
+    gamemode_size: int,
+    gamemode_code: str,
+    is_gamemode_watched: bool,
+    is_random_dist_rollable: bool,
+    is_weighted_dist_rollable: bool,
+    is_equal_dist_rollable: bool
 ):
     """Interaction to handle the `/gamemode_add` command. It stores in the gamemodes's Database and Catalog the new gamemode created with the provided information."""
     await interaction.response.defer(ephemeral=True)
@@ -43,17 +43,17 @@ async def gamemode_add(
     await interaction.followup.send(content='Gamemode added successfully!', ephemeral=True)
 
 @error_handler_decorator()
-async def gamemode_delete(interaction : discord.Interaction, gamemode_name : str):
+async def gamemode_delete(interaction: discord.Interaction, gamemode_name: str):
     """Interaction to handle the `/gamemode_delete` command. It deletes from the gamemodes's Database and Catalog the gamemode which has the name provided."""
     
     class confirm_elimination_view(discord.ui.View):
-        def __init__(self, gamemode : Gamemode):
+        def __init__(self, gamemode: Gamemode):
             super().__init__(timeout=60)
             self.gamemode = gamemode
             self.already_deleted = False
         
         @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
-        async def confirm(self, new_interaction : discord.Interaction, _ = discord.Button):
+        async def confirm(self, new_interaction: discord.Interaction, _ = discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             if self.already_deleted:
                 await new_interaction.followup.send(content='The gamemode has already been deleted', ephemeral=True)
@@ -98,26 +98,26 @@ async def gamemode_delete(interaction : discord.Interaction, gamemode_name : str
 
 @error_handler_decorator()
 async def gamemode_edit(
-    interaction : discord.Interaction,
-    gamemode_name : str,
-    new_name : str | None,
-    new_code : str | None,
-    new_random_song_distribution : bool | None,
-    new_weighted_song_distribution : bool | None,
-    new_equal_song_distribution : bool | None,
+    interaction: discord.Interaction,
+    gamemode_name: str,
+    new_name: str | None,
+    new_code: str | None,
+    new_random_song_distribution: bool | None,
+    new_weighted_song_distribution: bool | None,
+    new_equal_song_distribution: bool | None,
 ):
     """Interaction to handle the `/gamemode_edit` command. It display a select menu where the user can choose what gamemode's property to edit (and edit it afterwards)."""
 
     class confirm_changes_view(discord.ui.View):
         def __init__(
             self,
-            gamemode : Gamemode,
-            name : str | None,
-            code : str | None,
-            random_distribution : bool | None,
-            weighted_distribution : bool | None,
-            equal_distribution : bool | None,
-            content : str
+            gamemode: Gamemode,
+            name: str | None,
+            code: str | None,
+            random_distribution: bool | None,
+            weighted_distribution: bool | None,
+            equal_distribution: bool | None,
+            content: str
         ):
             super().__init__(timeout=60)
             self.gamemode = gamemode
@@ -131,7 +131,7 @@ async def gamemode_edit(
             self.changes_already_applied = False
         
         @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
-        async def confirm(self, new_interaction : discord.Interaction, _ = discord.Button):
+        async def confirm(self, new_interaction: discord.Interaction, _ = discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             if self.changes_already_applied:
                 await new_interaction.followup.send(content='The changes have already been applied', ephemeral=True)
@@ -209,17 +209,17 @@ async def gamemode_edit(
 
 
 @error_handler_decorator()
-async def get_code(interaction : discord.Interaction, gamemode_name : str):
+async def get_code(interaction: discord.Interaction, gamemode_name: str):
     """Interaction to handle the `/gamemode_code` command. It returns the code of the gamemode asked for with a button that allows to display its description when clicked."""
     
     class get_info_view(discord.ui.View):
-        def __init__(self, gamemode : Gamemode):
+        def __init__(self, gamemode: Gamemode):
             super().__init__(timeout=60)
             self.gamemode = gamemode
 
         @discord.ui.button(label='info', style=discord.ButtonStyle.green)
         @error_handler_decorator()
-        async def get_info(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
+        async def get_info(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             await new_interaction.response.defer()
             new_content = self.gamemode.display_info_details()
             await new_interaction.followup.send(content=new_content)
@@ -238,17 +238,17 @@ async def get_code(interaction : discord.Interaction, gamemode_name : str):
 
 
 @error_handler_decorator()
-async def get_info(interaction : discord.Interaction, gamemode_name : str):
+async def get_info(interaction: discord.Interaction, gamemode_name: str):
     """Interaction to handle the `/gamemode_info` command. It returns the description of the gamemode asked for with a button that allows to display its code when clicked."""
     
     class get_code_view(discord.ui.View):
-        def __init__(self, gamemode : Gamemode):
+        def __init__(self, gamemode: Gamemode):
             super().__init__(timeout=60)
             self.gamemode = gamemode
 
         @discord.ui.button(label='code', style=discord.ButtonStyle.green)
         @error_handler_decorator()
-        async def get_code(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
+        async def get_code(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             await new_interaction.response.defer()
             new_content = self.gamemode.display_code_details()
             await new_interaction.followup.send(content=new_content)
@@ -267,7 +267,7 @@ async def get_info(interaction : discord.Interaction, gamemode_name : str):
 
 
 @error_handler_decorator()
-async def roll(interaction : discord.Interaction, type : int):
+async def roll(interaction: discord.Interaction, type: int):
     """Interaction to handle the `/roll` command. It rolls a possible value given the type chosen."""
     await interaction.response.defer(ephemeral=False)
     enum_type = Rolls_Enum(type)
@@ -276,25 +276,25 @@ async def roll(interaction : discord.Interaction, type : int):
 
 
 @error_handler_decorator()
-async def roll_gamemode(interaction : discord.Interaction, type : int):
+async def roll_gamemode(interaction: discord.Interaction, type: int):
     """Interaction to handle the `/roll_gamemode` command. It rolls a possible gamemode given the type chosen."""
     
     class Roll_Gamemode_View(discord.ui.View):
 
-        def __init__(self, gamemode : Gamemode) -> None:
+        def __init__(self, gamemode: Gamemode) -> None:
             super().__init__(timeout=180)
             self.gamemode = gamemode
 
         @discord.ui.button(label='code', style=discord.ButtonStyle.green)
         @error_handler_decorator()
-        async def get_code(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
+        async def get_code(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             await new_interaction.response.defer()
             new_content = self.gamemode.display_code_details()
             await new_interaction.followup.send(content=new_content)
 
         @discord.ui.button(label='info', style=discord.ButtonStyle.green)
         @error_handler_decorator()
-        async def get_info(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
+        async def get_info(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             await new_interaction.response.defer()
             new_content = self.gamemode.display_info_details()
             await new_interaction.followup.send(content=new_content)
@@ -310,16 +310,16 @@ async def roll_gamemode(interaction : discord.Interaction, type : int):
 
 
 def _get_gamemode_edit_log(
-    old_name : str | None,
-    new_name : str | None,
-    old_code : str | None,
-    new_code : str | None,
-    old_random_distribution : bool | None,
-    new_random_distribution : bool | None,
-    old_weighted_distribution : bool | None,
-    new_weighted_distribution : bool | None,
-    old_equal_distribution : bool | None,
-    new_equal_distribution : bool | None
+    old_name: str | None,
+    new_name: str | None,
+    old_code: str | None,
+    new_code: str | None,
+    old_random_distribution: bool | None,
+    new_random_distribution: bool | None,
+    old_weighted_distribution: bool | None,
+    new_weighted_distribution: bool | None,
+    old_equal_distribution: bool | None,
+    new_equal_distribution: bool | None
 ) -> str:
     """Auxiliar method to get the log content of the `/gamemode_edit` interaction."""
     content = f'**Name**:\n- **Old:** `{old_name}`\n- **New:** `{new_name}`\n' if old_name is not None else ''

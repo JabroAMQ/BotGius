@@ -10,7 +10,7 @@ from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 from Code.Others.channels import Channels
 
 @error_handler_decorator()
-async def player_register(interaction : discord.Interaction, amq_name : str):
+async def player_register(interaction: discord.Interaction, amq_name: str):
     """Interaction to handle the `/player_register` command. It stores in the player's Database and Catalog the new player created with the provided information."""
     await interaction.response.defer(ephemeral=True)
     register_ok, other_player_ping = Players_Controller().register_player(discord_id=interaction.user.id, amq_name=amq_name)
@@ -30,7 +30,7 @@ async def player_register(interaction : discord.Interaction, amq_name : str):
     await interaction.followup.send(content='Registration complete successfully!', ephemeral=True)
 
 @error_handler_decorator()
-async def player_change_amq(interaction : discord.Interaction, new_amq_name : str):
+async def player_change_amq(interaction: discord.Interaction, new_amq_name: str):
     """Interaction to handle the `/player_change_amq` command. It modifies the `amq_name` field of the player using the command."""
     await interaction.response.defer(ephemeral=True)
 
@@ -58,7 +58,7 @@ async def player_change_amq(interaction : discord.Interaction, new_amq_name : st
 
 
 @error_handler_decorator()
-async def player_change_other_amq(interaction : discord.Interaction, player_old_amq : str, player_new_amq : str):
+async def player_change_other_amq(interaction: discord.Interaction, player_old_amq: str, player_new_amq: str):
     """Interaction to handle the `/player_change_other_amq` command. It modifies the `amq_name` field of the player with `amq_name == player_old_amq`."""
     await interaction.response.defer(ephemeral=True)
 
@@ -95,7 +95,7 @@ async def player_change_other_amq(interaction : discord.Interaction, player_old_
 
 
 @error_handler_decorator()
-async def player_get_profile(interaction : discord.Interaction, amq_name : str, discord_name : str):
+async def player_get_profile(interaction: discord.Interaction, amq_name: str, discord_name: str):
     """
     Interaction to handle the `/player_get_profile` command. It displays an embed with information abou the user
     and a view with 2 buttons that allows the users to display more information abou them.
@@ -103,18 +103,18 @@ async def player_get_profile(interaction : discord.Interaction, amq_name : str, 
 
     class Player_Get_Profile_View(discord.ui.View):
 
-        def __init__(self, player : Player, initial_page : int):
+        def __init__(self, player: Player, initial_page: int):
             super().__init__(timeout=180)
             self.player = player
             self.current_page = initial_page
 
         @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.green)
-        async def previous_profile_page(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
+        async def previous_profile_page(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             embed, self.current_page = await self.player.get_profile_embed(new_interaction.client, self.current_page - 1)
             await new_interaction.response.edit_message(embed=embed)
 
         @discord.ui.button(emoji='➡️', style=discord.ButtonStyle.green)
-        async def next_profile_page(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
+        async def next_profile_page(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             embed, self.current_page = await self.player.get_profile_embed(new_interaction.client, self.current_page + 1)
             await new_interaction.response.edit_message(embed=embed)
 
@@ -133,7 +133,7 @@ async def player_get_profile(interaction : discord.Interaction, amq_name : str, 
     
     # Check if player was obtained successfully
     if player is None:
-        content = 'I couldn\'t find a player with the provided argument :('
+        content = 'I couldn\'t find a player with the provided argument :worried:'
         await interaction.followup.send(content=content, ephemeral=False)
         return
 
@@ -143,7 +143,7 @@ async def player_get_profile(interaction : discord.Interaction, amq_name : str, 
 
 
 @error_handler_decorator()
-async def player_change_list(interaction : discord.Interaction, new_list_name : str, new_list_from : str, new_list_sections : str):
+async def player_change_list(interaction: discord.Interaction, new_list_name: str, new_list_from: str, new_list_sections: str):
     """Interaction to handle the `/player_change_list` command. It modifies the list fields of the player using the command."""
     await interaction.response.defer(ephemeral=True)
 
@@ -164,12 +164,12 @@ async def player_change_list(interaction : discord.Interaction, new_list_name : 
 
 
 @error_handler_decorator()
-async def player_change_mode(interaction : discord.Interaction, type : discord.app_commands.Choice[int]):
+async def player_change_mode(interaction: discord.Interaction, type: discord.app_commands.Choice[int]):
     """Interaction to handle the `/player_change_mode` command. It modifies the `type` field of the player using the command."""
     
     class Gamemodes_Dropdown(discord.ui.Select):
         
-        def __init__(self, option : int, gamemodes : list[Gamemode]):
+        def __init__(self, option: int, gamemodes: list[Gamemode]):
             options = [discord.SelectOption(label=gamemode.name, value=gamemode.id) for gamemode in gamemodes]
             super().__init__(placeholder='Choose Gamemode', options=options)
             self.option = option
@@ -183,7 +183,7 @@ async def player_change_mode(interaction : discord.Interaction, type : discord.a
 
     class Gamemodes_Dropdown_View(discord.ui.View):
         
-        def __init__(self, option : int, gamemodes : list[Gamemode]):
+        def __init__(self, option: int, gamemodes: list[Gamemode]):
             super().__init__(timeout=180)
 
             # Splitting gamemodes list into sublists with a max size of 25 gamemodes (max gamemodes that can be displayable into a select menu)
@@ -217,7 +217,7 @@ async def player_change_mode(interaction : discord.Interaction, type : discord.a
 
 
 @error_handler_decorator()
-async def player_change_rank(interaction : discord.Interaction, amq_name : str, new_rank : str):
+async def player_change_rank(interaction: discord.Interaction, amq_name: str, new_rank: str):
     """Interaction to handle the `/player_change_rank` command. It modifies the `rank` field of the player with `name` == `amq_name`."""
     await interaction.response.defer(ephemeral=True)
 
@@ -236,7 +236,7 @@ async def player_change_rank(interaction : discord.Interaction, amq_name : str, 
 
 
 @error_handler_decorator()
-async def player_show_ranking(interaction : discord.Interaction, rank_page : str):
+async def player_show_ranking(interaction: discord.Interaction, rank_page: str):
     """
     Interaction to handle the `/player_show_ranking` command. It displays an embed with all the players that have `rank_page` as their Rank
     and a view with 2 buttons that allows the users to display the information about other ranks.
@@ -244,17 +244,17 @@ async def player_show_ranking(interaction : discord.Interaction, rank_page : str
 
     class Player_Show_Ranking_View(discord.ui.View):
 
-        def __init__(self, initial_page : int):
+        def __init__(self, initial_page: int):
             super().__init__(timeout=180)
             self.current_page = initial_page
 
         @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.green)
-        async def show_previous_page(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
+        async def show_previous_page(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             embed, self.current_page = Ranking().get_rank_embed(new_interaction.guild, self.current_page - 1)
             await new_interaction.response.edit_message(embed=embed)
 
         @discord.ui.button(emoji='➡️', style=discord.ButtonStyle.green)
-        async def show_next_page(self, new_interaction : discord.Interaction, _ : discord.ui.Button):
+        async def show_next_page(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             embed, self.current_page = Ranking().get_rank_embed(new_interaction.guild, self.current_page + 1)
             await new_interaction.response.edit_message(embed=embed)
 

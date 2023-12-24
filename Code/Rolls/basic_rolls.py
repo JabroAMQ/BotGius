@@ -11,7 +11,7 @@ class Roll:
     """Static class that contains methods to produce all basic rolls."""
 
     @staticmethod
-    def roll(type : enums.Rolls_Enum, as_str : bool = False) -> str | Artist | SpecialList | GlobalPlayer:
+    def roll(type: enums.Rolls_Enum, as_str: bool = False) -> str | Artist | SpecialList | GlobalPlayer:
         """
         Roll some stuff (no gamemodes) based on the `type` value\n.
         Returns the roll itself if `as_str` = False or an string representation of the roll with some additional information if `as_str` = True.
@@ -80,7 +80,7 @@ class Roll:
 
 
     @staticmethod
-    def roll_gamemode(type : enums.Roll_Gamemode = enums.Roll_Gamemode.ALL_GAMEMODES) -> Gamemode:
+    def roll_gamemode(type: enums.Roll_Gamemode = enums.Roll_Gamemode.ALL_GAMEMODES) -> Gamemode:
         """Roll a gamemode."""
         gamemodes = Main_Controller().get_gamemodes()
 

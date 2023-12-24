@@ -9,20 +9,20 @@ class Player:
 
     def __init__(
         self,
-        discord_id : int,
-        amq_name : str,
-        rank : str = 'None',
-        elo : int = 0,
-        list_name : str = 'TBD',
-        list_from : str = 'TBD',
-        list_sections : str = 'TBD',
-        fav_1v1_gamemode_id : int = None,
-        hated_1v1_gamemode_id : int = None,
-        fav_2v2_gamemode_id : int = None,
-        hated_2v2_gamemode_id : int = None,
-        fav_4v4_gamemode_id : int = None,
-        hated_4v4_gamemode_id : int = None,
-        is_banned : bool = False
+        discord_id: int,
+        amq_name: str,
+        rank: str = 'None',
+        elo: int = 0,
+        list_name: str = 'TBD',
+        list_from: str = 'TBD',
+        list_sections: str = 'TBD',
+        fav_1v1_gamemode_id: int = None,
+        hated_1v1_gamemode_id: int = None,
+        fav_2v2_gamemode_id: int = None,
+        hated_2v2_gamemode_id: int = None,
+        fav_4v4_gamemode_id: int = None,
+        hated_4v4_gamemode_id: int = None,
+        is_banned: bool = False
     ) -> None:
         """Constructor of the Player class."""
         self._discord_id = discord_id
@@ -59,7 +59,7 @@ class Player:
         return self._amq_name
     
     @amq_name.setter
-    def amq_name(self, new_amq_name : str) -> None:
+    def amq_name(self, new_amq_name: str) -> None:
         self._amq_name = new_amq_name
 
     @property
@@ -67,7 +67,7 @@ class Player:
         return Ranking().get_rank(self._rank)
     
     @rank.setter
-    def rank(self, new_rank : str) -> None:
+    def rank(self, new_rank: str) -> None:
         self._rank = new_rank
     
     @property
@@ -75,7 +75,7 @@ class Player:
         return self._is_banned
     
     @is_banned.setter
-    def is_banned(self, new_is_banned : bool) -> None:
+    def is_banned(self, new_is_banned: bool) -> None:
         self._is_banned = new_is_banned
     
 
@@ -84,7 +84,7 @@ class Player:
         return self._list_name
     
     @list_name.setter
-    def list_name(self, new_list_name : str) -> None:
+    def list_name(self, new_list_name: str) -> None:
         self._list_name = new_list_name
 
     @property
@@ -92,7 +92,7 @@ class Player:
         return self._list_from
     
     @list_from.setter
-    def list_from(self, new_list_from : str) -> None:
+    def list_from(self, new_list_from: str) -> None:
         self._list_from = new_list_from
 
     @property
@@ -100,7 +100,7 @@ class Player:
         return self._list_sections
     
     @list_sections.setter
-    def list_sections(self, new_list_sections : str) -> None:
+    def list_sections(self, new_list_sections: str) -> None:
         self._list_sections = new_list_sections
 
     @property
@@ -108,7 +108,7 @@ class Player:
         return Gamemodes_Controller().get_gamemode(self._fav_1v1_gamemode_id) if self._fav_1v1_gamemode_id is not None else None
     
     @fav_1v1_gamemode.setter
-    def fav_1v1_gamemode(self, new_fav_1v1_gamemode_id : int) -> None:
+    def fav_1v1_gamemode(self, new_fav_1v1_gamemode_id: int) -> None:
         self._fav_1v1_gamemode_id = new_fav_1v1_gamemode_id
 
     @property
@@ -116,7 +116,7 @@ class Player:
         return Gamemodes_Controller().get_gamemode(self._fav_2v2_gamemode_id) if self._fav_2v2_gamemode_id is not None else None
     
     @fav_2v2_gamemode.setter
-    def fav_2v2_gamemode(self, new_fav_2v2_gamemode_id : int) -> None:
+    def fav_2v2_gamemode(self, new_fav_2v2_gamemode_id: int) -> None:
         self._fav_2v2_gamemode_id = new_fav_2v2_gamemode_id
 
     @property
@@ -124,7 +124,7 @@ class Player:
         return Gamemodes_Controller().get_gamemode(self._fav_4v4_gamemode_id) if self._fav_4v4_gamemode_id is not None else None
     
     @fav_4v4_gamemode.setter
-    def fav_4v4_gamemode(self, new_fav_4v4_gamemode_id : int) -> None:
+    def fav_4v4_gamemode(self, new_fav_4v4_gamemode_id: int) -> None:
         self._fav_4v4_gamemode_id = new_fav_4v4_gamemode_id
 
     @property
@@ -132,7 +132,7 @@ class Player:
         return Gamemodes_Controller().get_gamemode(self._hated_1v1_gamemode_id) if self._hated_1v1_gamemode_id is not None else None
     
     @hated_1v1_gamemode.setter
-    def hated_1v1_gamemode(self, new_hated_1v1_gamemode_id : int) -> None:
+    def hated_1v1_gamemode(self, new_hated_1v1_gamemode_id: int) -> None:
         self._hated_1v1_gamemode_id = new_hated_1v1_gamemode_id
 
     @property
@@ -140,7 +140,7 @@ class Player:
         return Gamemodes_Controller().get_gamemode(self._hated_2v2_gamemode_id) if self._hated_2v2_gamemode_id is not None else None
     
     @hated_2v2_gamemode.setter
-    def hated_2v2_gamemode(self, new_hated_2v2_gamemode_id : int) -> None:
+    def hated_2v2_gamemode(self, new_hated_2v2_gamemode_id: int) -> None:
         self._hated_2v2_gamemode_id = new_hated_2v2_gamemode_id
 
     @property
@@ -148,7 +148,7 @@ class Player:
         return Gamemodes_Controller().get_gamemode(self._hated_4v4_gamemode_id) if self._hated_4v4_gamemode_id is not None else None
     
     @hated_4v4_gamemode.setter
-    def hated_4v4_gamemode(self, new_hated_4v4_gamemode_id : int) -> None:
+    def hated_4v4_gamemode(self, new_hated_4v4_gamemode_id: int) -> None:
         self._hated_4v4_gamemode_id = new_hated_4v4_gamemode_id
 
 
@@ -170,7 +170,7 @@ class Player:
         return info
     
 
-    def has_gamemode_referenced(self, gamemode : Gamemode) -> bool:
+    def has_gamemode_referenced(self, gamemode: Gamemode) -> bool:
         """Return whether the player has referenced a gamemode as one of their favourite/most hated gamemodes."""
         match gamemode.size:
             case 1:
@@ -186,7 +186,7 @@ class Player:
                 return False
 
 
-    async def get_profile_embed(self, client : discord.Client, page : int = 0) -> discord.Embed:
+    async def get_profile_embed(self, client: discord.Client, page: int = 0) -> discord.Embed:
         """
         Return:
         - A discord Embed containing the profile page for the `page` value provided.
@@ -240,7 +240,7 @@ class Player:
         return embed, page
 
 
-    def __eq__(self, other : object) -> bool:
+    def __eq__(self, other: object) -> bool:
         """
         Check whether 2 players are equal.\n
         Based on the players ids (database).
@@ -250,7 +250,7 @@ class Player:
         
         return self.discord_id == other.discord_id
     
-    def __lt__(self, other : object) -> bool:
+    def __lt__(self, other: object) -> bool:
         """
         Check whether this player is lower than another one.\n
         Based on player rank and, in case of same rank, name (lowercase).
@@ -266,7 +266,7 @@ class Player:
         return self.amq_name.lower() < other.amq_name.lower()
     
 
-    def __add__(self, other : object) -> int:
+    def __add__(self, other: object) -> int:
         """
         Define addition for Player object.\n
         Based on Rank value.

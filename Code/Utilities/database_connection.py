@@ -25,13 +25,13 @@ def _connect_to_database() -> tuple[psycopg2.extensions.connection, psycopg2.ext
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     return conn, cur
 
-def _close_connection(conn : psycopg2.extensions.connection, cur : psycopg2.extensions.cursor) -> None:
+def _close_connection(conn: psycopg2.extensions.connection, cur: psycopg2.extensions.cursor) -> None:
     """Method in charge of closing the connection with the Gamemodes Database."""
     cur.close()
     conn.close()
 
 
-def connection_manager(func : callable) -> callable:
+def connection_manager(func: callable) -> callable:
     """
     Decorator to handle connections with the Database.
     :param func: The function to decorate

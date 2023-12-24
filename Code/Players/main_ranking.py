@@ -4,7 +4,7 @@ import discord
 
 class Rank:
     """Class to represent a possible player' rank."""
-    def __init__(self, rank_name : str, rank_value : int) -> None:
+    def __init__(self, rank_name: str, rank_value: int) -> None:
         self._name = rank_name
         self._value = rank_value
 
@@ -16,17 +16,17 @@ class Rank:
     def value(self) -> int:
         return self._value
     
-    def __eq__(self, other : object) -> bool:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, Rank):
             return NotImplemented
         return self.value == other.value
     
-    def __lt__(self, other : object) -> bool:
+    def __lt__(self, other: object) -> bool:
         if not isinstance(other, Rank):
             return NotImplemented
         return self.value < other.value
     
-    def __add__(self, other : object) -> int:
+    def __add__(self, other: object) -> int:
         if not isinstance(other, Rank):
             return NotImplemented
         return self.value + other.value
@@ -57,11 +57,17 @@ class Ranking:
             'None'
         ]
         
-        self.ranks_by_names = {name: Rank(rank_name=name, rank_value=value+1) for value, name in enumerate(self.rank_names)}
-        self.ranks_by_values = {value: Rank(rank_name=name, rank_value=value+1) for value, name in enumerate(self.rank_names)}
+        self.ranks_by_names = {
+            name: Rank(rank_name=name, rank_value=value+1)
+            for value, name in enumerate(self.rank_names)
+        }
+        self.ranks_by_values = {
+            value: Rank(rank_name=name, rank_value=value+1)
+            for value, name in enumerate(self.rank_names)
+        }
 
 
-    def get_rank(self, rank_name : str) -> Rank:
+    def get_rank(self, rank_name: str) -> Rank:
         """
         Return the `Rank` object with name == `rank_name`.\n
         In case that no rank with name `rank_name` is found, the default Rank "None" will be returned instead.
@@ -70,7 +76,7 @@ class Ranking:
         return rank if rank is not None else self.ranks_by_names['None']
     
 
-    def get_rank_embed(self, guild : discord.Guild, rank_value : int) -> tuple[discord.Embed, int]:
+    def get_rank_embed(self, guild: discord.Guild, rank_value: int) -> tuple[discord.Embed, int]:
         """
         Return:
         - A discord Embed containing the rank name and all the players with that rank.
@@ -91,13 +97,13 @@ class Ranking:
 
         # Get all the players with rank == rank_value
         all_players = list(Players_Controller().players_by_amq_name.values())
-        all_players_in_rank = filter(lambda player : player.rank == selected_rank, all_players)
+        all_players_in_rank = filter(lambda player: player.rank == selected_rank, all_players)
 
         # Sort the players
         all_players_in_rank = sorted(list(all_players_in_rank))
 
         # Get all the players identification: "amq_name (discord_user)"
-        all_discords_in_rank : list[discord.Member] = []
+        all_discords_in_rank: list[discord.Member] = []
         all_players_in_rank_copy = copy(all_players_in_rank)
 
         # NOTE we don't show those players who left the server (not present in the guild where the command is being executed)
@@ -110,7 +116,8 @@ class Ranking:
 
         all_names_in_rank = [
             f'**{discord.utils.escape_markdown(player.amq_name)}** ({discord.utils.escape_markdown(discord_member.display_name)})'
-        for player, discord_member in zip(all_players_in_rank, all_discords_in_rank)]
+            for player, discord_member in zip(all_players_in_rank, all_discords_in_rank)
+        ]
 
         # Create the embed
         embed = discord.Embed(title=selected_rank.name, description='\n'.join(all_names_in_rank), colour=discord.Colour.green())

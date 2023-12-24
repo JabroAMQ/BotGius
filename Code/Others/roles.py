@@ -21,16 +21,16 @@ class Roles:
         yaml_route = os.path.join('Config', 'roles.yaml')
         roles_data = load_yaml_content(yaml_route=yaml_route)
 
-        self.main_guild_id : int = roles_data['teams']['main']['id']
-        self.test_guild_id : int = roles_data['teams']['test']['id']
+        self.main_guild_id: int = roles_data['teams']['main']['id']
+        self.test_guild_id: int = roles_data['teams']['test']['id']
 
-        self.main_guild_roles_ids : list[int] = roles_data['teams']['main']['roles']
-        self.test_guild_roles_ids : list[int] = roles_data['teams']['test']['roles']
+        self.main_guild_roles_ids: list[int] = roles_data['teams']['main']['roles']
+        self.test_guild_roles_ids: list[int] = roles_data['teams']['test']['roles']
 
-        self.pings : list[str] = [roles_data['pings']['bullies'], roles_data['pings']['capos']]
+        self.pings: list[str] = [roles_data['pings']['bullies'], roles_data['pings']['capos']]
 
     
-    def _get_team_roles(self, guild : discord.Guild, role_index : int = 0) -> tuple[discord.Role, list[discord.Role]]:
+    def _get_team_roles(self, guild: discord.Guild, role_index: int = 0) -> tuple[discord.Role, list[discord.Role]]:
         """
         Given a guild and a role_index, return a tuple formed by 2 elemets:
         - `Role`: The role with index `role_index` among all the team's roles from the guild.
@@ -60,7 +60,7 @@ class Roles:
         return ' '.join(self.pings)
     
 
-    async def remove_team_roles(self, guild : discord.Guild, player_id : int):
+    async def remove_team_roles(self, guild: discord.Guild, player_id: int):
         """
         Remove all team roles from the player (identified by its discord id `player_id`) from the guild (identified by its id `guild_id`).
         
@@ -82,7 +82,7 @@ class Roles:
             print(f'Couldn\'t remove role from player {player_id}')
 
 
-    async def add_team_role(self, guild : discord.Guild, player_id : int, role_index : int):
+    async def add_team_role(self, guild: discord.Guild, player_id: int, role_index: int):
         """
         Add the team role with index `role_index` to the player (identified by its discord id `player_id`) in the guild provided.
         
@@ -104,7 +104,7 @@ class Roles:
             print(f'Couldn\'t add role to player {player_id}')
 
     
-    async def add_all_team_roles(self, guild : discord.Guild, player_id : int):
+    async def add_all_team_roles(self, guild: discord.Guild, player_id: int):
         """
         Add all team roles to the player (identified by its discord id `player_id`) in the guild provided.
         

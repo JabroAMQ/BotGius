@@ -14,12 +14,12 @@ from Code.Others.channels import Channels
 from Code.Others.emojis import Emojis
 from Code.Others.roles import Roles
 
-def load_app_commands(client : discord.Client):
+def load_app_commands(client: discord.Client):
     """
     Load all the `discord.app_commands` commands found in the `./Commands/Commands` subdirectory dynamically.\n
     Parameters:
     -----------
-    - `client` : `discord.Client`
+    - `client`: `discord.Client`
         The Discord Client to load commands into.
     """
     # importing inside function to avoid circular import error
@@ -55,7 +55,7 @@ def load_app_commands(client : discord.Client):
 
 def load_controllers() -> None:
     """Auxiliar function to load the singleton controllers so that delay is not introduced when they are first needed."""
-    # Saving the reference is not needed
+    # Saving the references is not needed
     Main_Controller()
     Tours_Controller()
     Players_Controller()
@@ -79,8 +79,8 @@ class Tour_Helpers:
     def _set_data(self) -> None:
         """Loads into memory the tour helpers / admins discord ids."""
         hosts_data = load_yaml_content(yaml_route=os.path.join('Config', 'hosts.yaml'))
-        self.admins : list[int] = hosts_data['admins']
-        self.helpers : list[int] = hosts_data['helpers']
+        self.admins: list[int] = hosts_data['admins']
+        self.helpers: list[int] = hosts_data['helpers']
 
     def get_admins(self) -> list[int]:
         """Return the ids of all the tour's admins."""

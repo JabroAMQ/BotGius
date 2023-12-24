@@ -13,7 +13,7 @@ class Others_Commands(Commands):
         super().__init__()
 
 
-    def load_commands(self, client : discord.Client) -> None:
+    def load_commands(self, client: discord.Client) -> None:
         """
         Method that loads the "others" commands into the client's tree.
         - `/info`
@@ -24,19 +24,19 @@ class Others_Commands(Commands):
         @client.tree.command(name='info', description='Check stored information (gamemodes, artists, metronomes, etc.)')
         @app_commands.describe(type='The type of list you want to retrieve')
         @app_commands.choices(type=[app_commands.Choice(name=option.name.replace('_', ' ').capitalize(), value=option.value) for option in InfoType])
-        async def info(interaction : discord.Interaction, type : app_commands.Choice[int]):
+        async def info(interaction: discord.Interaction, type: app_commands.Choice[int]):
             await interactions.info(interaction, type)
 
 
         @client.tree.command(name='feedback', description='Send a feedback message to admins and tour helpers')
         @app_commands.guild_only
-        async def feedback(interaction : discord.Interaction):
+        async def feedback(interaction: discord.Interaction):
             await interactions.feedback(interaction)
         
         @client.tree.command(name='pick', description='Send a tour decision message to a channel that can only be seen by admins and tour helpers')
         @app_commands.describe(decision='The decision you want to send')
         @app_commands.guild_only
-        async def pick(interaction : discord.Interaction, decision : str):
+        async def pick(interaction: discord.Interaction, decision: str):
             await interactions.pick(interaction, decision)
 
 
@@ -55,17 +55,17 @@ class Others_Commands(Commands):
         )
         @app_commands.guild_only
         async def poll(
-            interaction : discord.Interaction,
-            poll_name : str,
-            option1 : str,
-            option2 : str,
-            option3 : str = '',
-            option4 : str = '',
-            option5 : str = '',
-            option6 : str = '',
-            option7 : str = '',
-            option8 : str = '',
-            option9 : str = ''
+            interaction: discord.Interaction,
+            poll_name: str,
+            option1: str,
+            option2: str,
+            option3: str = '',
+            option4: str = '',
+            option5: str = '',
+            option6: str = '',
+            option7: str = '',
+            option8: str = '',
+            option9: str = ''
         ):
             all_options = [option1, option2, option3, option4, option5, option6, option7, option8, option9]
             poll_options = [option for option in all_options if option]

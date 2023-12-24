@@ -40,14 +40,14 @@ class Gamemodes_Commands(Commands):
         @app_commands.guild_only
         @app_commands.check(self.is_user_admin)
         async def gamemode_add(
-            interaction : discord.Interaction,
-            name : str,
-            size : app_commands.Choice[int],
-            code : str,
-            is_it_watched : app_commands.Choice[int],
-            is_random_dist_rollable : app_commands.Choice[int],
-            is_weighted_dist_rollable : app_commands.Choice[int],
-            is_equal_dist_rollable : app_commands.Choice[int]
+            interaction: discord.Interaction,
+            name: str,
+            size: app_commands.Choice[int],
+            code: str,
+            is_it_watched: app_commands.Choice[int],
+            is_random_dist_rollable: app_commands.Choice[int],
+            is_weighted_dist_rollable: app_commands.Choice[int],
+            is_equal_dist_rollable: app_commands.Choice[int]
         ):
             is_it_watched = bool(is_it_watched.value)
             is_random_dist_rollable = bool(is_random_dist_rollable.value)
@@ -60,7 +60,7 @@ class Gamemodes_Commands(Commands):
         @app_commands.describe(gamemode_name='The name of the gamemode to delete')
         @app_commands.guild_only
         @app_commands.check(self.is_user_admin)
-        async def gamemode_delete(interaction : discord.Interaction, gamemode_name : str):
+        async def gamemode_delete(interaction: discord.Interaction, gamemode_name: str):
             await interactions.gamemode_delete(interaction, gamemode_name)
 
 
@@ -79,13 +79,13 @@ class Gamemodes_Commands(Commands):
         @app_commands.guild_only
         @app_commands.check(self.is_user_admin)
         async def gamemode_edit(
-            interaction : discord.Interaction,
-            gamemode_name : str,
-            new_name : str = None,
-            new_code : str = None,
-            new_random_song_distribution : app_commands.Choice[int] = None,
-            new_weighted_song_distribution : app_commands.Choice[int] = None,
-            new_equal_song_distribution : app_commands.Choice[int] = None
+            interaction: discord.Interaction,
+            gamemode_name: str,
+            new_name: str = None,
+            new_code: str = None,
+            new_random_song_distribution: app_commands.Choice[int] = None,
+            new_weighted_song_distribution: app_commands.Choice[int] = None,
+            new_equal_song_distribution: app_commands.Choice[int] = None
         ):
             new_random_song_distribution = bool(new_random_song_distribution.value) if new_random_song_distribution is not None else None
             new_weighted_song_distribution = bool(new_weighted_song_distribution.value) if new_weighted_song_distribution is not None else None
@@ -97,25 +97,25 @@ class Gamemodes_Commands(Commands):
 
         @client.tree.command(name='gamemode_code', description='Gives you the amq code (room settings) of a gamemode')
         @app_commands.describe(gamemode_name='The name of the gamemode which code you want to get')
-        async def gamemode_code(interaction : discord.Interaction, gamemode_name : str):
+        async def gamemode_code(interaction: discord.Interaction, gamemode_name: str):
             await interactions.get_code(interaction, gamemode_name)
 
 
         @client.tree.command(name='gamemode_info', description='Gives you the description of a gamemode')
         @app_commands.describe(gamemode_name='The name of the gamemode which description you want to get')
-        async def gamemode_code(interaction : discord.Interaction, gamemode_name : str):
+        async def gamemode_code(interaction: discord.Interaction, gamemode_name: str):
             await interactions.get_info(interaction, gamemode_name)
 
 
         @client.tree.command(name='roll', description='For rolling stuff (no gamemodes)')
         @app_commands.describe(type='Type of stuff to roll')
         @app_commands.choices(type=[app_commands.Choice(name=type.name.replace('_', ' ').capitalize(), value=type.value) for type in Rolls_Enum])
-        async def roll(interaction : discord.Interaction, type : app_commands.Choice[int]):
+        async def roll(interaction: discord.Interaction, type: app_commands.Choice[int]):
             await interactions.roll(interaction, type.value)
 
 
         @client.tree.command(name='roll_gamemode', description='For rolling gamemodes')
         @app_commands.describe(type='Type of stuff to roll')
         @app_commands.choices(type=[app_commands.Choice(name=type.name.replace('_', ' ').capitalize(), value=type.value) for type in Roll_Gamemode])
-        async def roll_gamemode(interaction : discord.Interaction, type : app_commands.Choice[int]):
+        async def roll_gamemode(interaction: discord.Interaction, type: app_commands.Choice[int]):
             await interactions.roll_gamemode(interaction, type.value)

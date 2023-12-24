@@ -19,8 +19,8 @@ class Players_Controller:
     
     def _set_data(self) -> None:
         """Retrieve all the Players from the Database and load them into memory through the Players's Catalogs (by id and amq_name)."""
-        self.players_by_ids : dict[int, Player] = {}
-        self.players_by_amq_name : dict[str, Player] = {}
+        self.players_by_ids: dict[int, Player] = {}
+        self.players_by_amq_name: dict[str, Player] = {}
 
         players = Players_Database.get_all_players()
         for player_data in players:
@@ -29,20 +29,20 @@ class Players_Controller:
 
     def _add_player_to_catalogs(
         self,
-        discord_id : int,
-        amq_name : str,
-        rank : str = 'None',
-        elo : int = 0,
-        list_name : str = 'TBD',
-        list_from : str = 'TBD',
-        list_sections : str = 'TBD',
-        fav_1v1_gamemode_id : int = None,
-        hated_1v1_gamemode_id : int = None,
-        fav_2v2_gamemode_id : int = None,
-        hated_2v2_gamemode_id : int = None,
-        fav_4v4_gamemode_id : int = None,
-        hated_4v4_gamemode_id : int = None,
-        is_banned : bool = False
+        discord_id: int,
+        amq_name: str,
+        rank: str = 'None',
+        elo: int = 0,
+        list_name: str = 'TBD',
+        list_from: str = 'TBD',
+        list_sections: str = 'TBD',
+        fav_1v1_gamemode_id: int = None,
+        hated_1v1_gamemode_id: int = None,
+        fav_2v2_gamemode_id: int = None,
+        hated_2v2_gamemode_id: int = None,
+        fav_4v4_gamemode_id: int = None,
+        hated_4v4_gamemode_id: int = None,
+        is_banned: bool = False
     ) -> None:
         """Add a player to the Players's Catalogs (by `discord_id` and `amq_name`)."""
         player = Player(
@@ -66,13 +66,13 @@ class Players_Controller:
         self.players_by_amq_name[amq_name.lower()] = player
     
 
-    def _get_player_by_name(self, amq_name : str) -> Player | None:
+    def _get_player_by_name(self, amq_name: str) -> Player | None:
         """Return the player which name is the most similar to the `amq_name` provided as argument (or None if a not close enough match was found)."""
         closest_matches = difflib.get_close_matches(amq_name.lower(), self.players_by_amq_name.keys())
         closest_match = closest_matches[0] if closest_matches else None
         return self.players_by_amq_name.get(closest_match) if closest_match is not None else None
 
-    def get_player(self, id_or_name : int | str) -> Player | None:
+    def get_player(self, id_or_name: int | str) -> Player | None:
         """
         Return the `Player` object given its `discord_id` or `amq_name`.\n
         `None` will be returned if the `discord_id` or `amq_name` provided wasn't found in the database.
@@ -92,7 +92,7 @@ class Players_Controller:
             raise ValueError('Invalid `id_or_name` value type!')
 
 
-    def get_player_from_discord_name(self, guild : discord.Guild, discord_name : str) -> Player | None:
+    def get_player_from_discord_name(self, guild: discord.Guild, discord_name: str) -> Player | None:
         """Return the `Player` object associated to the discord account which has the closest name to `discord_name` among all the `guild`'s members."""
         possibilities = {}
         for member in guild.members:
@@ -112,7 +112,7 @@ class Players_Controller:
         return self.players_by_ids.get(discord_id) if discord_id is not None else None
 
 
-    def get_all_players_with_gamemode_referenced(self, gamemode : Gamemode) -> list[Player]:
+    def get_all_players_with_gamemode_referenced(self, gamemode: Gamemode) -> list[Player]:
         """Return a list with all the players that have referenced the gamemode as one of their favourite/most hated gamemodes."""
         return [player for player in self.players_by_ids.values() if player.has_gamemode_referenced(gamemode)]
     
@@ -121,7 +121,7 @@ class Players_Controller:
         return [player for player in self.players_by_ids.values() if player.is_banned]
 
 
-    def register_player(self, discord_id : int, amq_name : str) -> tuple[bool, str | None]:
+    def register_player(self, discord_id: int, amq_name: str) -> tuple[bool, str | None]:
         """
         Add a player to the Players's Database and Catalogs (by `discord_id` and `amq_name`).\n
         Only `discord_id` and `amq_name` are required as the rest of the Player's fields will be initialized as the default values.\n
@@ -143,7 +143,7 @@ class Players_Controller:
         return True, None
 
 
-    def change_player_amq(self, discord_id : int, new_amq_name : str) -> tuple[bool, str | None]:
+    def change_player_amq(self, discord_id: int, new_amq_name: str) -> tuple[bool, str | None]:
         """
         Change the player's amq name with `discord_id` to `new_amq_name`.\n
         The method return a tuple which first element is a boolean that can be `False` if:
@@ -176,7 +176,7 @@ class Players_Controller:
         return True, old_amq_name
     
 
-    def change_player_rank(self, player_amq_name : str, new_rank : str) -> tuple[bool, Player, str]:
+    def change_player_rank(self, player_amq_name: str, new_rank: str) -> tuple[bool, Player, str]:
         """
         Change the rank of the player with name == `player_amq_name`.\n
         Returns a boolean telling the user whether the change could be applied.\n
@@ -197,7 +197,7 @@ class Players_Controller:
         return True, player, old_rank
     
 
-    def change_player_ban(self, player_amq_name : str, new_is_banned : bool) -> tuple[bool, bool, Player | None]:
+    def change_player_ban(self, player_amq_name: str, new_is_banned: bool) -> tuple[bool, bool, Player | None]:
         """
         Change the `is_banned` value of the player with name == `player_amq_name`.\n
         Returns a tuple:
@@ -225,10 +225,10 @@ class Players_Controller:
 
     def change_player_list(
         self,
-        discord_id : int,
-        new_list_name : str,
-        new_list_from : str,
-        new_list_sections : str
+        discord_id: int,
+        new_list_name: str,
+        new_list_from: str,
+        new_list_sections: str
     ) -> tuple[bool, str]:
         """
         Change the player's list information with the one provided.\n
@@ -250,9 +250,9 @@ class Players_Controller:
 
     def change_player_prefered_gamemodes(
         self,
-        discord_id : int,
-        prefered_gamemode_option : int,
-        gamemode_id : int,
+        discord_id: int,
+        prefered_gamemode_option: int,
+        gamemode_id: int,
     ) -> bool:
         """
         Change the player's prefered gamemodes information with the one provided.\n
@@ -263,7 +263,7 @@ class Players_Controller:
             return False
 
         prefered_gamemode_option_name = Prefered_Gamemode_Options(prefered_gamemode_option).name    # getting fav_1v1_gamemode / fav_2v2_gamemode / etc. name
-        setattr(player, prefered_gamemode_option_name.lower(), gamemode_id)                         # modifying the property (fav_1v1_gamemode) with the gamemode selected (low level)
+        setattr(player, prefered_gamemode_option_name.lower(), gamemode_id)                         # modifying the property (fav_1v1_gamemode) with the gamemode selected (dynamically)
 
         Players_Database.change_player_preferred_gamemodes_data(
             discord_id=discord_id,

@@ -1,17 +1,23 @@
 class Artist:
     """Class that instanciates an Artist object containing the information that is stored in the sheet."""
 
-    def __init__(self, artist_name : str, list_name : str, score_range : str, list_sections : str, list_from : str, author_name : str) -> None:
+    def __init__(self, artist_name: str, list_name: str, score_range: str, list_sections: str, list_from: str, author_name: str) -> None:
         """
         Constructor of the Artist class.\n
         Parameters:
         -----------
-        - artist_name : The name of the artist(s).
-        - list_name : The name of the list (username from Anilist / MyAnimeList) where the shows are stored.
-        - score_range : A string consisting of the Scores that the show(s) which contains songs from the artist(s), stored in the list, have (that must be set in the AMQ room settings).
-        - list_sections : The sections from the list that must be used during the AMQ game that contains the shows from the artist(s).
-        - list_from : Where the list is from (Anilist / MyAnimeList).
-        - author_name : The player who created the list.
+        - `artist_name`: `str`
+            The name of the artist(s).
+        - `list_name`: `str`
+            The name of the list (username from Anilist / MyAnimeList) where the shows are stored.
+        - `score_range`: `str`
+            A string consisting of the Scores that the show(s) which contains songs from the artist(s), stored in the list, have (that must be set in the AMQ room settings).
+        - `list_sections`: `str`
+            The sections from the list that must be used during the AMQ game that contains the shows from the artist(s).
+        - `list_from`: `str`
+            Where the list is from (Anilist / MyAnimeList).
+        - `author_name`: `str`
+            The player who created the list.
         """
         self.artist_name = artist_name
         self.author_name = author_name

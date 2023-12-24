@@ -4,11 +4,11 @@ from Code.Utilities.error_handler import error_handler_decorator
 
 @error_handler_decorator()
 async def to_webhook(
-    interaction : discord.Interaction,
-    webhook_name : str,
-    channel : discord.TextChannel,
-    message_content : str = '',
-    embed : discord.Embed = None
+    interaction: discord.Interaction,
+    webhook_name: str,
+    channel: discord.TextChannel,
+    message_content: str = '',
+    embed: discord.Embed = None
 ):
     """Send a webhook to the specified `channel` with the `message_content` provided and with the name and avatar extracted from the `interaction`."""
     user_name = interaction.user.display_name

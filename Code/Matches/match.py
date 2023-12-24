@@ -5,7 +5,7 @@ from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 
 class Match:
     """Class to represent a match. Formed by a gamemode and 2 list of players (team 1, team 2)."""
-    def __init__(self, gamemode : Gamemode, team_1 : list[Player], team_2 : list[Player]) -> None:
+    def __init__(self, gamemode: Gamemode, team_1: list[Player], team_2: list[Player]) -> None:
         """Class constructor."""
         self.gamemode = gamemode
         self.team_1 = team_1

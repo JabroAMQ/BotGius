@@ -8,7 +8,7 @@ class Teams_Roll:
     """Static class that contains the methods to split a list of players into different teams."""
 
     @staticmethod
-    def roll_teams(type : Roll_Teams, player_list : list[Player], num_teams : int = 2) -> tuple[list[list[Player]], str]:
+    def roll_teams(type: Roll_Teams, player_list: list[Player], num_teams: int = 2) -> tuple[list[list[Player]], str]:
         """
         Split the `player_list` into `num_teams` teams following a different criteria based on the `type` provided.\n
         Return a tuple consisting of 2 elements:
@@ -36,7 +36,7 @@ class Teams_Roll:
 
 
     @staticmethod
-    def _roll_teams_random(player_list : list[Player], num_teams : int) -> list[list[Player]]:
+    def _roll_teams_random(player_list: list[Player], num_teams: int) -> list[list[Player]]:
         """
         Split the `player_list` into `num_teams` teams.\n
         All teams will have the same number of players.\n
@@ -54,7 +54,7 @@ class Teams_Roll:
 
 
     @staticmethod
-    def _roll_teams_balanced(player_list : list[Player], num_teams : int) -> list[list[Player]]:
+    def _roll_teams_balanced(player_list: list[Player], num_teams: int) -> list[list[Player]]:
         """
         Split the `player_list` into `num_teams` teams.\n
         All teams will have the same number of players.\n
@@ -82,7 +82,7 @@ class Teams_Roll:
     
 
     @staticmethod
-    def _roll_teams_grouped_by_strength(player_list : list[Player], num_teams : int) -> list[list[Player]]:
+    def _roll_teams_grouped_by_strength(player_list: list[Player], num_teams: int) -> list[list[Player]]:
         """
         Split the `player_list` into `num_teams` teams.\n
         All teams will have the same number of players.\n
@@ -103,7 +103,7 @@ class Teams_Roll:
     
 
     @staticmethod
-    def _teams_as_str(teams : list[list[Player]]) -> str:
+    def _teams_as_str(teams: list[list[Player]]) -> str:
         """Return a string representation for the `teams` rolled."""
         teams_as_str = ''
         for i, team in enumerate(teams):

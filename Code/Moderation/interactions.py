@@ -11,7 +11,7 @@ from Code.Others.emojis import Emojis
 from Code.Others.roles import Roles
 
 @error_handler_decorator()
-async def reset_data(interaction : discord.Interaction):
+async def reset_data(interaction: discord.Interaction):
     """
     Interaction to handle the `/reset_data` command.\n
     It reloads some of the bot's data so that reseting the bot when an external data change is made is not needed.\n
@@ -32,7 +32,7 @@ async def reset_data(interaction : discord.Interaction):
 
 
 @error_handler_decorator()
-async def ban_player(interaction : discord.Interaction, amq_name : str, is_banned : bool):
+async def ban_player(interaction: discord.Interaction, amq_name: str, is_banned: bool):
     """Interaction to handle the `/ban_player` command. It bans/unbans the `is_banned` field of the player with `name` == `amq_name`."""
     await interaction.response.defer(ephemeral=True)
 
@@ -55,7 +55,7 @@ async def ban_player(interaction : discord.Interaction, amq_name : str, is_banne
 
 
 @error_handler_decorator()
-async def list_banned_players(interaction : discord.Interaction):
+async def list_banned_players(interaction: discord.Interaction):
     """Interaction to handle the `/list_banned_players` command. It sends the user an embed to dm with the names of all the banned players."""
     await interaction.response.defer(ephemeral=True)
 

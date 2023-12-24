@@ -1,18 +1,25 @@
 class SpecialList:
     """Class that instanciates a SpecialList object containing the information that is stored in the sheet."""
 
-    def __init__(self, special_list_name : str, list_name : str, list_from : str, list_sections : str, difficulty_range : str, special_list_description : str, author_name : str) -> None:
+    def __init__(self, special_list_name: str, list_name: str, list_from: str, list_sections: str, difficulty_range: str, special_list_description: str, author_name: str) -> None:
         """
         Constructor of the Artist class.\n
         Parameters:
         -----------
-        - special_list_name : The name of the special list.
-        - list_name : The name of the list (username from Anilist / MyAnimeList) where the shows are stored.
-        - list_from : Where the list is from (Anilist / MyAnimeList).
-        - list_sections : The sections from the list that must be used during the AMQ game that contains the shows from the special list.
-        - difficulty_range : The difficulty range that has to be set in the AMQ game settings.
-        - special_list_description : The description of the special list.
-        - author_name : The player who created the list.
+        - `special_list_name`: `str`
+            The name of the special list.
+        - `list_name: `str`
+            The name of the list (username from Anilist / MyAnimeList) where the shows are stored.
+        - `list_from: `str`
+            Where the list is from (Anilist / MyAnimeList).
+        - `list_sections: `str`
+            The sections from the list that must be used during the AMQ game that contains the shows from the special list.
+        - `difficulty_range: `str`
+            The difficulty range that has to be set in the AMQ game settings.
+        - `special_list_description: `str`
+            The description of the special list.
+        - `author_name: `str`
+            The player who created the list.
         """
         self.special_list_name = special_list_name
         self.special_list_description = special_list_description

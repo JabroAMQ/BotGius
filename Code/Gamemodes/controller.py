@@ -47,7 +47,7 @@ class Main_Controller:
         self.genres = [genre.name.replace('_', ' ') for genre in Genres]
 
 
-    def info(self, type : int) -> list[str]:
+    def info(self, type: int) -> list[str]:
         """
         Return a list of strings with the information asked according to the type value.
 
@@ -81,7 +81,7 @@ class Main_Controller:
                 raise ValueError('Invalid type value!')
 
 
-    def get_gamemode(self, gamemode_id_or_name : str) -> Gamemode | None:
+    def get_gamemode(self, gamemode_id_or_name: str) -> Gamemode | None:
         """
         Give a name or id of a Gamemode, return the `Gamemode` which has that id or name.\n
         In the name case, the closest match to the value provided is searched for.\n
@@ -124,13 +124,13 @@ class Main_Controller:
 
     def add_gamemode(
         self,
-        gamemode_name : str,
-        gamemode_size : int,
-        gamemode_code : str,
-        is_gamemode_watched : bool,
-        is_random_dist_rollable : bool,
-        is_weighted_dist_rollable : bool,
-        is_equal_dist_rollable : bool
+        gamemode_name: str,
+        gamemode_size: int,
+        gamemode_code: str,
+        is_gamemode_watched: bool,
+        is_random_dist_rollable: bool,
+        is_weighted_dist_rollable: bool,
+        is_equal_dist_rollable: bool
     ) -> tuple[bool, str]:
         """
         Create a gamemode with the provided data, storing it into the database and memory (through the gamemodes's catalogs).\n
@@ -148,19 +148,19 @@ class Main_Controller:
             is_equal_dist_rollable=is_equal_dist_rollable
         )
 
-    def delete_gamemode(self, gamemode : Gamemode) -> bool:
+    def delete_gamemode(self, gamemode: Gamemode) -> bool:
         """Delete the gamemode provided as argument. Return `True` if the gamemode was deleted successfully, `False` otherwise."""
         return self.gamemodes.delete_gamemode(gamemode)
     
     
     def get_gamemode_old_values(
         self,
-        gamemode : Gamemode,
-        new_name : str | None,
-        new_code : str | None,
-        new_random : bool | None,
-        new_weighted : bool | None,
-        new_equal : bool | None
+        gamemode: Gamemode,
+        new_name: str | None,
+        new_code: str | None,
+        new_random: bool | None,
+        new_weighted: bool | None,
+        new_equal: bool | None
     ) -> tuple[bool, str | None, str | None, bool | None, bool | None, bool | None]:
         """
         For each of the gamemode fields editable (those that has a parameter in this function), return `None` if a new value wasn't provided or if the new
@@ -178,12 +178,12 @@ class Main_Controller:
 
     def edit_gamemode(
         self,
-        gamemode_name : str,
-        new_name : str | None,
-        new_code : str | None,
-        new_random_dist_rollable : bool | None,
-        new_weighted_dist_rollable : bool | None,
-        new_equal_dist_rollable : bool | None
+        gamemode_name: str,
+        new_name: str | None,
+        new_code: str | None,
+        new_random_dist_rollable: bool | None,
+        new_weighted_dist_rollable: bool | None,
+        new_equal_dist_rollable: bool | None
     ) -> bool:
         """
         Edit the gamemode with name `gamemode_name`.

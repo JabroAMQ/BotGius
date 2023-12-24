@@ -27,14 +27,14 @@ class Gamemodes_Database:
     @staticmethod
     @connection_manager
     def _add_gamemode(
-        name : str,
-        size : int,
-        code : str,
-        watched_song_selection : bool,
-        random_song_distribution : bool,
-        weighted_song_distribution : bool,
-        equal_song_distribution : bool,
-        cur : psycopg2.extensions.cursor = None
+        name: str,
+        size: int,
+        code: str,
+        watched_song_selection: bool,
+        random_song_distribution: bool,
+        weighted_song_distribution: bool,
+        equal_song_distribution: bool,
+        cur: psycopg2.extensions.cursor = None
     ) -> None:
         """
         Add a new Gamemode to the Gamemodes Database.\n
@@ -48,7 +48,7 @@ class Gamemodes_Database:
 
     @staticmethod
     @connection_manager
-    def _get_gamemode_id(name : str, cur : psycopg2.extensions.cursor = None) -> int:
+    def _get_gamemode_id(name: str, cur: psycopg2.extensions.cursor = None) -> int:
         """
         Return the Database's ID of a Gamemode given its `name`.\n
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
@@ -61,13 +61,13 @@ class Gamemodes_Database:
     
     @staticmethod
     def add_gamemode(
-        name : str,
-        size : int,
-        code : str,
-        watched_song_selection : bool,
-        random_song_distribution : bool,
-        weighted_song_distribution : bool,
-        equal_song_distribution : bool
+        name: str,
+        size: int,
+        code: str,
+        watched_song_selection: bool,
+        random_song_distribution: bool,
+        weighted_song_distribution: bool,
+        equal_song_distribution: bool
     ) -> int:
         """
         Add a new Gamemode to the Gamemodes Database.\n
@@ -81,24 +81,24 @@ class Gamemodes_Database:
 
     @staticmethod
     @connection_manager
-    def get_all_gamemodes(cur : psycopg2.extensions.cursor = None) -> list[tuple[str, int, str, bool, bool, bool, bool, int]]:
+    def get_all_gamemodes(cur: psycopg2.extensions.cursor = None) -> list[tuple[str, int, str, bool, bool, bool, bool, int]]:
         """
         Return all the Gamemodes stored in the Database as tuples containing:
-        - `name` : `str`
+        - `name`: `str`
             The Gamemode's name.
-        - `size` : `int`
+        - `size`: `int`
             How many players per team does the Gamemode require.
-        - `code` : `str`
+        - `code`: `str`
             The Code to set the Gamemode's rules in the AMQ lobby.
-        - `watched_song_selection` : `bool`
+        - `watched_song_selection`: `bool`
             Whether the gamemode has watched (or random) song selection.
-        - `random_song_distribution` : `bool`
+        - `random_song_distribution`: `bool`
             Whether the gamemode has random song distribution as a possible distribution roll.
-        - `weighted_song_distribution` : `bool`
+        - `weighted_song_distribution`: `bool`
             Whether the gamemode has weighted song distribution as a possible distribution roll.
-        - `equal_song_distribution` : `bool`
+        - `equal_song_distribution`: `bool`
             Whether the gamemode has equal song distribution as a possible distribution roll.
-        - `id` : `int`
+        - `id`: `int`
             The Gamemode's ID in the database.
 
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
@@ -110,7 +110,7 @@ class Gamemodes_Database:
 
     @staticmethod
     @connection_manager
-    def delete_gamemode(name : str, cur : psycopg2.extensions.cursor = None) -> None:
+    def delete_gamemode(name: str, cur: psycopg2.extensions.cursor = None) -> None:
         """
         Delete a Gamemode from the Database given its `name`.\n
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
@@ -123,13 +123,13 @@ class Gamemodes_Database:
     @staticmethod
     @connection_manager
     def edit_gamemode(
-        id : int,
-        new_name : str,
-        new_code : str,
-        new_random_song_distribution : bool,
-        new_weighted_song_distribution : bool,
-        new_equal_song_distribution : bool,
-        cur : psycopg2.extensions.cursor = None
+        id: int,
+        new_name: str,
+        new_code: str,
+        new_random_song_distribution: bool,
+        new_weighted_song_distribution: bool,
+        new_equal_song_distribution: bool,
+        cur: psycopg2.extensions.cursor = None
     ) -> None:
         """
         Given a gamemode `id`, modify the gamemode related with the `new_...` provided values.\n

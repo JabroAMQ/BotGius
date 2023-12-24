@@ -17,7 +17,7 @@ class BotGius(discord.Client):
         load_controllers()
 
         @self.tree.error
-        async def on_app_command_error(interaction : discord.Interaction, error : discord.app_commands.AppCommandError):
+        async def on_app_command_error(interaction: discord.Interaction, error: discord.app_commands.AppCommandError):
             """
             Handler for app commands's highest level errors.\n
             This is, errors that may occure due to checks done before the command's code itself is executed (e.g. syntax errors in the command's header).\n

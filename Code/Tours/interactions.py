@@ -16,19 +16,19 @@ from Code.Others.emojis import Emojis
 from Code.Others.roles import Roles
 
 @error_handler_decorator()
-async def tour_create(interaction : discord.Interaction, timer : int = None, size : int = None, info : str = '', custom_ping : str = ''):
+async def tour_create(interaction: discord.Interaction, timer: int = None, size: int = None, info: str = '', custom_ping: str = ''):
     """Interaction to handle the `/tour_create` command. It creates a new tour and stores it in the tours's catalog."""
     await interaction.response.defer(ephemeral=True)
     join_emoji, leave_emoji = Emojis().get_tour_emojis(interaction.user.id)
 
 
     class Tour_Create_View(discord.ui.View):
-        def __init__(self, tour : Tour):
+        def __init__(self, tour: Tour):
             super().__init__(timeout=18000)     # 5 hours timeout
             self.tour = tour
 
         @discord.ui.button(label='Join', emoji=join_emoji, style=discord.ButtonStyle.green)
-        async def join(self, new_interaction : discord.Interaction, _ : discord.Button):
+        async def join(self, new_interaction: discord.Interaction, _: discord.Button):
             await new_interaction.response.defer(ephemeral=True)
 
             # Make sure tour is still active...
@@ -72,7 +72,7 @@ async def tour_create(interaction : discord.Interaction, timer : int = None, siz
 
 
         @discord.ui.button(label='Leave', emoji=leave_emoji, style=discord.ButtonStyle.green)
-        async def leave(self, new_interaction : discord.Interaction, _ : discord.Button):
+        async def leave(self, new_interaction: discord.Interaction, _: discord.Button):
             # Make sure tour is still active...
             if not self.tour.is_tour_active:
                 content = 'This tour has already ended'
@@ -114,7 +114,7 @@ async def tour_create(interaction : discord.Interaction, timer : int = None, siz
 
 
 @error_handler_decorator()
-async def tour_edit(interaction : discord.Interaction, timer : int | None, max_size : int | None, is_open : bool | None, info : bool | None):
+async def tour_edit(interaction: discord.Interaction, timer: int | None, max_size: int | None, is_open: bool | None, info: bool | None):
     """Interaction to handel the `/tour_edit` command. It allows the host to modify sign-ups related parameters's values from the active tour."""
     await interaction.response.defer(ephemeral=True)
 
@@ -195,7 +195,7 @@ async def tour_edit(interaction : discord.Interaction, timer : int | None, max_s
 
 
 @error_handler_decorator()
-async def tour_quit(interaction : discord.Interaction, tour : Tour = None):
+async def tour_quit(interaction: discord.Interaction, tour: Tour = None):
     """
     Interaction to handle the `/tour_quit` command. It allows the player to leave a tour.\n
     `tour` argument is added so that this function can be reused from `/tour_create`'s `Leave` button.
@@ -231,7 +231,7 @@ async def tour_quit(interaction : discord.Interaction, tour : Tour = None):
     await _inform_host_player_left(interaction=interaction, tour=tour, player=player, from_players_list=from_players_list)
 
 
-async def _inform_host_player_left(interaction : discord.Interaction, tour : Tour, player : Player, from_players_list : bool):
+async def _inform_host_player_left(interaction: discord.Interaction, tour: Tour, player: Player, from_players_list: bool):
     """Method to send a dm message to the host when a player leaves the tour they are hosting."""
     content = f'A player left the tour:\n{tour.join_message.jump_url}'
 
@@ -250,7 +250,7 @@ async def _inform_host_player_left(interaction : discord.Interaction, tour : Tou
 
 
 @error_handler_decorator()
-async def tour_players_add(interaction : discord.Interaction, players_str : str):
+async def tour_players_add(interaction: discord.Interaction, players_str: str):
     """Interaction to handle the `/tour_players_add` command. It allows the host to manually add some players to the tour."""
     await interaction.response.defer(ephemeral=True)
 
@@ -300,7 +300,7 @@ async def tour_players_add(interaction : discord.Interaction, players_str : str)
 
 
 @error_handler_decorator()
-async def tour_players_remove(interaction : discord.Interaction, players_str : str):
+async def tour_players_remove(interaction: discord.Interaction, players_str: str):
     """Interaction to handle the `/tour_players_remove` command. It allows the host to manually remove some players from the tour."""
     await interaction.response.defer(ephemeral=True)
     
@@ -350,7 +350,7 @@ async def tour_players_remove(interaction : discord.Interaction, players_str : s
 
 
 @error_handler_decorator()
-async def tour_players_list(interaction : discord.Interaction):
+async def tour_players_list(interaction: discord.Interaction):
     """Interaction to handle the `/tour_players_list` command. It send a message with the list of players that joined the tour sorted by their rank."""
     await interaction.response.defer(ephemeral=False)
 
@@ -367,7 +367,7 @@ async def tour_players_list(interaction : discord.Interaction):
 
 
 @error_handler_decorator()
-async def tour_players_ping(interaction : discord.Interaction):
+async def tour_players_ping(interaction: discord.Interaction):
     """Interaction to handle the `/tour_players_ping` command. It send a message with the discord mention of all the players (not queue) that joined the tour."""
     await interaction.response.defer(ephemeral=True)
 
@@ -392,7 +392,7 @@ async def tour_players_ping(interaction : discord.Interaction):
 
 
 @error_handler_decorator()
-async def tour_end(interaction : discord.Interaction):
+async def tour_end(interaction: discord.Interaction):
     """Interaction to handle the `/tour_end` command. It ends the tour that is currently active."""
     await interaction.response.defer(ephemeral=True)
 
@@ -413,7 +413,7 @@ async def tour_end(interaction : discord.Interaction):
 
 
 @error_handler_decorator()
-async def team_players_list(interaction : discord.Interaction):
+async def team_players_list(interaction: discord.Interaction):
     """Interaction to handle the `/team_players_list` command. It send a message with the list of players that are in a team sorted by their rank."""
     await interaction.response.defer(ephemeral=False)
     
@@ -432,7 +432,7 @@ async def team_players_list(interaction : discord.Interaction):
 
 
 @error_handler_decorator()
-async def team_players_add(interaction : discord.Interaction, team_index : int, players_str : str):
+async def team_players_add(interaction: discord.Interaction, team_index: int, players_str: str):
     """Interaction to handle the `/team_players_add` command. It adds tour players to a specific team."""
     await interaction.response.defer(ephemeral=True)
 
@@ -471,7 +471,7 @@ async def team_players_add(interaction : discord.Interaction, team_index : int, 
 
 
 @error_handler_decorator()
-async def team_players_remove(interaction : discord.Interaction, team_index : int, players_str : str):
+async def team_players_remove(interaction: discord.Interaction, team_index: int, players_str: str):
     """Interaction to handle the `/team_players_remove` command. It removes tour players from a specific team."""
     await interaction.response.defer(ephemeral=True)
 
@@ -510,12 +510,12 @@ async def team_players_remove(interaction : discord.Interaction, team_index : in
 
 
 @error_handler_decorator()
-async def team_randomize(interaction : discord.Interaction, number_of_teams : int, criteria : int):
+async def team_randomize(interaction: discord.Interaction, number_of_teams: int, criteria: int):
     """Interaction to handle the `/team_randomize` command. It divides the players into groups and creates tour's teams based on the result."""
 
     class Team_Randomize_View(discord.ui.View):
 
-        def __init__(self, tour : Tour, players : list[Player], type : Roll_Teams, number_of_teams : int, teams : list[list[Player]]):
+        def __init__(self, tour: Tour, players: list[Player], type: Roll_Teams, number_of_teams: int, teams: list[list[Player]]):
             super().__init__(timeout=180)
             self.tour = tour
             self.players = players
@@ -525,7 +525,7 @@ async def team_randomize(interaction : discord.Interaction, number_of_teams : in
             self.rerolled = False
 
         @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
-        async def confirm(self, new_interaction : discord.Interaction, _ : discord.Button):
+        async def confirm(self, new_interaction: discord.Interaction, _: discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             
             if self.rerolled:
@@ -554,7 +554,7 @@ async def team_randomize(interaction : discord.Interaction, number_of_teams : in
 
 
         @discord.ui.button(label='Reroll', style=discord.ButtonStyle.green)
-        async def reroll(self, new_interaction : discord.Interaction, _ : discord.Button):
+        async def reroll(self, new_interaction: discord.Interaction, _: discord.Button):
             await new_interaction.response.defer(ephemeral=True)
 
             if self.rerolled:
@@ -594,7 +594,7 @@ async def team_randomize(interaction : discord.Interaction, number_of_teams : in
 
 
 @error_handler_decorator()
-async def team_get_all_roles(interaction : discord.Interaction):
+async def team_get_all_roles(interaction: discord.Interaction):
     """Interaction to handle the `/team_get_all_roles` command. It adds all team roles to the interaction's user."""
     await interaction.response.defer(ephemeral=True)
     await Roles().add_all_team_roles(interaction.guild, interaction.user.id)
@@ -603,12 +603,12 @@ async def team_get_all_roles(interaction : discord.Interaction):
 
 
 @error_handler_decorator()
-async def roll_groups(interaction : discord.Interaction, number_of_groups : int, criteria : int):
+async def roll_groups(interaction: discord.Interaction, number_of_groups: int, criteria: int):
     """Interaction to handle the `/roll_groups` command. It divides the players into groups."""
 
     class Roll_Groups_View(discord.ui.View):
 
-        def __init__(self, players : list[Player], type : Roll_Teams, number_of_groups : int, groups : str):
+        def __init__(self, players: list[Player], type: Roll_Teams, number_of_groups: int, groups: str):
             super().__init__(timeout=180)
             self.players = players
             self.type = type
@@ -616,14 +616,14 @@ async def roll_groups(interaction : discord.Interaction, number_of_groups : int,
             self.groups = groups
 
         @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
-        async def confirm(self, new_interaction : discord.Interaction, _ : discord.Button):
+        async def confirm(self, new_interaction: discord.Interaction, _: discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             await new_interaction.channel.send(self.groups)
             await new_interaction.followup.send(content='Groups displayed suceessfully', ephemeral=True)
 
 
         @discord.ui.button(label='Reroll', style=discord.ButtonStyle.green)
-        async def reroll(self, new_interaction : discord.Interaction, _ : discord.Button):
+        async def reroll(self, new_interaction: discord.Interaction, _: discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             _, groups = Teams_Roll.roll_teams(type=self.type, player_list=self.players, num_teams=self.number_of_groups)
             view = Roll_Groups_View(players=self.players, type=self.type, number_of_groups=self.number_of_groups, groups=groups)
@@ -656,13 +656,13 @@ async def roll_groups(interaction : discord.Interaction, number_of_groups : int,
 
 
 @error_handler_decorator()
-async def roll_blind_crews(interaction : discord.Interaction, criteria : int):
+async def roll_blind_crews(interaction: discord.Interaction, criteria: int):
     """Interaction to handle the `/roll_blind_crews` command. It rolls a blind crews round."""
     
 
     class Teams_Dropdown(discord.ui.Select):
         
-        def __init__(self, criteria : int, active_teams : list[Team]):
+        def __init__(self, criteria: int, active_teams: list[Team]):
             options = [discord.SelectOption(label=team.name, value=str(i)) for i, team in enumerate(active_teams)]
             super().__init__(placeholder='Choose 2 teams', options=options, min_values=2, max_values=2)
             self.teams = active_teams
@@ -677,12 +677,12 @@ async def roll_blind_crews(interaction : discord.Interaction, criteria : int):
 
     class Teams_Dropdown_View(discord.ui.View):
         
-        def __init__(self, criteria : int, active_teams : list[Team]):
+        def __init__(self, criteria: int, active_teams: list[Team]):
             super().__init__(timeout=180)
             self.add_item(Teams_Dropdown(criteria, active_teams))
             
 
-    async def roll_bc(interaction : discord.Interaction, criteria : int, team_1 : Team, team_2 : Team, add_team_names : bool = False):
+    async def roll_bc(interaction: discord.Interaction, criteria: int, team_1: Team, team_2: Team, add_team_names: bool = False):
         """Roll a blind crews round for 2 teams."""
         # Create the BlindCrews
         type = Roll_Gamemode(criteria)
@@ -718,7 +718,7 @@ async def roll_blind_crews(interaction : discord.Interaction, criteria : int):
         return
     
     # Check that the tour has two teams with players
-    active_teams : list[Team] = []
+    active_teams: list[Team] = []
     for team in tour.teams:
         if len(team.players) > 0:
             active_teams.append(team)

@@ -8,7 +8,7 @@ def _generate_file_name() -> str:
     random_string = secrets.token_hex(nbytes=8)
     return f'{random_string}.txt'
 
-async def send_message_as_file(interaction : discord.Interaction, message : str | list[str], forbidden_error : bool = True):
+async def send_message_as_file(interaction: discord.Interaction, message: str | list[str], forbidden_error: bool = True):
     """
     Given a discord's Interaction (`interaction`) and the content to send as response (`message`), creates a File with the `message` content and
     sends it via the `interaction`.
