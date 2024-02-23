@@ -13,6 +13,8 @@ from Code.Others.channels import Channels
 async def player_register(interaction: discord.Interaction, amq_name: str):
     """Interaction to handle the `/player_register` command. It stores in the player's Database and Catalog the new player created with the provided information."""
     await interaction.response.defer(ephemeral=True)
+    
+    amq_name = amq_name.replace(' ', '_')
     register_ok, other_player_ping = Players_Controller().register_player(discord_id=interaction.user.id, amq_name=amq_name)
     amq_name = discord.utils.escape_markdown(amq_name)
 
