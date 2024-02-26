@@ -48,13 +48,12 @@ class Ranking:
         self.rank_names = [
             'Anything Goes',
             'Ubers',
-            'SS+', 'SS', 'SS-',
+            'SS', 'SS-',
             'S+', 'S', 'S-',
             'A+', 'A', 'A-',
             'B+', 'B', 'B-',
             'C+', 'C', 'C-',
-            'D+', 'D', 'D-',
-            'None'
+            'EMQ', 'None'
         ]
         
         self.ranks_by_names = {
