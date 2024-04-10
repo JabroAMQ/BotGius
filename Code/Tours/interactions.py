@@ -445,7 +445,7 @@ async def tour_players_ping(interaction: discord.Interaction):
 
     # Log the command usage
     args = []
-    await _log_command(interaction, 'tour_players_remove', tour, args)
+    await _log_command(interaction, 'tour_players_ping', tour, args)
 
 
 @error_handler_decorator()
