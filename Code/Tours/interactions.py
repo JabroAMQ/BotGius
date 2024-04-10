@@ -12,8 +12,44 @@ from Code.Players.player import Player
 from Code.Rolls.teams import Teams_Roll
 from Code.Rolls.blind_crews import Blind_Crews
 from Code.Rolls.enums import Roll_Teams, Roll_Gamemode
+from Code.Others.channels import Channels
 from Code.Others.emojis import Emojis
 from Code.Others.roles import Roles
+
+
+async def _log_command(interaction: discord.Interaction, command_name: str, tour: Tour, args: list[str]):
+    """
+    Auxiliar method for logging tour commands that modify/ends the tour being hosted at the moment.\n
+    Current commands that are logged:
+    - `/tour_edit`
+    - `/tour_players_add`
+    - `/tour_players_remove`
+    - `/tour_players_ping`
+    - `/tour_end`
+    - `/team_players_add`
+    - `/team_players_remove`
+    - `/team_randomize`
+    - `/roll_groups`
+    - `/roll_blind_crews`
+    """
+    user: Player = Players_Controller().get_player(interaction.user.id)
+    host: Player = Players_Controller().get_player(tour.host.id)
+    
+    # TODO Should we only log the command if someone who is not the original host is trying to modify the tour's data?
+    """
+    if user.id == host.id:
+        return
+    """
+
+    log_thread = await Channels().get_commands_usage_thread(interaction.client)
+    args = [f'- {arg}\n' for arg in args if arg is not None]
+    content = f'{user.discord_ping} ({user.amq_name}) used command `/{command_name}` in {host.discord_ping} ({host.amq_name})\'s tour'
+    if args:
+        content += ' with parameters:\n'
+        content += ''.join(args)
+
+    await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
+
 
 @error_handler_decorator()
 async def tour_create(interaction: discord.Interaction, timer: int = None, size: int = None, info: str = '', custom_ping: str = ''):
@@ -192,6 +228,15 @@ async def tour_edit(interaction: discord.Interaction, timer: int | None, max_siz
     embed = tour.generate_join_embed()
     await tour.join_message.edit(embed=embed)
     await interaction.followup.send(content=content, ephemeral=True)
+    
+    # Log the command usage
+    args = [
+        f'`timer`: **{timer}**' if timer is not None else None,
+        f'`max_size`: **{max_size}**' if max_size is not None else None,
+        f'`is_open`: **{is_open}**' if is_open is not None else None,
+        f'`info`: **{discord.utils.escape_markdown(info)}**' if info is not None else None
+    ]
+    await _log_command(interaction, 'tour_edit', tour, args)
 
 
 @error_handler_decorator()
@@ -298,6 +343,10 @@ async def tour_players_add(interaction: discord.Interaction, players_str: str):
     tour_players = tour.display_tour_players_and_queue()
     await tour.players_message.edit(content=tour_players)
 
+    # Log the command usage
+    args = [f'`players`: **{discord.utils.escape_markdown(players_str)}**']
+    await _log_command(interaction, 'tour_players_add', tour, args)
+
 
 @error_handler_decorator()
 async def tour_players_remove(interaction: discord.Interaction, players_str: str):
@@ -348,6 +397,10 @@ async def tour_players_remove(interaction: discord.Interaction, players_str: str
     tour_players = tour.display_tour_players_and_queue()
     await tour.players_message.edit(content=tour_players)
 
+    # Log the command usage
+    args = [f'`players`: **{discord.utils.escape_markdown(players_str)}**']
+    await _log_command(interaction, 'tour_players_remove', tour, args)
+
 
 @error_handler_decorator()
 async def tour_players_list(interaction: discord.Interaction):
@@ -390,6 +443,10 @@ async def tour_players_ping(interaction: discord.Interaction):
     content = 'Players pinged successfully'
     await interaction.followup.send(content=content, ephemeral=True)
 
+    # Log the command usage
+    args = []
+    await _log_command(interaction, 'tour_players_remove', tour, args)
+
 
 @error_handler_decorator()
 async def tour_end(interaction: discord.Interaction):
@@ -410,6 +467,10 @@ async def tour_end(interaction: discord.Interaction):
     
     content = 'Tour ended successfully'
     await interaction.followup.send(content=content, ephemeral=True)
+
+    # Log the command usage
+    args = []
+    await _log_command(interaction, 'tour_end', tour, args)
 
 
 @error_handler_decorator()
@@ -469,6 +530,13 @@ async def team_players_add(interaction: discord.Interaction, team_index: int, pl
     content += tour.get_players_not_in_team()
     await interaction.followup.send(content=content, ephemeral=True)
 
+    # Log the command usage
+    args = [
+        f'`team_index`: **{team_index}**',
+        f'`players`: **{discord.utils.escape_markdown(players_str)}**'
+    ]
+    await _log_command(interaction, 'team_players_add', tour, args)
+
 
 @error_handler_decorator()
 async def team_players_remove(interaction: discord.Interaction, team_index: int, players_str: str):
@@ -507,6 +575,13 @@ async def team_players_remove(interaction: discord.Interaction, team_index: int,
 
     content += tour.get_players_not_in_team()
     await interaction.followup.send(content=content, ephemeral=True)
+
+    # Log the command usage
+    args = [
+        f'`team_index`: **{team_index}**',
+        f'`players`: **{discord.utils.escape_markdown(players_str)}**'
+    ]
+    await _log_command(interaction, 'team_players_remove', tour, args)
 
 
 @error_handler_decorator()
@@ -551,6 +626,13 @@ async def team_randomize(interaction: discord.Interaction, number_of_teams: int,
             real_teams = '\n'.join(real_teams)
             await new_interaction.channel.send(real_teams)
             await new_interaction.followup.send(content='Roles added successfully!', ephemeral=True)
+
+            # Log the command usage
+            args = [
+                f'`number_of_teams`: **{number_of_teams}**',
+                f'`criteria`: **{criteria}**'
+            ]
+            await _log_command(interaction, 'team_randomize', tour, args)
 
 
         @discord.ui.button(label='Reroll', style=discord.ButtonStyle.green)
@@ -620,6 +702,13 @@ async def roll_groups(interaction: discord.Interaction, number_of_groups: int, c
             await new_interaction.response.defer(ephemeral=True)
             await new_interaction.channel.send(self.groups)
             await new_interaction.followup.send(content='Groups displayed suceessfully', ephemeral=True)
+
+            # Log the command usage
+            args = [
+                f'`number_of_groups`: **{number_of_groups}**',
+                f'`criteria`: **{criteria}**'
+            ]
+            await _log_command(interaction, 'roll_groups', tour, args)
 
 
         @discord.ui.button(label='Reroll', style=discord.ButtonStyle.green)
@@ -707,6 +796,10 @@ async def roll_blind_crews(interaction: discord.Interaction, criteria: int):
         except discord.errors.Forbidden:
             # host has dms closed, we don't send them the template then
             pass
+
+        # Log the command usage
+        args = [f'`criteria`: **{criteria}**']
+        await _log_command(interaction, 'roll_blind_crews', tour, args)
 
         
     await interaction.response.defer(ephemeral=True)

@@ -34,6 +34,7 @@ class Channels:
         self.gamemode_add_thread_id = channels_data['test']['logs']['threads']['gamemode_add']
         self.gamemode_delete_thread_id = channels_data['test']['logs']['threads']['gamemode_delete']
         self.gamemode_edit_thread_id = channels_data['test']['logs']['threads']['gamemode_edit']
+        self.commands_usage_thread_id = channels_data['test']['logs']['threads']['commands_usage']
 
 
     def get_main_guild(self, client: discord.Client) -> discord.Guild:
@@ -106,4 +107,11 @@ class Channels:
         test_guild = self.get_test_guild(client)
         # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.gamemode_edit_thread_id)
+        return thread
+    
+    async def get_commands_usage_thread(self, client: discord.Client) -> discord.Thread:
+        """Return the log thread object (from the test guild) used for keeping track of important (mainly tour) commands."""
+        test_guild = self.get_test_guild(client)
+        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
+        thread = await test_guild.fetch_channel(self.commands_usage_thread_id)
         return thread
