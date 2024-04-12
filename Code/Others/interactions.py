@@ -71,6 +71,52 @@ async def feedback(interaction: discord.Interaction):
     await interaction.response.send_modal(Feedback_Modal())
 
 
+async def report(interaction: discord.Interaction):
+    """Interaction to handle the `/report` command. It sends the report about toxic behavior to a channel only visible to a few specific hosts."""
+
+    class Report_Modal(discord.ui.Modal, title='Report'):
+
+        name = discord.ui.TextInput(
+            label='Name',
+            style=discord.TextStyle.short,
+            placeholder='Your amq name would be used if left empty',
+            default='',
+            required=False,
+            max_length=50
+        )
+
+        feedback = discord.ui.TextInput(
+            label='Report',
+            style=discord.TextStyle.long,
+            placeholder='Report the toxic behavior here (who and why)',
+            required=True,
+            max_length=1000
+        )
+
+        @error_handler_decorator()
+        async def on_submit(self, new_interaction: discord.Interaction):
+            await new_interaction.response.defer(ephemeral=True)
+
+            if self.name.value:
+                player_name = self.name
+            else:
+                player = Players_Controller().get_player(new_interaction.user.id)
+                player_name = player.amq_name if player is not None else 'Not Registered'
+
+            embed = discord.Embed(title='Report', color=discord.Colour.red())
+            embed.add_field(name='From', value=player_name, inline=False)
+            embed.add_field(name='Content', value=self.feedback, inline=False)
+            
+            report_channel = Channels().get_report_channel(new_interaction.client)
+            await to_webhook(interaction=new_interaction, webhook_name='Report', channel=report_channel, embed=embed)
+
+    """
+    await interaction.response.send_message(content='Not yet operational', ephemeral=True)
+    return
+    """
+    await interaction.response.send_modal(Report_Modal())
+
+
 @error_handler_decorator()
 async def pick(interaction: discord.Interaction, decision: str):
     """Interaction to handle the `/pick` command. It sends the `pick` to the pick channel."""
