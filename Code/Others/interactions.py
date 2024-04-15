@@ -110,10 +110,6 @@ async def report(interaction: discord.Interaction):
             report_channel = Channels().get_report_channel(new_interaction.client)
             await to_webhook(interaction=new_interaction, webhook_name='Report', channel=report_channel, embed=embed)
 
-    """
-    await interaction.response.send_message(content='Not yet operational', ephemeral=True)
-    return
-    """
     await interaction.response.send_modal(Report_Modal())
 
 
