@@ -18,6 +18,7 @@ class Others_Commands(Commands):
         Method that loads the "others" commands into the client's tree.
         - `/info`
         - `/feedback`
+        - `/report`
         - `/pick`
         - `/poll`
         """
