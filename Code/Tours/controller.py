@@ -17,7 +17,8 @@ class Tours_Controller:
     
     def _set_data(self) -> None:
         """Creates the active tours catalog."""
-        self.tours_active = {}
+        self._tour_cont = 0
+        self.tours: dict[int, Tour] = {}
 
 
     def start_new_tour(
@@ -29,28 +30,65 @@ class Tours_Controller:
         elo: bool = False,
         info: str = ''
     ) -> Tour:
-        """Starts a new tour. Returns the tour created."""
-        # TODO Tour ID
-        tour_id = 0
+        """
+        Starts a new tour, associates to it a `tour_id` and store it in the `tours` dict.\n
+        Returns the tour created.
+        """
+        tour_id = self._tour_cont
+        self._tour_cont += 1
 
         tour = Tour(tour_id=tour_id, host=host, guild=guild, timer=timer, max_players_size=size, counts_for_elo=elo, tour_info=info)
-        self.tours_active[tour_id] = tour
+        self.tours[tour_id] = tour
         return tour
     
 
-    def get_current_tour(self) -> Tour | None:
+    async def get_current_tour(self, interaction: discord.Interaction) -> Tour | None:
         """Returns the tour that is currently active."""
-        # TODO Tour ID
-        tour_id = 0
-        return self.tours_active.get(tour_id)
+
+        class Tours_Dropdown(discord.ui.Select):
+        
+            def __init__(self, active_tours: list[Tour]):
+                options = [
+                    discord.SelectOption(label=f'{tour.host.name}\'s Tour: "{tour.tour_info[:20]}"', value=str(i))
+                    for i, tour in enumerate(active_tours)
+                ]
+                super().__init__(placeholder='Select a tour to apply the changes', options=options)
+                self.active_tours = active_tours
+                self.selected_tour: Tour | None = None
+
+            async def callback(self, new_interaction: discord.Interaction):
+                await new_interaction.response.defer(ephemeral=True)
+                self.selected_tour = self.active_tours[int(self.values[0])]
+                self.view.stop()
+                await new_interaction.followup.send(content='Tour successfully selected', ephemeral=True)
     
 
-    async def end_current_tour(self, guild: discord.Guild) -> None:
-        """Ends the tour that is currently active."""
-        # TODO Tour ID
-        tour_id = 0
-        tour: Tour = self.tours_active.get(tour_id)
+        class Tours_Dropdown_View(discord.ui.View):
+            
+            def __init__(self, active_tours: list[Tour]):
+                super().__init__(timeout=180)
+                self.dropdown = Tours_Dropdown(active_tours)
+                self.add_item(self.dropdown)
+
+            async def on_timeout(self):
+                self.stop()
+            
+
+        active_tours = [tour for tour in self.tours.values() if tour.is_tour_active]
+        if not active_tours:
+            return None
         
+        if len(active_tours) == 1:
+            return active_tours[0]
+
+        view = Tours_Dropdown_View(active_tours)
+        await interaction.followup.send(view=view, ephemeral=True)
+        await view.wait()
+        return view.dropdown.selected_tour
+    
+
+    async def end_current_tour(self, tour: Tour, guild: discord.Guild) -> None:
+        """Ends the tour that is currently active."""        
         # Remove the roles from the players
         [await team.reset_roles(guild) for team in tour.teams]
         
@@ -58,4 +96,5 @@ class Tours_Controller:
         tour.is_tour_active = False
         tour.is_tour_open = False
 
-        del self.tours_active[tour_id]
+        # NOTE we do not remove the ended tour from self.tours dict
+        # TODO tours database?

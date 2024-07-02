@@ -118,14 +118,6 @@ async def tour_create(interaction: discord.Interaction, timer: int = None, size:
             await tour_quit(interaction=new_interaction, tour=self.tour)
 
 
-    # Check if there is a tour active at the moment
-    tour = Tours_Controller().get_current_tour()
-    if tour is not None:
-        url = tour.join_message.jump_url
-        content = f'There is a tour active at the moment:\n{url}\nIf the host forgot to close it, close it yourself with command `/tour_end` and then use `/tour_create` again'
-        await interaction.followup.send(content=content, ephemeral=True)
-        return
-
     # Create a new tour
     tour = Tours_Controller().start_new_tour(
         host=interaction.user,
@@ -161,7 +153,7 @@ async def tour_edit(interaction: discord.Interaction, timer: int | None, max_siz
         return
 
     # Get the tour that is currently active
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -249,7 +241,7 @@ async def tour_quit(interaction: discord.Interaction, tour: Tour = None):
 
     # If no tour added, get current tour
     if tour is None:
-        tour = Tours_Controller().get_current_tour()
+        tour = await Tours_Controller().get_current_tour(interaction)
         if tour is None:
             content = 'There is not a tour active at the moment'
             await interaction.followup.send(content=content, ephemeral=True)
@@ -300,7 +292,7 @@ async def tour_players_add(interaction: discord.Interaction, players_str: str):
     await interaction.response.defer(ephemeral=True)
 
     # Get the tour that is currently active
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -354,7 +346,7 @@ async def tour_players_remove(interaction: discord.Interaction, players_str: str
     await interaction.response.defer(ephemeral=True)
     
     # Get the tour that is currently active
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -408,7 +400,7 @@ async def tour_players_list(interaction: discord.Interaction):
     await interaction.response.defer(ephemeral=False)
 
     # Get the tour that is currently active
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=False)
@@ -425,7 +417,7 @@ async def tour_players_ping(interaction: discord.Interaction):
     await interaction.response.defer(ephemeral=True)
 
     # Get the tour that is currently active
-    tour = Tours_Controller().get_current_tour()
+    tour = await  Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -453,13 +445,13 @@ async def tour_end(interaction: discord.Interaction):
     """Interaction to handle the `/tour_end` command. It ends the tour that is currently active."""
     await interaction.response.defer(ephemeral=True)
 
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
         return
     
-    await Tours_Controller().end_current_tour(guild=interaction.guild)
+    await Tours_Controller().end_current_tour(tour=tour, guild=interaction.guild)
 
     # Modify the "Looking for players" join embed's field to False
     embed = tour.generate_join_embed()
@@ -469,7 +461,7 @@ async def tour_end(interaction: discord.Interaction):
     await interaction.followup.send(content=content, ephemeral=True)
 
     # Log the command usage
-    args = []
+    args = [f'**tour:** {tour.join_message.jump_url}']
     await _log_command(interaction, 'tour_end', tour, args)
 
 
@@ -478,7 +470,7 @@ async def team_players_list(interaction: discord.Interaction):
     """Interaction to handle the `/team_players_list` command. It send a message with the list of players that are in a team sorted by their rank."""
     await interaction.response.defer(ephemeral=False)
     
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=False)
@@ -497,7 +489,7 @@ async def team_players_add(interaction: discord.Interaction, team_index: int, pl
     """Interaction to handle the `/team_players_add` command. It adds tour players to a specific team."""
     await interaction.response.defer(ephemeral=True)
 
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -543,7 +535,7 @@ async def team_players_remove(interaction: discord.Interaction, team_index: int,
     """Interaction to handle the `/team_players_remove` command. It removes tour players from a specific team."""
     await interaction.response.defer(ephemeral=True)
 
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -652,7 +644,7 @@ async def team_randomize(interaction: discord.Interaction, number_of_teams: int,
 
     await interaction.response.defer(ephemeral=True)
 
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -721,7 +713,7 @@ async def roll_groups(interaction: discord.Interaction, number_of_groups: int, c
 
     await interaction.response.defer(ephemeral=True)
 
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -804,7 +796,7 @@ async def roll_blind_crews(interaction: discord.Interaction, criteria: int):
         
     await interaction.response.defer(ephemeral=True)
 
-    tour = Tours_Controller().get_current_tour()
+    tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
