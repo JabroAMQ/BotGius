@@ -1,26 +1,22 @@
-from os import getenv
+import json
+import os
 
 import psycopg2, psycopg2.extras, psycopg2.extensions
 from dotenv import load_dotenv
 
 
 load_dotenv()
-
-DATABASE_HOST = getenv('DATABASE_HOST')
-DATABASE_NAME = getenv('DATABASE_NAME')
-DATABASE_USER = getenv('DATABASE_USER')
-DATABASE_PORT = getenv('DATABASE_PORT')
-DATABASE_PASSWORD = getenv('DATABASE_PASSWORD')
+database_creds = json.loads(os.getenv('DATABASE_CREDS'))
 
 
 def _connect_to_database() -> tuple[psycopg2.extensions.connection, psycopg2.extensions.cursor]:
     """Method in charge of establishing a connection with the Gamemodes Database."""
     conn = psycopg2.connect(
-        host = DATABASE_HOST,
-        dbname = DATABASE_NAME,
-        user = DATABASE_USER,
-        port = DATABASE_PORT,
-        password = DATABASE_PASSWORD
+        host = database_creds['host'],
+        dbname = database_creds['dbname'],
+        user = database_creds['user'],
+        port = database_creds['port'],
+        password = database_creds['password']
     )
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     return conn, cur
