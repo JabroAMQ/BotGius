@@ -1,5 +1,4 @@
 __pycache__/
 Config/
 .env
-credentials-sheets-api.json
 launcher.bat

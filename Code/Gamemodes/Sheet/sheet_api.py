@@ -4,10 +4,14 @@ Sheet: https://docs.google.com/spreadsheets/d/1VxqdLA3T_coSpoFXhSnaNgAk3BZ2XQ7dr
 """
 
 import os
+import json
 
+import dotenv
 import gspread
+from google.oauth2.service_account import Credentials
 
 
+dotenv.load_dotenv()
 _MAIN_SHEET_KEY = '1VxqdLA3T_coSpoFXhSnaNgAk3BZ2XQ7drvNgcUf6OXQ'
 
 
@@ -101,8 +105,10 @@ def get_sheet_data() -> tuple[
     - SpecialLists: `list[tuple[str, str, str, str, str, str, str]]`
         A list of tuples with all the special lists information (see _get_specialList docstring for further explanation).
     """
-    filename = os.path.join('Code', 'Gamemodes', 'Sheet', 'credentials-sheets-api.json')    # Private, it isn't added to the repository
-    gspread_client: gspread.client.Client = gspread.service_account(filename=filename)
+    credentials_info = json.loads(os.getenv('GOOGLE_SHEETS_CREDS'))
+    scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+    credentials = Credentials.from_service_account_info(credentials_info, scopes=scopes)
+    gspread_client = gspread.authorize(credentials)
     spreadsheet = gspread_client.open_by_key(_MAIN_SHEET_KEY)
 
     descriptions_ws, metronomes_ws, items_ws, artists_ws, tags_ws, specialLists_ws = (spreadsheet.get_worksheet(i) for i in range(6))
