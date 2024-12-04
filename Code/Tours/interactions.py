@@ -85,7 +85,7 @@ async def tour_create(interaction: discord.Interaction, timer: int = None, size:
             # Also we let tour helpers add banned people from `/tour_players_add` command (ban only affect if joning through this button)
             if player.is_banned:
                 content = 'You couldn\'t join the tour because you are banned :worried:'
-                await interaction.followup.send(content=content, ephemeral=True)
+                await new_interaction.followup.send(content=content, ephemeral=True)
                 return
             
             # Try to add the player to the tour and inform the user about the result
