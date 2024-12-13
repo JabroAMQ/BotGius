@@ -3,15 +3,15 @@ import random
 from Code.Rolls import enums
 from Code.Gamemodes.controller import Main_Controller
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
-from Code.Gamemodes.Artists.artist import Artist
-from Code.Gamemodes.SpecialLists.specialList import SpecialList
+from Code.Gamemodes.Artists.og_artist import OG_Artist
+from Code.Gamemodes.SpecialLists.og_specialList import OG_SpecialList
 from Code.Gamemodes.GlobalPlayers.global_players import GlobalPlayer
 
 class Roll:
     """Static class that contains methods to produce all basic rolls."""
 
     @staticmethod
-    def roll(type: enums.Rolls_Enum, as_str: bool = False) -> str | Artist | SpecialList | GlobalPlayer:
+    def roll(type: enums.Rolls_Enum, as_str: bool = False) -> str | OG_Artist | OG_SpecialList | GlobalPlayer:
         """
         Roll some stuff (no gamemodes) based on the `type` value\n.
         Returns the roll itself if `as_str` = False or an string representation of the roll with some additional information if `as_str` = True.

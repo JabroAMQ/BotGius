@@ -1,9 +1,9 @@
-class SpecialList:
-    """Class that instanciates a SpecialList object containing the information that is stored in the sheet."""
+class OG_SpecialList:
+    """Class that instanciates a OG SpecialList object containing the information that is stored in the sheet."""
 
     def __init__(self, special_list_name: str, list_name: str, list_from: str, list_sections: str, difficulty_range: str, special_list_description: str, author_name: str) -> None:
         """
-        Constructor of the Artist class.\n
+        Constructor of the OG Special List class.\n
         Parameters:
         -----------
         - `special_list_name`: `str`
@@ -30,13 +30,13 @@ class SpecialList:
         self.difficulty_range = difficulty_range
 
     def __str__(self) -> str:
-        """Return a string representation of the SpecialList object. Use it to display special list info in a compressed way (e.g. displaying info from all special lists)"""
+        """Return a string representation of the OG SpecialList object. Use it to display special list info in a compressed way (e.g. displaying info from all special lists)"""
         special_list = f'**{self.special_list_name}**: {self.list_name} (From {self.list_from} // Sections: {self.list_sections} // Difficulty: {self.difficulty_range}'
         special_list += f' // Author: {self.author_name})\n{self.special_list_description}'
         return special_list
 
     def __repr__(self) -> str:
-        """Return a string representation of the SpecialList object. Use it to display special list info in a extended way (e.g. displaying info from only one special list)"""
+        """Return a string representation of the OG SpecialList object. Use it to display special list info in a extended way (e.g. displaying info from only one special list)"""
         special_list = f'**Special List:** {self.special_list_name}\n'
         special_list += f'**List Name:** {self.list_name}\n'
         special_list += f'**From:** {self.list_from}\n'

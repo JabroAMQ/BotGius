@@ -6,9 +6,9 @@ from Code.Gamemodes.Sheet.sheet_scrapper import get_global_players
 from Code.Gamemodes.Gamemodes.controller import Gamemodes_Controller
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 from Code.Gamemodes.Artists.controller import Artist_Controller
-from Code.Gamemodes.Artists.artist import Artist
+from Code.Gamemodes.Artists.og_artist import OG_Artist
 from Code.Gamemodes.SpecialLists.controller import SpecialList_Controller
-from Code.Gamemodes.SpecialLists.specialList import SpecialList
+from Code.Gamemodes.SpecialLists.og_specialList import OG_SpecialList
 from Code.Gamemodes.GlobalPlayers.controller import GlobalPlayer_Controller
 from Code.Gamemodes.GlobalPlayers.global_players import GlobalPlayer
 
@@ -29,17 +29,18 @@ class Main_Controller:
         - Metronomes
         - Items
         - Tags
-        - Artists
+        - OG_Artists
+        - CQ_Artists
         - Special Lists
         - Global Players
         - Genres
         """
-        gamemodes_descriptions, self.metronomes, self.items, artists, self.tags, special_lists = get_sheet_data()
+        gamemodes_descriptions, self.metronomes, self.items, self.tags, og_artists, cq_artists, og_special_lists, cq_special_lists = get_sheet_data()
         
         self.gamemodes = Gamemodes_Controller(gamemodes_descriptions)
 
-        self.artists = Artist_Controller(artists)
-        self.special_lists = SpecialList_Controller(special_lists)
+        self.artists = Artist_Controller(og_artists, cq_artists)
+        self.special_lists = SpecialList_Controller(og_special_lists, cq_special_lists)
 
         global_players = get_global_players()
         self.global_players = GlobalPlayer_Controller(global_players)
@@ -93,11 +94,11 @@ class Main_Controller:
         """Return a list containing all the gamemodes."""
         return self.gamemodes.get_all_gamemodes()
     
-    def get_artists(self) -> list[Artist]:
+    def get_artists(self) -> list[OG_Artist]:
         """Return a list with all the artists stored."""
         return self.artists.get_artists()
     
-    def get_special_lists(self) -> list[SpecialList]:
+    def get_special_lists(self) -> list[OG_SpecialList]:
         """Return a list with all the special lists stored."""
         return self.special_lists.get_special_lists()
     

@@ -1,9 +1,12 @@
-class Artist:
-    """Class that instanciates an Artist object containing the information that is stored in the sheet."""
+class OG_Artist:
+    """
+    Class that instanciates an OG Artist object containing the information that is stored in the sheet.\n
+    These are Anilist/MyAnimeList lists that have all the shows where the artist(s) sings in (songs from those shows by different artist can play).
+    """
 
     def __init__(self, artist_name: str, list_name: str, score_range: str, list_sections: str, list_from: str, author_name: str) -> None:
         """
-        Constructor of the Artist class.\n
+        Constructor of the OG_Artist class.\n
         Parameters:
         -----------
         - `artist_name`: `str`
@@ -27,11 +30,11 @@ class Artist:
         self.score_range = score_range
 
     def __str__(self) -> str:
-        """Return a string representation of the Artist object. Use it to display artist info in a compressed way (e.g. displaying info from all artists)"""
+        """Return a string representation of the OG Artist object. Use it to display artist info in a compressed way (e.g. displaying info from all artists)"""
         return f'**{self.artist_name}** // {self.list_name} // Score {self.score_range} // {self.list_sections} // {self.list_from}'
 
     def __repr__(self) -> str:
-        """Return a string representation of the Artist object. Use it to display artist info in a extended way (e.g. displaying info from only one artist)"""
+        """Return a string representation of the OG Artist object. Use it to display artist info in a extended way (e.g. displaying info from only one artist)"""
         artist = f'**Artist:** {self.artist_name}\n'
         artist += f'**List:** {self.list_name}\n'
         artist += f'**Score:** {self.score_range}\n'

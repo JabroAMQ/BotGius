@@ -22,7 +22,7 @@ def _get_gamemodes_description(descriptions_worksheet: gspread.worksheet.Workshe
         for row in descriptions_worksheet.get_all_values()
     }
 
-def _get_artists(artists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str, str, str]]:
+def _get_og_artists(og_artists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str, str, str]]:
     """
     Return a list of tuples with all the artist information:
     - First Element: `str`
@@ -40,10 +40,27 @@ def _get_artists(artists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[s
     """
     return [
         (row[0], row[1], row[2], row[3], row[4], row[5])
-        for row in artists_worksheet.get_all_values()
+        for row in og_artists_worksheet.get_all_values()
     ]
 
-def _get_specialLists(specialLists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str, str, str, str]]:
+def _get_cq_artists(cq_artists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str]]:
+    """
+    Return a list of tuples with all the artist information:
+    - First Element: `str`
+        The Artist(s) name(s).
+    - Second Element: `str`
+        The Community Quiz name.
+    - Third Element: `str`
+        The number of songs that the quiz has.
+    - Fourth Element: `str`
+        The Player who created the list.
+    """
+    return [
+        (row[0], row[1], row[2], row[3])
+        for row in cq_artists_worksheet.get_all_values()
+    ]
+
+def _get_og_specialLists(og_specialLists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str, str, str, str]]:
     """
     Return a list of tuples with all the special list information:
         - First Element: `str`
@@ -63,7 +80,24 @@ def _get_specialLists(specialLists_worksheet: gspread.worksheet.Worksheet) -> li
     """
     return [
         (row[0], row[1], row[2], row[3], row[4], row[5], row[6])
-        for row in specialLists_worksheet.get_all_values()
+        for row in og_specialLists_worksheet.get_all_values()
+    ]
+
+def _get_cq_specialLists(cq_specialLists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str]]:
+    """
+    Return a list of tuples with all the special list information:
+    - First Element: `str`
+        The Special List(s) name(s).
+    - Second Element: `str`
+        The Community Quiz name.
+    - Third Element: `str`
+        The number of songs that the quiz has.
+    - Fourth Element: `str`
+        The Player who created the list.
+    """
+    return [
+        (row[0], row[1], row[2], row[3])
+        for row in cq_specialLists_worksheet.get_all_values()
     ]
 
 def _get_default(worksheet: gspread.worksheet.Worksheet, add_new_line: bool = True) -> list[str]:
@@ -82,9 +116,11 @@ def get_sheet_data() -> tuple[
         dict[str, str],
         list[str],
         list[str],
-        list[tuple[str, str, str, str, str, str]],
         list[str],
-        list[tuple[str, str, str, str, str, str, str]]
+        list[tuple[str, str, str, str, str, str]],
+        list[tuple[str, str, str, str]],
+        list[tuple[str, str, str, str, str, str, str]],
+        list[tuple[str, str, str, str]]
     ]:
     """
     Method to retrieve the information from the gamemodes spreadsheet.
@@ -98,12 +134,20 @@ def get_sheet_data() -> tuple[
         A list of strings with all the possible metronome powers.
     - Items: `list[str]`
         A list of strings with all the possible items.
-    - Artists: `list[tuple[str, str, str, str, str, str]]`
-        A list of tuples with all the artists information (see _get_artists docstring for further explanation).
     - Tags: `list[str]`
         A list of strings with all the possible tags.
-    - SpecialLists: `list[tuple[str, str, str, str, str, str, str]]`
-        A list of tuples with all the special lists information (see _get_specialList docstring for further explanation).
+    - OG_Artists: `list[tuple[str, str, str, str, str, str]]`
+        A list of tuples with all the artists information (see _get_og_artists docstring for further explanation).\n
+        These are Anilist/MyAnimeList lists that have all the shows where the artist(s) sings in (songs from those shows by different artist can play).
+    - CQ_Artists: `list[tuple[str, str, str, str]]`
+        A list of tuples with all the artists information (see _get_cq_artists docstring for further explanation).\n
+        These are Community Quizes to get only the songs from the artist rather than all songs from the shows were the artist sings in.
+    - OG_SpecialLists: `list[tuple[str, str, str, str, str, str, str]]`
+        A list of tuples with all the special lists information (see _get_og_specialList docstring for further explanation).
+        These are Anilist/MyAnimeList lists that have all the shows included in the special lists (all songs from those shows can play).
+    - CQ_SpecialLists: `list[tuple[str, str, str, str, str, str, str]]`
+        A list of tuples with all the special lists information (see _get_cq_specialList docstring for further explanation).
+        These are Community Quizes to get only the songs from the composer/shows/whatever rather than all songs from the shows like in OG_SpecialLists.
     """
     credentials_info = json.loads(os.getenv('GOOGLE_SHEETS_CREDS'))
     scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -111,12 +155,14 @@ def get_sheet_data() -> tuple[
     gspread_client = gspread.authorize(credentials)
     spreadsheet = gspread_client.open_by_key(_MAIN_SHEET_KEY)
 
-    descriptions_ws, metronomes_ws, items_ws, artists_ws, tags_ws, specialLists_ws = (spreadsheet.get_worksheet(i) for i in range(6))
+    descriptions_ws, metronomes_ws, items_ws, tags_ws, og_artists_ws, cq_artists_ws, og_specialLists_ws, cq_specialLists_ws = (spreadsheet.get_worksheet(i) for i in range(8))
     descriptions = _get_gamemodes_description(descriptions_ws)
     metronomes = _get_default(metronomes_ws)
     items = _get_default(items_ws)
-    artists = _get_artists(artists_ws)
     tags = _get_default(tags_ws, add_new_line=False)
-    specialLists = _get_specialLists(specialLists_ws)
+    og_artists = _get_og_artists(og_artists_ws)
+    cq_artists = _get_cq_artists(cq_artists_ws)
+    og_specialLists = _get_og_specialLists(og_specialLists_ws)
+    cq_specialLists = _get_cq_specialLists(cq_specialLists_ws)
 
-    return descriptions, metronomes, items, artists, tags, specialLists
+    return descriptions, metronomes, items, tags, og_artists, cq_artists, og_specialLists, cq_specialLists
