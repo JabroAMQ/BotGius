@@ -31,6 +31,7 @@ class Moderation_Commands(Commands):
             is_now_banned='Whether you want to ban (True) or unban (False) the user'    
         )
         @app_commands.choices(is_now_banned=[app_commands.Choice(name=str(i), value=int(i)) for i in [True, False]])
+        @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
         async def ban_player(interaction: discord.Interaction, amq_name: str, is_now_banned: app_commands.Choice[int]):
             is_now_banned = bool(is_now_banned.value)
@@ -38,6 +39,7 @@ class Moderation_Commands(Commands):
 
 
         @client.tree.command(name='list_banned_players', description='List all banned players')
+        @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
         async def list_banned_players(interaction: discord.Interaction):
             await interactions.list_banned_players(interaction)
