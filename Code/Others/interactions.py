@@ -66,7 +66,9 @@ async def feedback(interaction: discord.Interaction):
             embed.add_field(name='Content', value=self.feedback, inline=False)
             
             feedback_channel = Channels().get_feedback_channel(new_interaction.client)
-            await to_webhook(interaction=new_interaction, webhook_name='Feedback', channel=feedback_channel, embed=embed)
+            host_channel = Channels().get_host_channel(new_interaction.client)
+            await to_webhook(interaction=new_interaction, webhook_name='Feedback', channel=feedback_channel, embed=embed, inform=False)
+            await to_webhook(interaction=new_interaction, webhook_name='Feedback', channel=host_channel, embed=embed)
 
     await interaction.response.send_modal(Feedback_Modal())
 

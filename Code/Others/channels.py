@@ -23,6 +23,7 @@ class Channels:
         self.main_guild_id = channels_data['main']['guild']
         self.test_guild_id = channels_data['test']['guild']
 
+        self.host_channel_id = channels_data['main']['host_chat']
         self.feedback_channel_id = channels_data['test']['feedback']
         self.report_channel_id = channels_data['test']['report']
         self.picks_channel_id = channels_data['test']['picks']
@@ -46,6 +47,11 @@ class Channels:
         """Return the test guild object."""
         return client.get_guild(self.test_guild_id)
     
+    def get_host_channel(self, client: discord.Client) -> discord.TextChannel:
+        """Return the host channel object (from the main guild)."""
+        main_guild = self.get_main_guild(client)
+        return main_guild.get_channel(self.host_channel_id)
+
     def get_feedback_channel(self, client: discord.Client) -> discord.TextChannel:
         """Return the feedback channel object (from the test guild)."""
         test_guild = self.get_test_guild(client)
