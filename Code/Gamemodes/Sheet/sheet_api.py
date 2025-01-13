@@ -19,7 +19,7 @@ def _get_gamemodes_description(descriptions_worksheet: gspread.worksheet.Workshe
     """Return a dictionary with the names of the gamemodes (lowercase) as Keys and their description as Values."""
     return {
         row[0].lower(): row[1]
-        for row in descriptions_worksheet.get_all_values()
+        for row in descriptions_worksheet.get_all_values()[1:]
     }
 
 def _get_og_artists(og_artists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str, str, str]]:
@@ -40,24 +40,26 @@ def _get_og_artists(og_artists_worksheet: gspread.worksheet.Worksheet) -> list[t
     """
     return [
         (row[0], row[1], row[2], row[3], row[4], row[5])
-        for row in og_artists_worksheet.get_all_values()
+        for row in og_artists_worksheet.get_all_values()[1:]
     ]
 
-def _get_cq_artists(cq_artists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str]]:
+def _get_cq_artists(cq_artists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str, str]]:
     """
     Return a list of tuples with all the artist information:
     - First Element: `str`
-        The Artist(s) name(s).
+        The Community quiz ID.
     - Second Element: `str`
-        The Community Quiz name.
+        The Artist(s) name(s).
     - Third Element: `str`
-        The number of songs that the quiz has.
+        The Community Quiz name.
     - Fourth Element: `str`
+        The number of songs that the quiz has.
+    - Fifth Element: `str`
         The Player who created the list.
     """
     return [
-        (row[0], row[1], row[2], row[3])
-        for row in cq_artists_worksheet.get_all_values()
+        (row[0], row[1], row[2], row[3], row[4])
+        for row in cq_artists_worksheet.get_all_values()[1:]
     ]
 
 def _get_og_specialLists(og_specialLists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str, str, str, str]]:
@@ -80,14 +82,16 @@ def _get_og_specialLists(og_specialLists_worksheet: gspread.worksheet.Worksheet)
     """
     return [
         (row[0], row[1], row[2], row[3], row[4], row[5], row[6])
-        for row in og_specialLists_worksheet.get_all_values()
+        for row in og_specialLists_worksheet.get_all_values()[1:]
     ]
 
-def _get_cq_specialLists(cq_specialLists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str]]:
+def _get_cq_specialLists(cq_specialLists_worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str, str, str, str]]:
     """
     Return a list of tuples with all the special list information:
     - First Element: `str`
-        The Special List(s) name(s).
+        The Community Quiz name ID.
+    - First Element: `str`
+        The Special List name.
     - Second Element: `str`
         The Community Quiz name.
     - Third Element: `str`
@@ -96,8 +100,8 @@ def _get_cq_specialLists(cq_specialLists_worksheet: gspread.worksheet.Worksheet)
         The Player who created the list.
     """
     return [
-        (row[0], row[1], row[2], row[3])
-        for row in cq_specialLists_worksheet.get_all_values()
+        (row[0], row[1], row[2], row[3], row[4])
+        for row in cq_specialLists_worksheet.get_all_values()[1:]
     ]
 
 def _get_default(worksheet: gspread.worksheet.Worksheet, add_new_line: bool = True) -> list[str]:
@@ -109,7 +113,7 @@ def _get_default(worksheet: gspread.worksheet.Worksheet, add_new_line: bool = Tr
     new_line = '\n' if add_new_line else ''
     return [
         f'{row[0]}{new_line}'
-        for row in worksheet.get_all_values()
+        for row in worksheet.get_all_values()[1:]
     ]
 
 def get_sheet_data() -> tuple[
@@ -118,9 +122,9 @@ def get_sheet_data() -> tuple[
         list[str],
         list[str],
         list[tuple[str, str, str, str, str, str]],
-        list[tuple[str, str, str, str]],
+        list[tuple[str, str, str, str, str]],
         list[tuple[str, str, str, str, str, str, str]],
-        list[tuple[str, str, str, str]]
+        list[tuple[str, str, str, str, str]]
     ]:
     """
     Method to retrieve the information from the gamemodes spreadsheet.

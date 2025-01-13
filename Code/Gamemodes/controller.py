@@ -61,10 +61,10 @@ class Main_Controller:
                 return self.gamemodes.list_all_gamemodes()
             
             case InfoType.METRONOMES.value:
-                return self.metronomes
+                return sorted(self.metronomes, key=str.lower)
             
             case InfoType.ITEMS.value:
-                return self.items
+                return sorted(self.items, key=str.lower)
             
             case InfoType.ARTISTS.value:
                 return self.artists.info_artists()
@@ -73,7 +73,7 @@ class Main_Controller:
                 return self.special_lists.info_special_lists()
             
             case InfoType.TAGS.value:
-                return self.tags
+                return sorted(self.tags, key=str.lower)
             
             case InfoType.GLOBAL_PLAYERS.value:
                 return self.global_players.info_global_players()

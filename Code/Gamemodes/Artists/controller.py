@@ -7,7 +7,7 @@ class Artist_Controller:
     def __init__(
         self,
         og_artists: list[tuple[str, str, str, str, str, str]],
-        cq_artists: list[tuple[str, str, str, str]]
+        cq_artists: list[tuple[str, str, str, str, str]]
     ) -> None:
         """
         Constructor of the Artist class.\n

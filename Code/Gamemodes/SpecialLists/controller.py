@@ -7,7 +7,7 @@ class SpecialList_Controller:
     def __init__(
         self,
         og_special_lists: list[tuple[str, str, str, str, str, str]],
-        cq_special_lists: list[tuple[str, str, str, str]]
+        cq_special_lists: list[tuple[str, str, str, str, str]]
     ) -> None:
         """
         Constructor of the SpecialList class.\n
