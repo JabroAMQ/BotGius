@@ -28,16 +28,18 @@ class Type_7(Enum):
 
 class Rolls_Enum(Enum):
     """Enumerate class to represent the different rollable stuff possible."""
-    ARTIST = 0
-    SPECIAL_LIST = 1
-    GLOBAL_PLAYER = 2
-    GENRE = 3
-    TAG = 4
-    METRONOME = 5
-    ITEM = 6
-    DISTRIBUTION = 7
-    TYPE_4 = 8
-    TYPE_7 = 9
+    ARTIST_OG = 0
+    ARTIST_CQ = 1
+    SPECIAL_LIST_OG = 2
+    SPECIAL_LIST_CQ = 3
+    GLOBAL_PLAYER = 4
+    GENRE = 5
+    TAG = 6
+    METRONOME = 7
+    ITEM = 8
+    DISTRIBUTION = 9
+    TYPE_4 = 10
+    TYPE_7 = 11
 
 
 class Roll_Gamemode(Enum):

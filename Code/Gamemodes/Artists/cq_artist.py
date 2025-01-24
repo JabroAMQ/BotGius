@@ -28,12 +28,12 @@ class CQ_Artist:
 
     def __str__(self) -> str:
         """Return a string representation of the CQ Artist object. Use it to display artist info in a compressed way (e.g. displaying info from all artists)"""
-        return f'**{self.artist_name}** // {self.community_quiz_id}: {self.community_quiz_name} // Score {self.number_of_songs} // {self.author_name}'
+        return f'**{self.artist_name}** // {self.community_quiz_id}: {self.community_quiz_name} // Songs: {self.number_of_songs} // {self.author_name}'
 
     def __repr__(self) -> str:
         """Return a string representation of the CQ Artist object. Use it to display artist info in a extended way (e.g. displaying info from only one artist)"""
         artist = f'**Artist:** {self.artist_name}\n'
-        artist += f'**Community Quiz:** {self.community_quiz_id}: {self.community_quiz_name}\n'
+        artist += f'**Community Quiz:** {self.community_quiz_id} {self.community_quiz_name}\n'
         artist += f'**Number of songs:** {self.number_of_songs}\n'
         artist += f'**Author:** {self.author_name}'
         return artist

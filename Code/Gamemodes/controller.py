@@ -7,8 +7,10 @@ from Code.Gamemodes.Gamemodes.controller import Gamemodes_Controller
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 from Code.Gamemodes.Artists.controller import Artist_Controller
 from Code.Gamemodes.Artists.og_artist import OG_Artist
+from Code.Gamemodes.Artists.cq_artist import CQ_Artist
 from Code.Gamemodes.SpecialLists.controller import SpecialList_Controller
 from Code.Gamemodes.SpecialLists.og_specialList import OG_SpecialList
+from Code.Gamemodes.SpecialLists.cq_specialList import CQ_SpecialList
 from Code.Gamemodes.GlobalPlayers.controller import GlobalPlayer_Controller
 from Code.Gamemodes.GlobalPlayers.global_players import GlobalPlayer
 
@@ -66,11 +68,17 @@ class Main_Controller:
             case InfoType.ITEMS.value:
                 return sorted(self.items, key=str.lower)
             
-            case InfoType.ARTISTS.value:
-                return self.artists.info_artists()
+            case InfoType.ARTISTS_OG.value:
+                return self.artists.info_artists_OG()
             
-            case InfoType.SPECIAL_LISTS.value:
-                return self.special_lists.info_special_lists()
+            case InfoType.ARTISTS_CQ.value:
+                return self.artists.info_artists_CQ()
+            
+            case InfoType.SPECIAL_LISTS_OG.value:
+                return self.special_lists.info_special_lists_OG()
+            
+            case InfoType.SPECIAL_LISTS_CQ.value:
+                return self.special_lists.info_special_lists_CQ()
             
             case InfoType.TAGS.value:
                 return sorted(self.tags, key=str.lower)
@@ -94,13 +102,21 @@ class Main_Controller:
         """Return a list containing all the gamemodes."""
         return self.gamemodes.get_all_gamemodes()
     
-    def get_artists(self) -> list[OG_Artist]:
-        """Return a list with all the artists stored."""
-        return self.artists.get_artists()
+    def get_artists_OG(self) -> list[OG_Artist]:
+        """Return a list with all the artists stored (original version)."""
+        return self.artists.get_artists_OG()
     
-    def get_special_lists(self) -> list[OG_SpecialList]:
-        """Return a list with all the special lists stored."""
-        return self.special_lists.get_special_lists()
+    def get_artists_CQ(self) -> list[CQ_Artist]:
+        """Return a list with all the artists stored (community quiz version)."""
+        return self.artists.get_artists_CQ()
+    
+    def get_special_lists_OG(self) -> list[OG_SpecialList]:
+        """Return a list with all the special lists stored (original version)."""
+        return self.special_lists.get_special_lists_OG()
+    
+    def get_special_lists_CQ(self) -> list[CQ_SpecialList]:
+        """Return a list with all the special lists stored (community quiz version)."""
+        return self.special_lists.get_special_lists_CQ()
     
     def get_global_players(self) -> list[GlobalPlayer]:
         """Return a list with all the global players stored."""

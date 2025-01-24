@@ -5,10 +5,12 @@ class InfoType(Enum):
     GAMEMODES = 0
     METRONOMES = 1
     ITEMS = 2
-    ARTISTS = 3
-    SPECIAL_LISTS = 4
-    TAGS = 5
-    GLOBAL_PLAYERS = 6
+    ARTISTS_OG = 3
+    ARTISTS_CQ = 4
+    SPECIAL_LISTS_OG = 5
+    SPECIAL_LISTS_CQ = 6
+    TAGS = 7
+    GLOBAL_PLAYERS = 8
 
 
 class Genres(Enum):

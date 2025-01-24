@@ -22,17 +22,32 @@ class SpecialList_Controller:
             for cq_special_list in cq_special_lists
         }
 
-    def get_special_lists(self) -> str:
-        """Return a list with all the special lists."""
+    def get_special_lists_OG(self) -> list[OG_SpecialList]:
+        """Return a list with all the special lists (original version)."""
         return list(self.og_special_lists.values())
     
-    def info_special_lists(self) -> list[str]:
+    def get_special_lists_CQ(self) -> list[CQ_SpecialList]:
+        """Return a list with all the special lists (community quiz version)."""
+        return list(self.cq_special_lists.values())
+    
+    def info_special_lists_OG(self) -> list[str]:
         """
-        Return a list with all the special lists stored in the special lists catalog.\n
+        Return a list with all the special lists stored in the special lists catalog (original version).\n
         The list is sorted by the special list's names and contains strings with compressed information from the special lists.
         """
         special_lists: list[str] = [
             str(special_list)+'\n'
             for special_list in self.og_special_lists.values()
+        ]
+        return sorted(special_lists, key=str.lower)
+    
+    def info_special_lists_CQ(self) -> list[str]:
+        """
+        Return a list with all the special lists stored in the special lists catalog (community quiz version).\n
+        The list is sorted by the special list's names and contains strings with compressed information from the special lists.
+        """
+        special_lists: list[str] = [
+            str(special_list)+'\n'
+            for special_list in self.cq_special_lists.values()
         ]
         return sorted(special_lists, key=str.lower)

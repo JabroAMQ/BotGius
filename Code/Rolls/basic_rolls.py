@@ -4,24 +4,26 @@ from Code.Rolls import enums
 from Code.Gamemodes.controller import Main_Controller
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 from Code.Gamemodes.Artists.og_artist import OG_Artist
+from Code.Gamemodes.Artists.cq_artist import CQ_Artist
 from Code.Gamemodes.SpecialLists.og_specialList import OG_SpecialList
+from Code.Gamemodes.SpecialLists.cq_specialList import CQ_SpecialList
 from Code.Gamemodes.GlobalPlayers.global_players import GlobalPlayer
 
 class Roll:
     """Static class that contains methods to produce all basic rolls."""
 
     @staticmethod
-    def roll(type: enums.Rolls_Enum, as_str: bool = False) -> str | OG_Artist | OG_SpecialList | GlobalPlayer:
+    def roll(type: enums.Rolls_Enum, as_str: bool = False) -> str | OG_Artist | CQ_Artist | OG_SpecialList | CQ_SpecialList | GlobalPlayer:
         """
         Roll some stuff (no gamemodes) based on the `type` value\n.
         Returns the roll itself if `as_str` = False or an string representation of the roll with some additional information if `as_str` = True.
 
         Example:
         --------
-        - `type == ARTIST` and `not as_str`:
+        - `type == ARTIST_OG` and `not as_str`:
             return the Artist object
 
-        - `type == ARTIST` and `as_str`:
+        - `type == ARTIST_OG` and `as_str`:
             return repr(Artist)
 
         - `type == GENRE` and `not as_str`:
@@ -32,12 +34,20 @@ class Roll:
         """
         match type:
 
-            case enums.Rolls_Enum.ARTIST:
-                roll = random.choice(Main_Controller().get_artists())
+            case enums.Rolls_Enum.ARTIST_OG:
+                roll = random.choice(Main_Controller().get_artists_OG())
                 return repr(roll) if as_str else roll
             
-            case enums.Rolls_Enum.SPECIAL_LIST:
-                roll = random.choice(Main_Controller().get_special_lists())
+            case enums.Rolls_Enum.ARTIST_CQ:
+                roll = random.choice(Main_Controller().get_artists_CQ())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Enum.SPECIAL_LIST_OG:
+                roll = random.choice(Main_Controller().get_special_lists_OG())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Enum.SPECIAL_LIST_CQ:
+                roll = random.choice(Main_Controller().get_special_lists_CQ())
                 return repr(roll) if as_str else roll
             
             case enums.Rolls_Enum.GLOBAL_PLAYER:

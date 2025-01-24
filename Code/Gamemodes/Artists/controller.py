@@ -23,17 +23,32 @@ class Artist_Controller:
         }
 
 
-    def get_artists(self) -> list[OG_Artist]:
-        """Return a list with all the artists."""
+    def get_artists_OG(self) -> list[OG_Artist]:
+        """Return a list with all the artists (original version)."""
         return list(self.og_artists.values())
     
-    def info_artists(self) -> list[str]:
+    def get_artists_CQ(self) -> list[CQ_Artist]:
+        """Return a list with all the artists (community quiz version)."""
+        return list(self.cq_artists.values())
+    
+    def info_artists_OG(self) -> list[str]:
         """
-        Return a list with all the artists stored in the artists catalog.\n
+        Return a list with all the artists stored in the artists catalog (original version).\n
         The list is sorted by the artist's names and contains strings with compressed information from the artists.
         """
         artists: list[str] = [
             str(artist)+'\n'
             for artist in self.og_artists.values()
+        ]
+        return sorted(artists, key=str.lower)
+    
+    def info_artists_CQ(self) -> list[str]:
+        """
+        Return a list with all the artists stored in the artists catalog (community quiz version).\n
+        The list is sorted by the artist's names and contains strings with compressed information from the artists.
+        """
+        artists: list[str] = [
+            str(artist)+'\n'
+            for artist in self.cq_artists.values()
         ]
         return sorted(artists, key=str.lower)
