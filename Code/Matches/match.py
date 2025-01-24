@@ -36,11 +36,11 @@ class Match:
 
         # Artistmania
         if 'artistmania' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.ARTIST, as_str=True)
+            return content + Roll.roll(Rolls_Enum.ARTIST_OG, as_str=True)
         
         # Special List
         elif 'special list' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.SPECIAL_LIST, as_str=True)
+            return content + Roll.roll(Rolls_Enum.SPECIAL_LIST_OG, as_str=True)
         
         # Global Player
         elif 'global player list' in self.gamemode.name.lower():
