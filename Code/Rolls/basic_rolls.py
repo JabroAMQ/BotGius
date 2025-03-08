@@ -85,6 +85,11 @@ class Roll:
                 roll = random.choice(type_7_names)
                 return f'**Type 7 rolled:** {roll}' if as_str else roll
             
+            case enums.Rolls_Enum.MASTERY_MODE:
+                mastery_mode_names = [mastery_mode.name.capitalize() for mastery_mode in enums.Mastery_Modes]
+                roll = random.choice(mastery_mode_names)
+                return f'**Mastery mode rolled:** {roll}' if as_str else roll
+            
             case _:
                 raise ValueError('Invalied "type" value')
 

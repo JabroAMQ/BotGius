@@ -26,6 +26,15 @@ class Type_7(Enum):
     OPEDIN = 6
 
 
+class Mastery_Modes(Enum):
+    """Enumerate class to represent the 5 mastery modes options."""
+    NOVICE = 0
+    INTERMEDIATE = 1
+    EXPERT = 2
+    ALIEN = 3
+    FULL = 4
+
+
 class Rolls_Enum(Enum):
     """Enumerate class to represent the different rollable stuff possible."""
     ARTIST_OG = 0
@@ -40,6 +49,7 @@ class Rolls_Enum(Enum):
     DISTRIBUTION = 9
     TYPE_4 = 10
     TYPE_7 = 11
+    MASTERY_MODE = 12
 
 
 class Roll_Gamemode(Enum):
