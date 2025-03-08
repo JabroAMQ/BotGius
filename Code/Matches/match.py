@@ -53,6 +53,11 @@ class Match:
         # Random Tag
         elif 'random tag' in self.gamemode.name.lower():
             return content + Roll.roll(Rolls_Enum.TAG, as_str=True)
+        
+        # Mastery Modes
+        # NOTE we do not add roll for watched mastery modes
+        elif 'mastery' in self.gamemode.name.lower() and not 'watched' in self.gamemode.name.lower():
+            return content + Roll.roll(Rolls_Enum.MASTERY_MODE, as_str=True)
 
         # Random Metronome
         elif 'metronome' in self.gamemode.name.lower():
