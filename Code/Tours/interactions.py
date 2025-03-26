@@ -376,7 +376,7 @@ async def tour_players_remove(interaction: discord.Interaction, players_str: str
     # Inform the host
     content = 'This is the result:\n'
     if from_players_list:
-        content += f'- **Fom players list:** {", ".join(from_players_list)}\n'
+        content += f'- **From players list:** {", ".join(from_players_list)}\n'
     if from_queue:
         content += f'- **From queue:** {", ".join(from_queue)}\n'
     if not_in_tour:
