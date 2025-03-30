@@ -110,6 +110,9 @@ class Roll:
             case enums.Roll_Gamemode.ONLY_2V2:
                 gamemodes = [gamemode for gamemode in gamemodes if gamemode.size == 2]
 
+            case enums.Roll_Gamemode.ONLY_3V3:
+                gamemodes = [gamemode for gamemode in gamemodes if gamemode.size == 3]
+
             case enums.Roll_Gamemode.ONLY_4V4:
                 gamemodes = [gamemode for gamemode in gamemodes if gamemode.size == 4]
                 
@@ -122,6 +125,9 @@ class Roll:
             case enums.Roll_Gamemode.ONLY_WATCHED_2V2:
                 gamemodes = [gamemode for gamemode in gamemodes if gamemode.watched_song_selection and gamemode.size == 2]
 
+            case enums.Roll_Gamemode.ONLY_WATCHED_3V3:
+                gamemodes = [gamemode for gamemode in gamemodes if gamemode.watched_song_selection and gamemode.size == 3]
+
             case enums.Roll_Gamemode.ONLY_WATCHED_4V4:
                 gamemodes = [gamemode for gamemode in gamemodes if gamemode.watched_song_selection and gamemode.size == 4]
 
@@ -133,6 +139,9 @@ class Roll:
 
             case enums.Roll_Gamemode.ONLY_RANDOM_2V2:
                 gamemodes = [gamemode for gamemode in gamemodes if not gamemode.watched_song_selection and gamemode.size == 2]
+
+            case enums.Roll_Gamemode.ONLY_RANDOM_3V3:
+                gamemodes = [gamemode for gamemode in gamemodes if not gamemode.watched_song_selection and gamemode.size == 3]
 
             case enums.Roll_Gamemode.ONLY_RANDOM_4V4:
                 gamemodes = [gamemode for gamemode in gamemodes if not gamemode.watched_song_selection and gamemode.size == 4]
