@@ -43,9 +43,8 @@ class Main_Controller:
         self.artists = Artist_Controller(og_artists, cq_artists)
         self.special_lists = SpecialList_Controller(og_special_lists, cq_special_lists)
 
-        # NOTE all_global_players is unused
         all_global_players, active_global_players = Sheet_Controller().get_global_players()
-        self.global_players = GlobalPlayer_Controller(active_global_players)
+        self.global_players = GlobalPlayer_Controller(all_global_players, active_global_players)
 
         self.genres = [genre.name.replace('_', ' ') for genre in Genres]
 
@@ -83,8 +82,11 @@ class Main_Controller:
             case InfoType.TAGS.value:
                 return sorted(self.tags, key=str.lower)
             
-            case InfoType.GLOBAL_PLAYERS.value:
-                return self.global_players.info_global_players()
+            case InfoType.ALL_GLOBAL_PLAYERS.value:
+                return self.global_players.info_all_global_players()
+            
+            case InfoType.ACTIVE_GLOBAL_PLAYERS.value:
+                return self.global_players.info_active_global_players()
             
             case _:
                 raise ValueError('Invalid type value!')
@@ -118,9 +120,13 @@ class Main_Controller:
         """Return a list with all the special lists stored (community quiz version)."""
         return self.special_lists.get_special_lists_CQ()
     
-    def get_global_players(self) -> list[GlobalPlayer]:
+    def get_all_global_players(self) -> list[GlobalPlayer]:
         """Return a list with all the global players stored."""
-        return self.global_players.get_global_players()
+        return self.global_players.get_all_global_players()
+    
+    def get_active_global_players(self) -> list[GlobalPlayer]:
+        """Return a list with all the active global players stored."""
+        return self.global_players.get_active_global_players()
     
     def get_genres(self) -> list[str]:
         """Return a list with all the anime genres stored."""

@@ -115,10 +115,10 @@ def get_global_players_data(client: gspread.Client) -> tuple[
     spreadsheet = client.open_by_key(_MAIN_SHEET_KEY)
 
     # NOTE skipping worksheet 0 as it is a hidden "Archive" sheet that we will ignore
-    input_data, active_players, inactive_players, list_check_full, list_check_tour = (spreadsheet.get_worksheet(i) for i in range(1, 6))
-    #print(input_data.title, active_players.title, inactive_players.title, list_check_full.title, list_check_tour.title)
+    input_data, active_players, inactive_players = (spreadsheet.get_worksheet(i) for i in range(1, 4))
+    #print(input_data.title, active_players.title, inactive_players.title)
     
-    # TODO store any additional information?
+    # TODO store inactive players data?
     all_players = _get_all_players(input_data)
     active_players = _get_active_players(active_players)
     

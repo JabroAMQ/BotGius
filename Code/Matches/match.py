@@ -44,7 +44,7 @@ class Match:
         
         # Global Player
         elif 'global player list' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.GLOBAL_PLAYER, as_str=True)
+            return content + Roll.roll(Rolls_Enum.ACTIVE_GLOBAL_PLAYER, as_str=True)
 
         # Random Genre
         elif 'random genre' in self.gamemode.name.lower():

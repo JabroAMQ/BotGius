@@ -41,15 +41,16 @@ class Rolls_Enum(Enum):
     ARTIST_CQ = 1
     SPECIAL_LIST_OG = 2
     SPECIAL_LIST_CQ = 3
-    GLOBAL_PLAYER = 4
-    GENRE = 5
-    TAG = 6
-    METRONOME = 7
-    ITEM = 8
-    DISTRIBUTION = 9
-    TYPE_4 = 10
-    TYPE_7 = 11
-    MASTERY_MODE = 12
+    ALL_GLOBAL_PLAYER = 4
+    ACTIVE_GLOBAL_PLAYER = 5
+    GENRE = 6
+    TAG = 7
+    METRONOME = 8
+    ITEM = 9
+    DISTRIBUTION = 10
+    TYPE_4 = 11
+    TYPE_7 = 12
+    MASTERY_MODE = 13
 
 
 class Roll_Gamemode(Enum):

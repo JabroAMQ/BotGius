@@ -10,7 +10,8 @@ class InfoType(Enum):
     SPECIAL_LISTS_OG = 5
     SPECIAL_LISTS_CQ = 6
     TAGS = 7
-    GLOBAL_PLAYERS = 8
+    ALL_GLOBAL_PLAYERS = 8
+    ACTIVE_GLOBAL_PLAYERS = 9
 
 
 class Genres(Enum):

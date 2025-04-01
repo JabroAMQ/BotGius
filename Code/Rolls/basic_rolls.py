@@ -50,8 +50,12 @@ class Roll:
                 roll = random.choice(Main_Controller().get_special_lists_CQ())
                 return repr(roll) if as_str else roll
             
-            case enums.Rolls_Enum.GLOBAL_PLAYER:
-                roll = random.choice(Main_Controller().get_global_players())
+            case enums.Rolls_Enum.ALL_GLOBAL_PLAYER:
+                roll = random.choice(Main_Controller().get_all_global_players())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Enum.ACTIVE_GLOBAL_PLAYER:
+                roll = random.choice(Main_Controller().get_active_global_players())
                 return repr(roll) if as_str else roll
 
             case enums.Rolls_Enum.GENRE:
