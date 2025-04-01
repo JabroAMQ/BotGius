@@ -1,19 +1,10 @@
 """
-This is the functionality required for loading into memory the data from Jabro's sheet using the Google API.
+This is the functionality required for loading into memory the data from Jabro's sheet using the Google's API.
 Sheet: https://docs.google.com/spreadsheets/d/1VxqdLA3T_coSpoFXhSnaNgAk3BZ2XQ7drvNgcUf6OXQ/
 """
-
-import os
-import json
-
-import dotenv
 import gspread
-from google.oauth2.service_account import Credentials
 
-
-dotenv.load_dotenv()
 _MAIN_SHEET_KEY = '1VxqdLA3T_coSpoFXhSnaNgAk3BZ2XQ7drvNgcUf6OXQ'
-
 
 def _get_gamemodes_description(descriptions_worksheet: gspread.worksheet.Worksheet) -> dict[str, str]:
     """Return a dictionary with the names of the gamemodes (lowercase) as Keys and their description as Values."""
@@ -116,7 +107,7 @@ def _get_default(worksheet: gspread.worksheet.Worksheet, add_new_line: bool = Tr
         for row in worksheet.get_all_values()[1:]
     ]
 
-def get_sheet_data() -> tuple[
+def get_botgius_data(client: gspread.Client) -> tuple[
         dict[str, str],
         list[str],
         list[str],
@@ -153,11 +144,7 @@ def get_sheet_data() -> tuple[
         A list of tuples with all the special lists information (see _get_cq_specialList docstring for further explanation).
         These are Community Quizes to get only the songs from the composer/shows/whatever rather than all songs from the shows like in OG_SpecialLists.
     """
-    credentials_info = json.loads(os.getenv('GOOGLE_SHEETS_CREDS'))
-    scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-    credentials = Credentials.from_service_account_info(credentials_info, scopes=scopes)
-    gspread_client = gspread.authorize(credentials)
-    spreadsheet = gspread_client.open_by_key(_MAIN_SHEET_KEY)
+    spreadsheet = client.open_by_key(_MAIN_SHEET_KEY)
 
     descriptions_ws, metronomes_ws, items_ws, tags_ws, og_artists_ws, cq_artists_ws, og_specialLists_ws, cq_specialLists_ws = (spreadsheet.get_worksheet(i) for i in range(8))
     descriptions = _get_gamemodes_description(descriptions_ws)

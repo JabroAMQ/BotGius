@@ -1,8 +1,7 @@
 from copy import copy
 
 from Code.Gamemodes.enums import InfoType, Genres
-from Code.Gamemodes.Sheet.sheet_api import get_sheet_data
-from Code.Gamemodes.Sheet.sheet_scrapper import get_global_players
+from Code.Gamemodes.Sheet.controller import Sheet_Controller
 from Code.Gamemodes.Gamemodes.controller import Gamemodes_Controller
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 from Code.Gamemodes.Artists.controller import Artist_Controller
@@ -37,15 +36,15 @@ class Main_Controller:
         - Global Players
         - Genres
         """
-        gamemodes_descriptions, self.metronomes, self.items, self.tags, og_artists, cq_artists, og_special_lists, cq_special_lists = get_sheet_data()
+        gamemodes_descriptions, self.metronomes, self.items, self.tags, og_artists, cq_artists, og_special_lists, cq_special_lists = Sheet_Controller().get_sheet_data()
         
         self.gamemodes = Gamemodes_Controller(gamemodes_descriptions)
 
         self.artists = Artist_Controller(og_artists, cq_artists)
         self.special_lists = SpecialList_Controller(og_special_lists, cq_special_lists)
 
-        global_players = get_global_players()
-        self.global_players = GlobalPlayer_Controller(global_players)
+        all_global_players, active_global_players = Sheet_Controller().get_global_players()
+        self.global_players = GlobalPlayer_Controller(active_global_players)
 
         self.genres = [genre.name.replace('_', ' ') for genre in Genres]
 
