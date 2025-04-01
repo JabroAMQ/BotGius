@@ -43,6 +43,7 @@ class Main_Controller:
         self.artists = Artist_Controller(og_artists, cq_artists)
         self.special_lists = SpecialList_Controller(og_special_lists, cq_special_lists)
 
+        # NOTE all_global_players is unused
         all_global_players, active_global_players = Sheet_Controller().get_global_players()
         self.global_players = GlobalPlayer_Controller(active_global_players)
 
