@@ -15,6 +15,15 @@ class Type_4(Enum):
     OPEDIN = 3
 
 
+class Type_5(Enum):
+    """Enumerate class to represent 5 song types that an AMQ game can have (OP/ED/IN/OPED/OPEDIN)."""
+    OP = 0
+    ED = 1
+    IN = 2
+    OPED = 3
+    OPEDIN = 4
+
+
 class Type_7(Enum):
     """Enumerate class to represent the 7 song type possibilities that an AMQ game can have."""
     OP = 0
@@ -49,8 +58,9 @@ class Rolls_Enum(Enum):
     ITEM = 9
     DISTRIBUTION = 10
     TYPE_4 = 11
-    TYPE_7 = 12
-    MASTERY_MODE = 13
+    TYPE_5 = 12
+    TYPE_7 = 13
+    MASTERY_MODE = 14
 
 
 class Roll_Gamemode(Enum):

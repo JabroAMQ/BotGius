@@ -84,6 +84,11 @@ class Roll:
                 roll = random.choice(type_4_names)
                 return f'**Type 4 rolled:** {roll}' if as_str else roll
             
+            case enums.Rolls_Enum.TYPE_5:
+                type_5_names = [type.name for type in enums.Type_5]
+                roll = random.choice(type_5_names)
+                return f'**Type 5 rolled:** {roll}' if as_str else roll
+            
             case enums.Rolls_Enum.TYPE_7:
                 type_7_names = [type.name for type in enums.Type_7]
                 roll = random.choice(type_7_names)
