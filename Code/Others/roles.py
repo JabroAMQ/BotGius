@@ -61,16 +61,13 @@ class Roles:
     
 
     async def remove_team_roles(self, guild: discord.Guild, player_id: int):
-        """
-        Remove all team roles from the player (identified by its discord id `player_id`) from the guild (identified by its id `guild_id`).
-        
-        Raises:
-        -----------
-        - ValueError: if the player or guild ids are not valid.
-        """
+        """Remove all team roles from the player (identified by its discord id `player_id`) from the guild (identified by its id `guild_id`)."""
         member = guild.get_member(player_id)
         if member is None:
-            raise ValueError('Invalid User ID')
+            # NOTE If raising an exception is prefered, make sure to handle it properly so when using a command like /tour_end or /reset_teams,
+            # the role removal chain is not broken
+            print(f'Invalid User ID ({player_id}). Player not in Guild ({guild.name if isinstance(guild, discord.Guild) else guild})?')
+            return
         
         role, other_roles = self._get_team_roles(guild)
         roles = other_roles + [role]
@@ -78,8 +75,8 @@ class Roles:
         
         try:
             await member.remove_roles(*roles_to_remove)
-        except Exception:
-            print(f'Couldn\'t remove role from player {player_id}')
+        except Exception as e:
+            print(f'Couldn\'t remove role from player {player_id}: {e}')
 
 
     async def add_team_role(self, guild: discord.Guild, player_id: int, role_index: int):
