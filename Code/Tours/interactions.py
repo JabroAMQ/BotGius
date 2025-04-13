@@ -445,24 +445,46 @@ async def tour_end(interaction: discord.Interaction):
     """Interaction to handle the `/tour_end` command. It ends the tour that is currently active."""
     await interaction.response.defer(ephemeral=True)
 
-    tour = await Tours_Controller().get_current_tour(interaction)
+    tour: Tour = await Tours_Controller().get_current_tour(interaction)
     if tour is None:
         content = 'There is not a tour active at the moment'
         await interaction.followup.send(content=content, ephemeral=True)
         return
     
-    await Tours_Controller().end_current_tour(tour=tour, guild=interaction.guild)
+    class Tour_End_Confirmation_View(discord.ui.View):
+        def __init__(self, tour: Tour, host_str: str):
+            super().__init__(timeout=60)
+            self.tour = tour
+            self.host_str = host_str
+            self.already_ended = False
 
-    # Modify the "Looking for players" join embed's field to False
-    embed = tour.generate_join_embed()
-    await tour.join_message.edit(embed=embed)
-    
-    content = 'Tour ended successfully'
-    await interaction.followup.send(content=content, ephemeral=True)
+        @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+        async def confirm(self, new_interaction: discord.Interaction, _ = discord.Button):
+            await new_interaction.response.defer(ephemeral=True)
+            if self.already_ended:
+                await new_interaction.followup.send(content=f'The tour ({self.host_str}) has already been ended', ephemeral=True)
+                return
 
-    # Log the command usage
-    args = [f'**tour:** {tour.join_message.jump_url}']
-    await _log_command(interaction, 'tour_end', tour, args)
+            # End the tour
+            self.already_ended = True
+            await Tours_Controller().end_current_tour(tour=self.tour, guild=new_interaction.guild)
+
+            # Modify the "Looking for players" join embed's field to False
+            embed = self.tour.generate_join_embed()
+            await self.tour.join_message.edit(embed=embed)
+            
+            # Send confirmation message
+            content = 'Tour ended successfully'
+            await new_interaction.followup.send(content=content, ephemeral=True)
+
+            # Log the command usage
+            args = [f'**tour:** {self.tour.join_message.jump_url}']
+            await _log_command(new_interaction, 'tour_end', self.tour, args)
+
+    host_str = f'{tour.host.name}\'s Tour: "{tour.tour_info[:20]}"'
+    content = f'You have selected the next tour:\n**{host_str}**.\nPlease click the button to confirm that you want to end it'
+    view = Tour_End_Confirmation_View(tour=tour, host_str=host_str)
+    await interaction.followup.send(content=content, view=view, ephemeral=True)
 
 
 @error_handler_decorator()

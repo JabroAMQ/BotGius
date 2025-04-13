@@ -64,7 +64,7 @@ class Roles:
         """Remove all team roles from the player (identified by its discord id `player_id`) from the guild (identified by its id `guild_id`)."""
         member = guild.get_member(player_id)
         if member is None:
-            # NOTE If raising an exception is prefered, make sure to handle it properly so when using a command like /tour_end or /reset_teams,
+            # NOTE If raising an exception is prefered, make sure to handle it properly so when using a command like /tour_end or /reset_teams
             # the role removal chain is not broken
             print(f'Invalid User ID ({player_id}). Player not in Guild ({guild.name if isinstance(guild, discord.Guild) else guild})?')
             return
@@ -80,16 +80,13 @@ class Roles:
 
 
     async def add_team_role(self, guild: discord.Guild, player_id: int, role_index: int):
-        """
-        Add the team role with index `role_index` to the player (identified by its discord id `player_id`) in the guild provided.
-        
-        Raises:
-        -----------
-        - ValueError: if the player or guild ids are not valid.
-        """
+        """Add the team role with index `role_index` to the player (identified by its discord id `player_id`) in the guild provided."""
         member = guild.get_member(player_id)
         if member is None:
-            raise ValueError('Invalid User ID')
+            # NOTE If raising an exception is prefered, make sure to handle it properly so when using a command like /team_players_add or /team_randomize
+            # the loop is not broken
+            print(f'Invalid User ID ({player_id}). Player not in Guild ({guild.name if isinstance(guild, discord.Guild) else guild})?')
+            return
         
         role, other_roles = self._get_team_roles(guild, role_index)
 
@@ -97,8 +94,8 @@ class Roles:
             roles_to_remove = [role for role in other_roles if role in member.roles]
             await member.remove_roles(*roles_to_remove)
             await member.add_roles(role)
-        except Exception:
-            print(f'Couldn\'t add role to player {player_id}')
+        except Exception as e:
+            print(f'Couldn\'t remove role from player {player_id}: {e}')
 
     
     async def add_all_team_roles(self, guild: discord.Guild, player_id: int):
@@ -118,5 +115,5 @@ class Roles:
 
         try:
             await member.add_roles(*roles_to_add)
-        except Exception:
-            print(f'Couldn\'t add role to player {player_id}')
+        except Exception as e:
+            print(f'Couldn\'t remove role from player {player_id}: {e}')
