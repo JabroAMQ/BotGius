@@ -74,10 +74,24 @@ class Roll:
                 roll = random.choice(Main_Controller().get_items())
                 return f'**Item rolled:** {roll}' if as_str else roll
             
+            case enums.Rolls_Enum.SONG_SELECTION:
+                selection_names = [selection.name for selection in enums.SongSelections]
+                roll = random.choice(selection_names)
+                if not as_str:
+                    return roll
+                # We additionally roll distribution if watched or mixed
+                if roll in {enums.SongSelections.MIXED.name, enums.SongSelections.WATCHED.name}:
+                    distribution_names = [distribution.name for distribution in enums.Distributions]
+                    distribution_roll = random.choice(distribution_names)
+                    return f'**Song selection rolled:** {roll.capitalize()} ({distribution_roll.capitalize()} distribution)'
+                else:
+                    return f'**Song selection rolled:** {roll.capitalize()}'
+
+            
             case enums.Rolls_Enum.DISTRIBUTION:
                 distribution_names = [distribution.name for distribution in enums.Distributions]
                 roll = random.choice(distribution_names)
-                return f'**Distribution rolled:** {roll}' if as_str else roll
+                return f'**Distribution rolled:** {roll.capitalize()}' if as_str else roll.capitalize()
             
             case enums.Rolls_Enum.TYPE_4:
                 type_4_names = [type.name for type in enums.Type_4]

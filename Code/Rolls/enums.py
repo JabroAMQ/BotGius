@@ -1,10 +1,17 @@
 from enum import Enum
 
+class SongSelections(Enum):
+    """Enumerate class to represent the possible song selections that an AMQ game can have."""
+    RANDOM = 0
+    MIXED = 1
+    WATCHED = 2
+
+
 class Distributions(Enum):
     """Enumerate class to represent the possible watched song distributions that an AMQ game can have."""
-    Random = 0
-    Weighted = 1
-    Equal = 2
+    RANDOM = 0
+    WEIGHTED = 1
+    EQUAL = 2
 
 
 class Type_4(Enum):
@@ -56,11 +63,12 @@ class Rolls_Enum(Enum):
     TAG = 7
     METRONOME = 8
     ITEM = 9
-    DISTRIBUTION = 10
-    TYPE_4 = 11
-    TYPE_5 = 12
-    TYPE_7 = 13
-    MASTERY_MODE = 14
+    SONG_SELECTION = 10
+    DISTRIBUTION = 11
+    TYPE_4 = 12
+    TYPE_5 = 13
+    TYPE_7 = 14
+    MASTERY_MODE = 15
 
 
 class Roll_Gamemode(Enum):
