@@ -43,7 +43,7 @@ class Tours_Commands(Commands):
         async def tour_create(
             interaction: discord.Interaction,
             timer: app_commands.Range[int, 1, 180] = None,
-            size: app_commands.Range[int, 8, 128] = None,
+            size: app_commands.Range[int, 4, 128] = None,
             info: str = '',
             ping: str = ''
         ):
@@ -62,7 +62,7 @@ class Tours_Commands(Commands):
         async def tour_edit(
             interaction: discord.Interaction,
             timer: app_commands.Range[int, 1, 180] = None,
-            size: app_commands.Range[int, 8, 128] = None,
+            size: app_commands.Range[int, 4, 128] = None,
             looking_for_players: bool = None,
             info: str = None
         ):
