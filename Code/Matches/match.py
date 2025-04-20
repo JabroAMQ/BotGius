@@ -10,11 +10,7 @@ class Match:
         self.gamemode = gamemode
         self.team_1 = team_1
         self.team_2 = team_2
-
-        # TODO Add new attributes (elo purposes)
-        # - Match Status (PLAYING, FINISHED, etc.)
-        # - Match Result (TEAM_1, TEAM_2, DRAW)
-        # - The special roll (artist, tag, etc.) rolled?
+        self.special_roll = None    # TODO
 
     
     def special_gamemode_additional_roll(self) -> str | None:
