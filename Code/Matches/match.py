@@ -2,6 +2,9 @@ from Code.Rolls.basic_rolls import Roll
 from Code.Rolls.enums import Rolls_Enum
 from Code.Players.player import Player
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
+from Code.Gamemodes.Artists.cq_artist import CQ_Artist
+from Code.Gamemodes.SpecialLists.cq_specialList import CQ_SpecialList
+from Code.Gamemodes.GlobalPlayers.global_players import GlobalPlayer
 
 class Match:
     """Class to represent a match. Formed by a gamemode and 2 list of players (team 1, team 2)."""
@@ -10,7 +13,7 @@ class Match:
         self.gamemode = gamemode
         self.team_1 = team_1
         self.team_2 = team_2
-        self.special_roll = None    # TODO
+        self.special_roll = None
 
     
     def special_gamemode_additional_roll(self) -> str | None:
@@ -32,34 +35,50 @@ class Match:
 
         # Artistmania
         if 'artistmania' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.ARTIST_OG, as_str=True)
+            artist: CQ_Artist = Roll.roll(Rolls_Enum.ARTIST_CQ)
+            self.special_roll = f'Artist: {artist.artist_name} (quiz ID: {artist.community_quiz_id})'
+            return content + repr(artist)
         
         # Special List
         elif 'special list' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.SPECIAL_LIST_OG, as_str=True)
+            special_list: CQ_SpecialList = Roll.roll(Rolls_Enum.SPECIAL_LIST_CQ)
+            self.special_roll = f'Special list: {special_list.special_list_name} (quiz ID: {special_list.community_quiz_id})'
+            return content + repr(special_list)
         
         # Global Player
         elif 'global player list' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.ACTIVE_GLOBAL_PLAYER, as_str=True)
+            global_player: GlobalPlayer = Roll.roll(Rolls_Enum.ACTIVE_GLOBAL_PLAYER)
+            self.special_roll = f'Player: {global_player.player_name} (list: {global_player.list_name} ({global_player.list_from}))'
+            return content + repr(global_player)
 
         # Random Genre
         elif 'random genre' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.GENRE, as_str=True)
+            genre: str = Roll.roll(Rolls_Enum.GENRE)
+            self.special_roll = f'Genre: {genre}'
+            return content + f'**Genre rolled:** {genre}'
 
         # Random Tag
         elif 'random tag' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.TAG, as_str=True)
+            tag: str = Roll.roll(Rolls_Enum.TAG)
+            self.special_roll = f'Tag: {tag}'
+            return content + f'**Tag rolled:** {tag}'
         
         # Mastery Modes
         # NOTE we do not add roll for watched mastery modes
         elif 'mastery' in self.gamemode.name.lower() and not 'watched' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.MASTERY_MODE, as_str=True)
+            mastery_mode: str = Roll.roll(Rolls_Enum.MASTERY_MODE)
+            self.special_roll = f'Mastery mode: {mastery_mode}'
+            return content + f'**Mastery mode rolled:** {mastery_mode}'
         
         # Type 5 (OP/ED/IN/OPED/OPEDIN)
         elif 'countdown' in self.gamemode.name.lower() or 'ftf' in self.gamemode.name.lower():
-            return content + Roll.roll(Rolls_Enum.TYPE_5, as_str=True)
+            type_5: str = Roll.roll(Rolls_Enum.TYPE_5)
+            self.special_roll = f'Type 5: {type_5}'
+            return content + f'**Type 5 rolled:** {type_5}'
 
         # Random Metronome
+        # NOTE not adding self.special_roll for metronomes on purpose
+        # self.special_roll is basically extra info for the host that is particularly useful in crews_duel. For these cases, knowing the metronome beforehand makes no sense
         elif 'metronome' in self.gamemode.name.lower():
             # Rolling 1 different metronome per player
             metronomes = ''

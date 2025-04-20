@@ -118,8 +118,15 @@ class Blind_Crews:
             team_2_names = [player.amq_name for player in match.team_2]
             team_2_names = ' '.join(team_2_names)
 
-            # 4. Add the data to content
+            # 4. Get the special roll (if any)
+            special_roll = match.special_roll
+
+            # 5. Add the data to content
             content += f'**{i+1}) {gamemode_name}:** {team_1_names} VS {team_2_names} --> \n'
+            if special_roll is not None:
+                content += f'{special_roll}\n\n'
+            else:
+                content += '\n'
 
         content = f'```{content}```'
         return content
