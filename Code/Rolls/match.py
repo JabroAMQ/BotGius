@@ -13,9 +13,20 @@ class Match:
         self.gamemode = gamemode
         self.team_1 = team_1
         self.team_2 = team_2
+        self.distribution = self._roll_distribution()
         self.special_roll = None
 
     
+    def _roll_distribution(self) -> str | None:
+        """
+        Return a string with the gamemode distribution like: "(Distribution: {distribution})".\n
+        If the gamemode's song selection is random, we return None instead.
+        """
+        if not self.gamemode.watched_song_selection:
+            return None
+        return self.gamemode.roll_distribution() 
+
+
     def special_gamemode_additional_roll(self) -> str | None:
         """
         For those special gamemodes that requires an additional roll (Artistmania, random tag, etc.), apply that roll.\n
@@ -46,19 +57,19 @@ class Match:
             return content + repr(special_list)
         
         # Global Player
-        elif 'global player list' in self.gamemode.name.lower():
+        elif 'global player' in self.gamemode.name.lower():
             global_player: GlobalPlayer = Roll.roll(Rolls_Enum.ACTIVE_GLOBAL_PLAYER)
             self.special_roll = f'Player: {global_player.player_name} (list: {global_player.list_name} ({global_player.list_from}))'
             return content + repr(global_player)
 
         # Random Genre
-        elif 'random genre' in self.gamemode.name.lower():
+        elif 'genre' in self.gamemode.name.lower():
             genre: str = Roll.roll(Rolls_Enum.GENRE)
             self.special_roll = f'Genre: {genre}'
             return content + f'**Genre rolled:** {genre}'
 
         # Random Tag
-        elif 'random tag' in self.gamemode.name.lower():
+        elif 'tag' in self.gamemode.name.lower():
             tag: str = Roll.roll(Rolls_Enum.TAG)
             self.special_roll = f'Tag: {tag}'
             return content + f'**Tag rolled:** {tag}'

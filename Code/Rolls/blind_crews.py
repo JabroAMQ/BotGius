@@ -3,7 +3,7 @@ from copy import copy
 
 from Code.Rolls import enums
 from Code.Rolls.basic_rolls import Roll
-from Code.Matches.match import Match
+from Code.Rolls.match import Match
 from Code.Players.player import Player
 
 class Blind_Crews:
@@ -86,8 +86,10 @@ class Blind_Crews:
             # 1. Add the gamemode
             content += f'**Gamemode selected:** {match.gamemode.name}\n'
             
-            # 2. Roll a valid gamemode distribution
-            content += f'{match.gamemode.roll_distribution()}\n'
+            # 2. Get the rolled distribution (automatically rolled in Match constructor)
+            distribution = match.distribution
+            if distribution is not None:
+                content += f'{distribution}\n'
             
             # 3. Add team_1 players
             team_1_names = [player.amq_name for player in match.team_1]
@@ -118,15 +120,19 @@ class Blind_Crews:
             team_2_names = [player.amq_name for player in match.team_2]
             team_2_names = ' '.join(team_2_names)
 
-            # 4. Get the special roll (if any)
+            # 4. Get the distribution (if any)
+            distribution = match.distribution
+
+            # 5. Get the special roll (if any)
             special_roll = match.special_roll
 
-            # 5. Add the data to content
+            # 6. Add the data to content
             content += f'**{i+1}) {gamemode_name}:** {team_1_names} VS {team_2_names} --> \n'
+            if distribution is not None:
+                content += f'{distribution}\n'
             if special_roll is not None:
-                content += f'{special_roll}\n\n'
-            else:
-                content += '\n'
+                content += f'{special_roll}\n'
+            content += '\n'
 
         content = f'```{content}```'
         return content
