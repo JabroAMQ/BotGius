@@ -58,6 +58,10 @@ class Match:
         # NOTE we do not add roll for watched mastery modes
         elif 'mastery' in self.gamemode.name.lower() and not 'watched' in self.gamemode.name.lower():
             return content + Roll.roll(Rolls_Enum.MASTERY_MODE, as_str=True)
+        
+        # Type 5 (OP/ED/IN/OPED/OPEDIN)
+        elif 'countdown' in self.gamemode.name.lower() or 'ftf' in self.gamemode.name.lower():
+            return content + Roll.roll(Rolls_Enum.TYPE_5, as_str=True)
 
         # Random Metronome
         elif 'metronome' in self.gamemode.name.lower():
