@@ -813,7 +813,7 @@ async def roll_blind_crews(interaction: discord.Interaction, criteria: int, duel
             pass
 
         # Log the command usage
-        args = [f'`criteria`: **{criteria}**']
+        args = [f'`criteria`: **{criteria}**', f'`duels`: **{duels}**']
         await _log_command(interaction, 'roll_blind_crews', tour, args)
 
         
