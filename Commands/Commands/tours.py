@@ -169,9 +169,14 @@ class Tours_Commands(Commands):
 
 
         @client.tree.command(name='roll_blind_crews', description='Roll a blind crews round')
-        @app_commands.describe(gamemodes='Which gamemodes to roll')
+        @app_commands.describe(
+            gamemodes='Which gamemodes to roll',
+            duels='Whether to add the players to each mode in the DM results template'
+        )
         @app_commands.choices(gamemodes=[app_commands.Choice(name=type.name.replace('_', ' ').capitalize(), value=type.value) for type in Roll_Gamemode])
+        @app_commands.choices(duels=[app_commands.Choice(name=str(i), value=int(i)) for i in [True, False]])
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def roll_blind_crews(interaction: discord.Interaction, gamemodes: app_commands.Choice[int]):
-            await interactions.roll_blind_crews(interaction, gamemodes.value)
+        async def roll_blind_crews(interaction: discord.Interaction, gamemodes: app_commands.Choice[int], duels: app_commands.Choice[int]):
+            duels = bool(duels.value)
+            await interactions.roll_blind_crews(interaction, gamemodes.value, duels)

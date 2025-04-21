@@ -759,33 +759,34 @@ async def roll_groups(interaction: discord.Interaction, number_of_groups: int, c
 
 
 @error_handler_decorator()
-async def roll_blind_crews(interaction: discord.Interaction, criteria: int):
+async def roll_blind_crews(interaction: discord.Interaction, criteria: int, duels: bool):
     """Interaction to handle the `/roll_blind_crews` command. It rolls a blind crews round."""
     
 
     class Teams_Dropdown(discord.ui.Select):
         
-        def __init__(self, criteria: int, active_teams: list[Team]):
+        def __init__(self, criteria: int, duels: bool, active_teams: list[Team]):
             options = [discord.SelectOption(label=team.name, value=str(i)) for i, team in enumerate(active_teams)]
             super().__init__(placeholder='Choose 2 teams', options=options, min_values=2, max_values=2)
             self.teams = active_teams
             self.criteria = criteria
+            self.duels = duels
 
         async def callback(self, new_interaction: discord.Interaction):
             await new_interaction.response.defer(ephemeral=True)
             team_1 = self.teams[int(self.values[0])]
             team_2 = self.teams[int(self.values[1])]
-            await roll_bc(new_interaction, self.criteria, team_1, team_2, add_team_names=True)
+            await roll_bc(new_interaction, self.criteria, self.duels, team_1, team_2, add_team_names=True)
     
 
     class Teams_Dropdown_View(discord.ui.View):
         
-        def __init__(self, criteria: int, active_teams: list[Team]):
+        def __init__(self, criteria: int, duels: bool, active_teams: list[Team]):
             super().__init__(timeout=180)
-            self.add_item(Teams_Dropdown(criteria, active_teams))
+            self.add_item(Teams_Dropdown(criteria, duels, active_teams))
             
 
-    async def roll_bc(interaction: discord.Interaction, criteria: int, team_1: Team, team_2: Team, add_team_names: bool = False):
+    async def roll_bc(interaction: discord.Interaction, criteria: int, duels: bool, team_1: Team, team_2: Team, add_team_names: bool = False):
         """Roll a blind crews round for 2 teams."""
         # Create the BlindCrews
         type = Roll_Gamemode(criteria)
@@ -795,7 +796,7 @@ async def roll_blind_crews(interaction: discord.Interaction, criteria: int):
         blind_crews.roll_blind_crews()
         round_info = blind_crews.get_round_information()
         additional_rolls = blind_crews.special_rolls_list
-        results_template = blind_crews.get_results_template()
+        results_template = blind_crews.get_results_template(duels)
 
         # Send the roll information
         if add_team_names:
@@ -835,8 +836,8 @@ async def roll_blind_crews(interaction: discord.Interaction, criteria: int):
         await interaction.followup.send(content=content, ephemeral=True)
     
     elif len(active_teams) == 2:
-        await roll_bc(interaction, criteria, active_teams[0], active_teams[1])
+        await roll_bc(interaction, criteria, duels, active_teams[0], active_teams[1])
     
     else:
-        view = Teams_Dropdown_View(criteria, active_teams)
+        view = Teams_Dropdown_View(criteria, duels, active_teams)
         await interaction.followup.send(view=view, ephemeral=True)

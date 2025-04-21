@@ -104,7 +104,7 @@ class Blind_Crews:
         return content
     
 
-    def get_results_template(self) -> str:
+    def get_results_template(self, duels: bool) -> str:
         """Given the stored set of matches, return a string with the results template to send to the host's dms."""
         content = ''
 
@@ -127,7 +127,11 @@ class Blind_Crews:
             special_roll = match.special_roll
 
             # 6. Add the data to content
-            content += f'**{i+1}) {gamemode_name}:** {team_1_names} VS {team_2_names} --> \n'
+            if duels:
+                content += f'**{i+1}) {gamemode_name}:**\n'
+            else:
+                content += f'**{i+1}) {gamemode_name}:** {team_1_names} VS {team_2_names} --> \n'
+
             if distribution is not None:
                 content += f'{distribution}\n'
             if special_roll is not None:

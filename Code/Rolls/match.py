@@ -63,13 +63,13 @@ class Match:
             return content + repr(global_player)
 
         # Random Genre
-        elif 'genre' in self.gamemode.name.lower():
+        elif 'genre' in self.gamemode.name.lower() and not 'picked' in self.gamemode.name.lower():
             genre: str = Roll.roll(Rolls_Enum.GENRE)
             self.special_roll = f'Genre: {genre}'
             return content + f'**Genre rolled:** {genre}'
 
         # Random Tag
-        elif 'tag' in self.gamemode.name.lower():
+        elif 'tag' in self.gamemode.name.lower() and not 'picked' in self.gamemode.name.lower():
             tag: str = Roll.roll(Rolls_Enum.TAG)
             self.special_roll = f'Tag: {tag}'
             return content + f'**Tag rolled:** {tag}'
