@@ -51,6 +51,16 @@ class Mastery_Modes(Enum):
     FULL = 4
 
 
+class Decades(Enum):
+    """Enumerate class to represent the rollable decades."""
+    _1940s_TO_1970s = 0
+    _1980s = 1
+    _1990s = 2
+    _2000s = 3
+    _2010s = 4
+    _2020s = 5
+
+
 class Rolls_Enum(Enum):
     """Enumerate class to represent the different rollable stuff possible."""
     ARTIST_OG = 0
@@ -69,6 +79,8 @@ class Rolls_Enum(Enum):
     TYPE_5 = 13
     TYPE_7 = 14
     MASTERY_MODE = 15
+    DECADE = 16
+    YEAR = 17
 
 
 class Roll_Gamemode(Enum):
