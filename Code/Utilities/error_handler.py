@@ -26,9 +26,14 @@ async def _interaction_error_handler(interaction: discord.Interaction, error: Ex
 def error_handler_decorator():
     """Decorator in charge of handling the most common exceptions that can occure during a `discord.Interaction`."""
     def decorator(func):
-        async def wrapper(interaction: discord.Interaction, *args, **kwargs):
+        async def wrapper(*args, **kwargs):
             try:
-                await func(interaction, *args, **kwargs)
+                # Try to find a discord.Interaction among the arguments
+                interaction = next((arg for arg in args if isinstance(arg, discord.Interaction)), None)
+                if interaction is None:
+                    raise ValueError('No discord.Interaction instance found in arguments.')
+                
+                await func(*args, **kwargs)
             except Exception as error:
                 await _interaction_error_handler(interaction, error)
 

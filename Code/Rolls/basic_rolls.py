@@ -123,7 +123,7 @@ class Roll:
                 return f'**Decade rolled:** {roll}' if as_str else roll
             
             case enums.Rolls_Enum.YEAR:
-                first_year = 1968       # Previous years do not have enough songs to be rolles (20+); modify if needed
+                first_year = 1968       # Previous years do not have enough songs to be rolled (20+); modify if needed
                 last_year = datetime.datetime.now().year
                 roll = random.randint(first_year, last_year)
                 return f'**Year rolled:** {roll}' if as_str else roll
