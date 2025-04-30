@@ -111,11 +111,13 @@ async def player_get_profile(interaction: discord.Interaction, amq_name: str, di
             self.current_page = initial_page
 
         @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def previous_profile_page(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             embed, self.current_page = await self.player.get_profile_embed(new_interaction.client, self.current_page - 1)
             await new_interaction.response.edit_message(embed=embed)
 
         @discord.ui.button(emoji='➡️', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def next_profile_page(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             embed, self.current_page = await self.player.get_profile_embed(new_interaction.client, self.current_page + 1)
             await new_interaction.response.edit_message(embed=embed)
@@ -251,11 +253,13 @@ async def player_show_ranking(interaction: discord.Interaction, rank_page: str):
             self.current_page = initial_page
 
         @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def show_previous_page(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             embed, self.current_page = Ranking().get_rank_embed(new_interaction.guild, self.current_page - 1)
             await new_interaction.response.edit_message(embed=embed)
 
         @discord.ui.button(emoji='➡️', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def show_next_page(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             embed, self.current_page = Ranking().get_rank_embed(new_interaction.guild, self.current_page + 1)
             await new_interaction.response.edit_message(embed=embed)

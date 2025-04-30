@@ -64,6 +64,7 @@ async def tour_create(interaction: discord.Interaction, timer: int = None, size:
             self.tour = tour
 
         @discord.ui.button(label='Join', emoji=join_emoji, style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def join(self, new_interaction: discord.Interaction, _: discord.Button):
             await new_interaction.response.defer(ephemeral=True)
 
@@ -108,6 +109,7 @@ async def tour_create(interaction: discord.Interaction, timer: int = None, size:
 
 
         @discord.ui.button(label='Leave', emoji=leave_emoji, style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def leave(self, new_interaction: discord.Interaction, _: discord.Button):
             # Make sure tour is still active...
             if not self.tour.is_tour_active:
@@ -115,7 +117,7 @@ async def tour_create(interaction: discord.Interaction, timer: int = None, size:
                 await new_interaction.response.send_message(content=content, ephemeral=True)
                 return
             
-            await tour_quit(interaction=new_interaction, tour=self.tour)
+            await tour_quit(new_interaction, self.tour)
 
 
     # Create a new tour
@@ -459,6 +461,7 @@ async def tour_end(interaction: discord.Interaction):
             self.already_ended = False
 
         @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def confirm(self, new_interaction: discord.Interaction, _ = discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             if self.already_ended:
@@ -614,6 +617,7 @@ async def team_randomize(interaction: discord.Interaction, number_of_teams: int,
             self.rerolled = False
 
         @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def confirm(self, new_interaction: discord.Interaction, _: discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             
@@ -650,6 +654,7 @@ async def team_randomize(interaction: discord.Interaction, number_of_teams: int,
 
 
         @discord.ui.button(label='Reroll', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def reroll(self, new_interaction: discord.Interaction, _: discord.Button):
             await new_interaction.response.defer(ephemeral=True)
 
@@ -712,6 +717,7 @@ async def roll_groups(interaction: discord.Interaction, number_of_groups: int, c
             self.groups = groups
 
         @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def confirm(self, new_interaction: discord.Interaction, _: discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             await new_interaction.channel.send(self.groups)
@@ -726,6 +732,7 @@ async def roll_groups(interaction: discord.Interaction, number_of_groups: int, c
 
 
         @discord.ui.button(label='Reroll', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def reroll(self, new_interaction: discord.Interaction, _: discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             _, groups = Teams_Roll.roll_teams(type=self.type, player_list=self.players, num_teams=self.number_of_groups)
@@ -772,6 +779,7 @@ async def roll_blind_crews(interaction: discord.Interaction, criteria: int, duel
             self.criteria = criteria
             self.duels = duels
 
+        @error_handler_decorator()
         async def callback(self, new_interaction: discord.Interaction):
             await new_interaction.response.defer(ephemeral=True)
             team_1 = self.teams[int(self.values[0])]

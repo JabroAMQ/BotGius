@@ -53,6 +53,7 @@ async def gamemode_delete(interaction: discord.Interaction, gamemode_name: str):
             self.already_deleted = False
         
         @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def confirm(self, new_interaction: discord.Interaction, _ = discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             if self.already_deleted:
@@ -131,6 +132,7 @@ async def gamemode_edit(
             self.changes_already_applied = False
         
         @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+        @error_handler_decorator()
         async def confirm(self, new_interaction: discord.Interaction, _ = discord.Button):
             await new_interaction.response.defer(ephemeral=True)
             if self.changes_already_applied:

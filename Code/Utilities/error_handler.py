@@ -28,8 +28,8 @@ def error_handler_decorator():
     def decorator(func):
         async def wrapper(*args, **kwargs):
             try:
-                # Try to find a discord.Interaction among the arguments
-                interaction = next((arg for arg in args if isinstance(arg, discord.Interaction)), None)
+                # Search for discord.Interaction in both args and kwargs
+                interaction = next((arg for arg in list(args) + list(kwargs.values()) if isinstance(arg, discord.Interaction)), None)
                 if interaction is None:
                     raise ValueError('No discord.Interaction instance found in arguments.')
                 

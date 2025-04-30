@@ -1,6 +1,7 @@
 import discord
 
 from Code.Tours.tour import Tour
+from Code.Utilities.error_handler import error_handler_decorator
 
 class Tours_Controller:
     """Controller to encapsule the Tours Logic from the rest of the application."""
@@ -56,6 +57,7 @@ class Tours_Controller:
                 self.active_tours = active_tours
                 self.selected_tour: Tour | None = None
 
+            @error_handler_decorator()
             async def callback(self, new_interaction: discord.Interaction):
                 await new_interaction.response.defer(ephemeral=True)
                 self.selected_tour = self.active_tours[int(self.values[0])]
