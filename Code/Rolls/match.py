@@ -57,7 +57,7 @@ class Match:
             return content + repr(special_list)
         
         # Global Player
-        elif 'global player' in self.gamemode.name.lower():
+        elif 'global player' in self.gamemode.name.lower() and not 'picked' in self.gamemode.name.lower():
             global_player: GlobalPlayer = Roll.roll(Rolls_Enum.ACTIVE_GLOBAL_PLAYER)
             self.special_roll = f'Player: {global_player.player_name} (list: {global_player.list_name} ({global_player.list_from}))'
             return content + repr(global_player)
