@@ -31,8 +31,9 @@ class Others_Commands(Commands):
 
         @client.tree.command(name='feedback', description='Send a feedback message to admins and tour helpers')
         @app_commands.guild_only
-        async def feedback(interaction: discord.Interaction):
-            await interactions.feedback(interaction)
+        @app_commands.describe(image="Optional image to attach with your feedback")
+        async def feedback(interaction: discord.Interaction, image: discord.Attachment = None):
+            await interactions.feedback(interaction, image)
 
         @client.tree.command(name='report', description='Report some toxic behavior that only a few specific hosts would be able to see')
         @app_commands.guild_only
