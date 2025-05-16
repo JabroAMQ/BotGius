@@ -37,8 +37,9 @@ class Others_Commands(Commands):
 
         @client.tree.command(name='report', description='Report some toxic behavior that only a few specific hosts would be able to see')
         @app_commands.guild_only
-        async def report(interaction: discord.Interaction):
-            await interactions.report(interaction)
+        @app_commands.describe(image="Optional image to attach with your feedback")
+        async def report(interaction: discord.Interaction, image: discord.Attachment = None):
+            await interactions.report(interaction, image)
         
         @client.tree.command(name='pick', description='Send a tour decision message to a channel that can only be seen by admins and tour helpers')
         @app_commands.describe(decision='The decision you want to send')

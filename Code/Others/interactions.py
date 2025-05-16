@@ -93,10 +93,13 @@ async def feedback(interaction: discord.Interaction, image: discord.Attachment =
     await interaction.response.send_modal(Feedback_Modal(image))
 
 
-async def report(interaction: discord.Interaction):
+async def report(interaction: discord.Interaction, image: discord.Attachment = None):
     """Interaction to handle the `/report` command. It sends the report about toxic behavior to a channel only visible to a few specific hosts."""
 
     class Report_Modal(discord.ui.Modal, title='Report'):
+        def __init__(self, image: discord.Attachment = None):
+            super().__init__()
+            self.image = image
 
         name = discord.ui.TextInput(
             label='Name',
@@ -128,11 +131,28 @@ async def report(interaction: discord.Interaction):
             embed = discord.Embed(title='Report', color=discord.Colour.red())
             embed.add_field(name='From', value=player_name, inline=False)
             embed.add_field(name='Content', value=self.feedback, inline=False)
+            if self.image:
+                embed.set_image(url=self.image.url)
             
             report_channel = Channels().get_report_channel(new_interaction.client)
             await to_webhook(interaction=new_interaction, webhook_name='Report', channel=report_channel, embed=embed)
 
-    await interaction.response.send_modal(Report_Modal())
+    if image:
+        # Ensure the attachment is an image
+        allowed_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.webp') # Check extension to guard against spoofed non-image files
+        if not image.content_type or not image.content_type.startswith('image/') or not image.filename.lower().endswith(allowed_extensions):
+            content = f'The only allowed image formats are PNG, JPG, JPEG, GIF, and WEBP. Please upload a valid image.'
+            await interaction.response.send_message(content, ephemeral=True)
+            return
+        # Check if the image is too large
+        # NOTE not tested (nitro needed)
+        if image.size > 8 * 1024 * 1024:  # 8 MB limit
+            size_mb = image.size / (1024 * 1024)
+            content = f'The image you uploaded is too large ({size_mb:.2f} MB). Please upload an image smaller than 8 MB.'
+            await interaction.response.send_message(content, ephemeral=True)
+            return
+
+    await interaction.response.send_modal(Report_Modal(image))
 
 
 @error_handler_decorator()
