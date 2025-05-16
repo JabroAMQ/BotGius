@@ -77,14 +77,16 @@ async def feedback(interaction: discord.Interaction, image: discord.Attachment =
 
     if image:
         # Ensure the attachment is an image
-        if not image.content_type or not image.content_type.startswith('image/'):
-            content = f'You can only upload images, not {image.content_type}.'
+        allowed_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.webp') # Check extension to guard against spoofed non-image files
+        if not image.content_type or not image.content_type.startswith('image/') or not image.filename.lower().endswith(allowed_extensions):
+            content = f'The only allowed image formats are PNG, JPG, JPEG, GIF, and WEBP. Please upload a valid image.'
             await interaction.response.send_message(content, ephemeral=True)
             return
         # Check if the image is too large
         # NOTE not tested (nitro needed)
         if image.size > 8 * 1024 * 1024:  # 8 MB limit
-            content = f'The image you uploaded is too large ({image.size}). Please upload an image smaller than 8 MB.'
+            size_mb = image.size / (1024 * 1024)
+            content = f'The image you uploaded is too large ({size_mb:.2f} MB). Please upload an image smaller than 8 MB.'
             await interaction.response.send_message(content, ephemeral=True)
             return
 
