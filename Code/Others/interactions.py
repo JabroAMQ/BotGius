@@ -9,6 +9,26 @@ from Code.Players.controller import Players_Controller
 from Code.Others.emojis import Emojis
 from Code.Others.channels import Channels
 
+async def _validate_image(interaction: discord.Interaction, image: discord.Attachment) -> bool:
+    """Ensure that the `image` attachment is a valid image and not too large."""
+    # Ensure the attachment is an image
+    allowed_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.webp') # Check extension to guard against spoofed non-image files
+    if not image.content_type or not image.content_type.startswith('image/') or not image.filename.lower().endswith(allowed_extensions):
+        content = f'The only allowed image formats are PNG, JPG, JPEG, GIF, and WEBP. Please upload a valid image.'
+        await interaction.response.send_message(content, ephemeral=True)
+        return False
+    
+    # Check if the image is too large
+    # NOTE not tested (nitro needed)
+    if image.size > 8 * 1024 * 1024:  # 8 MB limit
+        size_mb = image.size / (1024 * 1024)
+        content = f'The image you uploaded is too large ({size_mb:.2f} MB). Please upload an image smaller than 8 MB.'
+        await interaction.response.send_message(content, ephemeral=True)
+        return False
+    
+    return True
+
+
 @error_handler_decorator()
 async def info(interaction: discord.Interaction, type: discord.app_commands.Choice[int]):
     """Interaction to handle the `/info` command. It sends embeds to dm with the information asked for in the `type` command parameter."""
@@ -76,18 +96,8 @@ async def feedback(interaction: discord.Interaction, image: discord.Attachment =
             await to_webhook(interaction=new_interaction, webhook_name='Feedback', channel=host_channel, embed=embed)
 
     if image:
-        # Ensure the attachment is an image
-        allowed_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.webp') # Check extension to guard against spoofed non-image files
-        if not image.content_type or not image.content_type.startswith('image/') or not image.filename.lower().endswith(allowed_extensions):
-            content = f'The only allowed image formats are PNG, JPG, JPEG, GIF, and WEBP. Please upload a valid image.'
-            await interaction.response.send_message(content, ephemeral=True)
-            return
-        # Check if the image is too large
-        # NOTE not tested (nitro needed)
-        if image.size > 8 * 1024 * 1024:  # 8 MB limit
-            size_mb = image.size / (1024 * 1024)
-            content = f'The image you uploaded is too large ({size_mb:.2f} MB). Please upload an image smaller than 8 MB.'
-            await interaction.response.send_message(content, ephemeral=True)
+        image_ok = await _validate_image(interaction, image)
+        if not image_ok:
             return
 
     await interaction.response.send_modal(Feedback_Modal(image))
@@ -138,18 +148,8 @@ async def report(interaction: discord.Interaction, image: discord.Attachment = N
             await to_webhook(interaction=new_interaction, webhook_name='Report', channel=report_channel, embed=embed)
 
     if image:
-        # Ensure the attachment is an image
-        allowed_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.webp') # Check extension to guard against spoofed non-image files
-        if not image.content_type or not image.content_type.startswith('image/') or not image.filename.lower().endswith(allowed_extensions):
-            content = f'The only allowed image formats are PNG, JPG, JPEG, GIF, and WEBP. Please upload a valid image.'
-            await interaction.response.send_message(content, ephemeral=True)
-            return
-        # Check if the image is too large
-        # NOTE not tested (nitro needed)
-        if image.size > 8 * 1024 * 1024:  # 8 MB limit
-            size_mb = image.size / (1024 * 1024)
-            content = f'The image you uploaded is too large ({size_mb:.2f} MB). Please upload an image smaller than 8 MB.'
-            await interaction.response.send_message(content, ephemeral=True)
+        image_ok = await _validate_image(interaction, image)
+        if not image_ok:
             return
 
     await interaction.response.send_modal(Report_Modal(image))
