@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS gamemodes(
 );
 """
 
-import psycopg2, psycopg2.extras, psycopg2.extensions
+import psycopg2, psycopg2.extensions
 
-from Code.Utilities.database_connection import connection_manager
+from Code.Utilities.database_connection_postgreql import connection_manager
 
 
 class Gamemodes_Database:
@@ -137,7 +137,7 @@ class Gamemodes_Database:
         """
         sql_edit_gamemode = '''
             UPDATE gamemodes
-            SET name = %s, code = %s,random = %s, weighted = %s, equal = %s
+            SET name = %s, code = %s, random = %s, weighted = %s, equal = %s
             WHERE id = %s
         '''
         gamemode = (new_name, new_code, new_random_song_distribution, new_weighted_song_distribution, new_equal_song_distribution, id)

@@ -1,7 +1,7 @@
 import difflib
 
 from Code.Utilities.error_handler import print_exception
-from Code.Gamemodes.Gamemodes.database import Gamemodes_Database
+from Code.Gamemodes.Gamemodes.database_sqlite3 import Gamemodes_Database
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 
 class Gamemodes_Controller:

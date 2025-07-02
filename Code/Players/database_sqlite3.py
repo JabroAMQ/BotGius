@@ -1,55 +1,38 @@
 """
 For reproducibility, this is how the Players's Table was created:
 
-CREATE TABLE IF NOT EXISTS players(
+CREATE TABLE IF NOT EXISTS players (
+    id INTEGER PRIMARY KEY NOT NULL,
+    amq TEXT UNIQUE NOT NULL,
 
-	id	BIGINT PRIMARY KEY NOT NULL,
-	amq	VARCHAR(50) UNIQUE NOT NULL,
-	
-	rank VARCHAR(20) DEFAULT 'None',
-	elo INT DEFAULT 0,
-	
-	list_name VARCHAR(50),
-	list_from VARCHAR(20),
-	list_sections VARCHAR(20),
-	
-	fav_1v1 INT,
-	FOREIGN KEY (fav_1v1)
-	REFERENCES gamemodes (id)
-	ON DELETE SET NULL,
-	
-	hated_1v1 INT,
-	FOREIGN KEY (hated_1v1)
-	REFERENCES gamemodes (id)
-	ON DELETE SET NULL,
-	
-	fav_2v2 INT,
-	FOREIGN KEY (fav_2V2)
-	REFERENCES gamemodes (id)
-	ON DELETE SET NULL,
-	
-	hated_2v2 INT,
-	FOREIGN KEY (hated_2v2)
-	REFERENCES gamemodes (id)
-	ON DELETE SET NULL,
-	
-	fav_4v4 INT,
-	FOREIGN KEY (fav_4v4)
-	REFERENCES gamemodes (id)
-	ON DELETE SET NULL,
-	
-	hated_4v4 INT,
-	FOREIGN KEY (hated_4v4)
-	REFERENCES gamemodes (id)
-	ON DELETE SET NULL,
+    rank TEXT DEFAULT 'None',
+    elo INTEGER DEFAULT 0,
 
-    is_banned BOOL DEFAULT False
+    list_name TEXT,
+    list_from TEXT,
+    list_sections TEXT,
+
+    fav_1v1 INTEGER,
+    hated_1v1 INTEGER,
+    fav_2v2 INTEGER,
+    hated_2v2 INTEGER,
+    fav_4v4 INTEGER,
+    hated_4v4 INTEGER,
+
+    is_banned BOOLEAN DEFAULT 0,
+
+    FOREIGN KEY (fav_1v1) REFERENCES gamemodes(id) ON DELETE SET NULL,
+    FOREIGN KEY (hated_1v1) REFERENCES gamemodes(id) ON DELETE SET NULL,
+    FOREIGN KEY (fav_2v2) REFERENCES gamemodes(id) ON DELETE SET NULL,
+    FOREIGN KEY (hated_2v2) REFERENCES gamemodes(id) ON DELETE SET NULL,
+    FOREIGN KEY (fav_4v4) REFERENCES gamemodes(id) ON DELETE SET NULL,
+    FOREIGN KEY (hated_4v4) REFERENCES gamemodes(id) ON DELETE SET NULL
 );
 """
 
-import psycopg2, psycopg2.extras, psycopg2.extensions
+import sqlite3
 
-from Code.Utilities.database_connection import connection_manager
+from Code.Utilities.database_connection_sqlite3 import connection_manager
 
 
 class Players_Database:
@@ -57,7 +40,7 @@ class Players_Database:
     
     @staticmethod
     @connection_manager
-    def get_all_players(cur: psycopg2.extensions.cursor = None) \
+    def get_all_players(cur: sqlite3.Cursor = None) \
         -> list[tuple[int, str, str, int, str | None, str | None, str | None, int | None, int | None, int | None, int | None, int | None, int | None, bool]]:
         """
         Return a list of tuple containing the Players's data with the following order:
@@ -84,45 +67,45 @@ class Players_Database:
     
     @staticmethod
     @connection_manager
-    def add_player(discord_id: int, amq_name: str, cur: psycopg2.extensions.cursor = None) -> None:
+    def add_player(discord_id: int, amq_name: str, cur: sqlite3.Cursor = None) -> None:
         """
         Add a new Player to the Players Database.\n
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
         """
-        add_player_query = 'INSERT INTO players (id, amq) VALUES (%s, %s)'
+        add_player_query = 'INSERT INTO players (id, amq) VALUES (?, ?)'
         cur.execute(add_player_query, (discord_id, amq_name))
 
 
     @staticmethod
     @connection_manager
-    def change_player_amq(discord_id: int, new_amq_name: str, cur: psycopg2.extensions.cursor = None) -> None:
+    def change_player_amq(discord_id: int, new_amq_name: str, cur: sqlite3.Cursor = None) -> None:
         """
         Change the Player's amq name to `new_amq_name` from the `discord_id` player in the Playerd's Database.
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
         """
-        change_player_amq_query = 'UPDATE players SET amq = %s WHERE id = %s'
+        change_player_amq_query = 'UPDATE players SET amq = ? WHERE id = ?'
         player = (new_amq_name, discord_id)
         cur.execute(change_player_amq_query, player)
 
     @staticmethod
     @connection_manager
-    def change_player_rank(discord_id: int, new_rank: str, cur: psycopg2.extensions.cursor = None) -> None:
+    def change_player_rank(discord_id: int, new_rank: str, cur: sqlite3.Cursor = None) -> None:
         """
         Change the Player's rank to `new_rank` from the `discord_id` player in the Player's Database.
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
         """
-        change_player_rank_query = 'UPDATE players SET rank = %s WHERE id = %s'
+        change_player_rank_query = 'UPDATE players SET rank = ? WHERE id = ?'
         player = (new_rank, discord_id)
         cur.execute(change_player_rank_query, player)
 
     @staticmethod
     @connection_manager
-    def change_is_baned(discord_id: int, is_banned: bool, cur: psycopg2.extensions.cursor = None) -> None:
+    def change_is_baned(discord_id: int, is_banned: bool, cur: sqlite3.Cursor = None) -> None:
         """
         Change the Player's "is_banned" attribute to `is_banned` from the `discord_id` player in the Player's Database.
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
         """
-        change_player_is_banned_query = 'UPDATE players SET is_banned = %s WHERE id = %s'
+        change_player_is_banned_query = 'UPDATE players SET is_banned = ? WHERE id = ?'
         player = (is_banned, discord_id)
         cur.execute(change_player_is_banned_query, player)
 
@@ -133,7 +116,7 @@ class Players_Database:
         new_list_name: str,
         new_list_from: str,
         new_list_sections: str,
-        cur: psycopg2.extensions.cursor = None
+        cur: sqlite3.Cursor = None
     ) -> None:
         """
         Change the Player's list information from the `discord_id` player in the Playerd's Database.
@@ -141,8 +124,8 @@ class Players_Database:
         """
         change_player_list_data_query = '''
             UPDATE players
-            SET list_name = %s, list_from = %s, list_sections = %s
-            WHERE id = %s
+            SET list_name = ?, list_from = ?, list_sections = ?
+            WHERE id = ?
         '''
         player = (new_list_name, new_list_from, new_list_sections, discord_id)
         cur.execute(change_player_list_data_query, player)
@@ -157,7 +140,7 @@ class Players_Database:
         new_hated_1v1_gamemode_id: int,
         new_hated_2v2_gamemode_id: int,
         new_hated_4v4_gamemode_id: int,
-        cur: psycopg2.extensions.cursor = None
+        cur: sqlite3.Cursor = None
     ) -> None:
         """
         Change the Player's preferred gamemodes from the `discord_id` player in the Playerd's Database.
@@ -165,8 +148,8 @@ class Players_Database:
         """
         change_player_preferred_gamemodes_data_query = '''
             UPDATE players
-            SET fav_1v1 = %s, fav_2v2 = %s, fav_4v4 = %s, hated_1v1 = %s, hated_2v2 = %s, hated_4v4 = %s
-            WHERE id = %s
+            SET fav_1v1 = ?, fav_2v2 = ?, fav_4v4 = ?, hated_1v1 = ?, hated_2v2 = ?, hated_4v4 = ?
+            WHERE id = ?
         '''
         player = (new_fav_1v1_gamemode_id, new_fav_2v2_gamemode_id, new_fav_4v4_gamemode_id, new_hated_1v1_gamemode_id, new_hated_2v2_gamemode_id, new_hated_4v4_gamemode_id, discord_id)
         cur.execute(change_player_preferred_gamemodes_data_query, player)
