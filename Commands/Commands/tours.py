@@ -36,7 +36,7 @@ class Tours_Commands(Commands):
             timer='Number of minutes before sign ups get closed',
             size='Maximum number of tour players',
             info='Tour\'s description',
-            ping='Custom role ping. Leave it empty for default roles'
+            ping='Custom role ping. Tour Addict one will always be added at the end'
         )
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
