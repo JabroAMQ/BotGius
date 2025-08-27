@@ -27,7 +27,7 @@ class Roles:
         self.main_guild_roles_ids: list[int] = roles_data['teams']['main']['roles']
         self.test_guild_roles_ids: list[int] = roles_data['teams']['test']['roles']
 
-        self.pings: list[str] = [roles_data['pings']['bullies'], roles_data['pings']['capos']]
+        self.common_ping: str = roles_data['pings']['tour_addicts']
 
     
     def _get_team_roles(self, guild: discord.Guild, role_index: int = 0) -> tuple[discord.Role, list[discord.Role]]:
@@ -55,9 +55,9 @@ class Roles:
                 raise ValueError('Invalid Guild ID')
 
 
-    def get_ping_roles(self) -> str:
-        """Return a string containing the mention of all the ping roles."""        
-        return ' '.join(self.pings)
+    def get_common_ping_role(self) -> str:
+        """Return a string containing the mention of the common_ping role."""        
+        return self.common_ping
     
 
     async def remove_team_roles(self, guild: discord.Guild, player_id: int):
