@@ -54,6 +54,7 @@ class Ranking:
             'B+', 'B', 'B-',
             'C+', 'C', 'C-',
             'D+', 'D', 'D-',
+            'F',
             'EMQ', 'None'
         ]
         
