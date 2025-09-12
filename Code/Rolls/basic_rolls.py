@@ -87,7 +87,6 @@ class Roll:
                     return f'**Song selection rolled:** {roll.capitalize()} ({distribution_roll.capitalize()} distribution)'
                 else:
                     return f'**Song selection rolled:** {roll.capitalize()}'
-
             
             case enums.Rolls_Enum.DISTRIBUTION:
                 distribution_names = [distribution.name for distribution in enums.Distributions]
@@ -114,19 +113,21 @@ class Roll:
                 roll = random.choice(mastery_mode_names)
                 return f'**Mastery mode rolled:** {roll}' if as_str else roll
             
-            case enums.Rolls_Enum.DECADE:
-                decades_names = [
-                    decade.name.lstrip('_').replace('_', ' ').capitalize()
-                    for decade in enums.Decades
-                ]
-                roll = random.choice(decades_names)
-                return f'**Decade rolled:** {roll}' if as_str else roll
-            
             case enums.Rolls_Enum.YEAR:
                 first_year = 1968       # Previous years do not have enough songs to be rolled (20+); modify if needed
                 last_year = datetime.datetime.now().year
                 roll = random.randint(first_year, last_year)
                 return f'**Year rolled:** {roll}' if as_str else roll
+            
+            case enums.Rolls_Enum.ONE_LIFE_CHALLENGE:
+                one_life_challenge_names = [mode.name.lstrip('_').replace('_', ' ').capitalize() for mode in enums.One_Life_Challenge]
+                roll = random.choice(one_life_challenge_names)
+                return f'**One Life Challenge rolled:** {roll}' if as_str else roll
+            
+            case enums.Rolls_Enum.UMA_MUSUME:
+                uma_musume_types_names = [type.name.capitalize() for type in enums.Uma_Musume]
+                roll = random.choice(uma_musume_types_names)
+                return f'**Uma Musume type rolled:** {roll}' if as_str else roll
 
             case _:
                 raise ValueError('Invalied "type" value')

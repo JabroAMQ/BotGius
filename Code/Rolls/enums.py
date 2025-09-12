@@ -51,14 +51,21 @@ class Mastery_Modes(Enum):
     FULL = 4
 
 
-class Decades(Enum):
-    """Enumerate class to represent the rollable decades."""
-    _1940s_TO_1970s = 0
-    _1980s = 1
-    _1990s = 2
-    _2000s = 3
-    _2010s = 4
-    _2020s = 5
+class One_Life_Challenge(Enum):
+    """Enumerate class to represent the different one life challenge modes."""
+    _5S = 0
+    _5S_START_SAMPLE = 1
+    _6S_END_SAMPLE = 2
+    _6S_2X = 3
+    _6S_4X = 4
+
+
+class Uma_Musume(Enum):
+    """Enumerate class to represent the different Uma Musume types?"""
+    SPRINT = 0
+    MILE = 1
+    MEDIUM = 2
+    LONG = 3
 
 
 class Rolls_Enum(Enum):
@@ -79,8 +86,9 @@ class Rolls_Enum(Enum):
     TYPE_5 = 13
     TYPE_7 = 14
     MASTERY_MODE = 15
-    DECADE = 16
-    YEAR = 17
+    YEAR = 16
+    ONE_LIFE_CHALLENGE = 17
+    UMA_MUSUME = 18
 
 
 class Roll_Gamemode(Enum):

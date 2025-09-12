@@ -86,6 +86,18 @@ class Match:
             type_5: str = Roll.roll(Rolls_Enum.TYPE_5)
             self.special_roll = f'Type 5: {type_5}'
             return content + f'**Type 5 rolled:** {type_5}'
+        
+        # Random/Watched Year
+        elif 'year' in self.gamemode.name.lower() and ('random' in self.gamemode.name.lower() or 'watched' in self.gamemode.name.lower()):
+            year: int = Roll.roll(Rolls_Enum.YEAR)
+            self.special_roll = f'Year: {year}'
+            return content + f'**Year rolled:** {year}'
+        
+        # One Life Challenge
+        elif 'one life challenge' in self.gamemode.name.lower():
+            one_life_challenge: str = Roll.roll(Rolls_Enum.ONE_LIFE_CHALLENGE)
+            self.special_roll = f'One Life Challenge: {one_life_challenge}'
+            return content + f'**One Life Challenge mode rolled:** {one_life_challenge}'
 
         # Random Metronome
         # NOTE not adding self.special_roll for metronomes on purpose
