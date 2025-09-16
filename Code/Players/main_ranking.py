@@ -88,6 +88,7 @@ class Ranking:
 
         # Ensure rank_value is valid  
         min_value, max_value = 0, len(self.ranks_by_values) - 1
+        rank_value -= 1                 # The ranks values start from 1, but the pages from 0 (idk why I did it like this)
         if rank_value < min_value:
             rank_value = max_value      # The next of the last is the first
         if rank_value > max_value:
