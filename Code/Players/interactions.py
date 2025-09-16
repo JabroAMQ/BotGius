@@ -268,7 +268,7 @@ async def player_show_ranking(interaction: discord.Interaction, rank_page: str):
     await interaction.response.defer(ephemeral=False)
 
     rank = Ranking().get_rank(rank_page)
-    embed, initial_page = Ranking().get_rank_embed(interaction.guild, rank.value)
+    embed, initial_page = Ranking().get_rank_embed(interaction.guild, rank.value-1)
     view = Player_Show_Ranking_View(initial_page)
 
     await interaction.followup.send(embed=embed, view=view, ephemeral=False)
