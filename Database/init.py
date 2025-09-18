@@ -55,6 +55,16 @@ CREATE TABLE IF NOT EXISTS players (
 ''')
 conn.commit()
 
+cur.execute("""
+CREATE TABLE IF NOT EXISTS scheduled_tours (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    description TEXT NOT NULL,
+    timestamp TEXT NOT NULL,
+    host TEXT NOT NULL
+);
+""")
+conn.commit()
+
 cur.executescript(populate_gamemodes)
 cur.executescript(populate_players)
 conn.commit()

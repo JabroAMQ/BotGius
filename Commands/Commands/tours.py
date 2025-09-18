@@ -3,6 +3,7 @@ from discord import app_commands
 
 from Commands.base import Commands
 from Code.Tours import interactions
+from Code.Tours.Schedule import interactions as schedule_interactions
 from Code.Tours.enums import Teams
 from Code.Rolls.enums import Roll_Teams, Roll_Gamemode
 
@@ -30,6 +31,8 @@ class Tours_Commands(Commands):
         - `/team_get_all_roles`
         - `/roll_groups`
         - `/roll_blind_crews`
+        - `/schedule_tour_add`
+        - `/schedule_tour_delete`
         """
         @client.tree.command(name='tour_create', description='Creates a new tour')
         @app_commands.describe(
@@ -180,3 +183,23 @@ class Tours_Commands(Commands):
         async def roll_blind_crews(interaction: discord.Interaction, gamemodes: app_commands.Choice[int], duels: app_commands.Choice[int]):
             duels = bool(duels.value)
             await interactions.roll_blind_crews(interaction, gamemodes.value, duels)
+        
+
+        @client.tree.command(name='schedule_tour_add', description='Schedule a new tour')
+        @app_commands.describe(
+            description='Tour\'s description',
+            timestamp='The UNIX timestamp',
+            host='The host of the tour (by default your Discord guild name)'
+        )
+        @app_commands.guild_only
+        @app_commands.check(self.is_user_tour_helper)
+        async def schedule_tour_add(interaction: discord.Interaction, description: str, timestamp: str, host: str = None):
+            host = interaction.user.display_name if not host else host
+            await schedule_interactions.schedule_tour_add_interaction(interaction, description, timestamp, host)
+
+
+        @client.tree.command(name='schedule_tour_delete', description='Delete a scheduled tour')
+        @app_commands.guild_only
+        @app_commands.check(self.is_user_tour_helper)
+        async def schedule_tour_delete(interaction: discord.Interaction):
+            await schedule_interactions.schedule_tour_delete_interaction(interaction)

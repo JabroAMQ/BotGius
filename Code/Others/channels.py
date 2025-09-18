@@ -22,11 +22,15 @@ class Channels:
 
         self.main_guild_id = channels_data['main']['guild']
         self.test_guild_id = channels_data['test']['guild']
+        self.new_guild_id = channels_data['new_server']['guild']
 
         self.host_channel_id = channels_data['main']['host_chat']
         self.feedback_channel_id = channels_data['test']['feedback']
         self.report_channel_id = channels_data['test']['report']
         self.picks_channel_id = channels_data['test']['picks']
+
+        self.tour_announcements_channel_id = channels_data['new_server']['tour_announcements']['channel']
+        self.tour_announcements_message_id = channels_data['new_server']['tour_announcements']['message']
         
         self.logs_channel_id = channels_data['test']['logs']['channel']
         self.player_register_thread_id = channels_data['test']['logs']['threads']['player_register']
@@ -37,6 +41,8 @@ class Channels:
         self.gamemode_delete_thread_id = channels_data['test']['logs']['threads']['gamemode_delete']
         self.gamemode_edit_thread_id = channels_data['test']['logs']['threads']['gamemode_edit']
         self.commands_usage_thread_id = channels_data['test']['logs']['threads']['commands_usage']
+        self.scheduled_tours_add_thread_id = channels_data['test']['logs']['threads']['scheduled_tours_add']
+        self.scheduled_tours_delete_thread_id = channels_data['test']['logs']['threads']['scheduled_tours_delete']
 
 
     def get_main_guild(self, client: discord.Client) -> discord.Guild:
@@ -47,6 +53,11 @@ class Channels:
         """Return the test guild object."""
         return client.get_guild(self.test_guild_id)
     
+    def get_new_guild(self, client: discord.Client) -> discord.Guild:
+        """Return the new guild object."""
+        return client.get_guild(self.new_guild_id)
+
+
     def get_host_channel(self, client: discord.Client) -> discord.TextChannel:
         """Return the host channel object (from the main guild)."""
         main_guild = self.get_main_guild(client)
@@ -66,6 +77,18 @@ class Channels:
         """Return the picks channel object (from the test guild)."""
         test_guild = self.get_test_guild(client)
         return test_guild.get_channel(self.picks_channel_id)
+
+
+    def get_tour_announcements_channel(self, client: discord.Client) -> discord.TextChannel:
+        """Return the tour announcements channel object (from the main guild)."""
+        new_guild = self.get_new_guild(client)
+        return new_guild.get_channel(self.tour_announcements_channel_id)
+
+    def get_tour_announcements_message(self, client: discord.Client) -> discord.Message:
+        """Return the tour announcements message object (from the main guild)."""
+        tour_announcements_channel = self.get_tour_announcements_channel(client)
+        return tour_announcements_channel.get_partial_message(self.tour_announcements_message_id)
+
 
     def get_logs_channel(self, client: discord.Client) -> discord.TextChannel:
         """Return the logs channel object (from the test guild)."""
@@ -126,4 +149,18 @@ class Channels:
         test_guild = self.get_test_guild(client)
         # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.commands_usage_thread_id)
+        return thread
+    
+    async def get_scheduled_tours_add_thread(self, client: discord.Client) -> discord.Thread:
+        """Return the `/schedule_tour_add` command's log thread object (from the test guild)."""
+        test_guild = self.get_test_guild(client)
+        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
+        thread = await test_guild.fetch_channel(self.scheduled_tours_add_thread_id)
+        return thread
+    
+    async def get_scheduled_tours_delete_thread(self, client: discord.Client) -> discord.Thread:
+        """Return the `/schedule_tour_delete` command's log thread object (from the test guild)."""
+        test_guild = self.get_test_guild(client)
+        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
+        thread = await test_guild.fetch_channel(self.scheduled_tours_delete_thread_id)
         return thread

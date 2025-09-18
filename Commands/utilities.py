@@ -8,6 +8,7 @@ from Code.Utilities.read_yaml import load_yaml_content
 from Code.Utilities.error_handler import print_exception
 from Code.Gamemodes.controller import Main_Controller
 from Code.Tours.controller import Tours_Controller
+from Code.Tours.Schedule.controller import Scheduled_Tour_Controller
 from Code.Players.controller import Players_Controller
 from Code.Players.main_ranking import Ranking
 from Code.Others.channels import Channels
@@ -58,6 +59,7 @@ def load_controllers() -> None:
     # Saving the references is not needed
     Main_Controller()
     Tours_Controller()
+    Scheduled_Tour_Controller()
     Players_Controller()
     Ranking()
     Channels()
