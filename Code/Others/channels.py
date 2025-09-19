@@ -45,6 +45,7 @@ class Channels:
         self.commands_usage_thread_id = channels_data['test']['logs']['threads']['commands_usage']
         self.scheduled_tours_add_thread_id = channels_data['test']['logs']['threads']['scheduled_tours_add']
         self.scheduled_tours_delete_thread_id = channels_data['test']['logs']['threads']['scheduled_tours_delete']
+        self.scheduled_tours_edit_thread_id = channels_data['test']['logs']['threads']['scheduled_tours_edit']
 
 
     def get_main_guild(self, client: discord.Client) -> discord.Guild:
@@ -197,4 +198,11 @@ class Channels:
         test_guild = self.get_test_guild(client)
         # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.scheduled_tours_delete_thread_id)
+        return thread
+    
+    async def get_scheduled_tours_edit_thread(self, client: discord.Client) -> discord.Thread:
+        """Return the `/schedule_tour_edit` command's log thread object (from the test guild)."""
+        test_guild = self.get_test_guild(client)
+        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
+        thread = await test_guild.fetch_channel(self.scheduled_tours_edit_thread_id)
         return thread

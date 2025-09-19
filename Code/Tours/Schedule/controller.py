@@ -42,18 +42,62 @@ class Scheduled_Tour_Controller:
             return False, ''
     
 
-    def delete_scheduled_tour(self, scheduled_tour_id: int) -> tuple[bool, str]:
+    def delete_scheduled_tour(self, tour_id: int) -> tuple[bool, str]:
         """
         Delete a Scheduled_Tour from the database and the catalog.
         
         Returns a tuple where the first element is a bool indicating if the operation was successful and the second element is the log data of the deleted Scheduled_Tour
         """
         try:
-            log_data = self.scheduled_tours[scheduled_tour_id].get_log_data()
-            Scheduled_Tours_Database.delete_scheduled_tour(scheduled_tour_id)
-            del self.scheduled_tours[scheduled_tour_id]
+            log_data = self.scheduled_tours[tour_id].get_log_data()
+            Scheduled_Tours_Database.delete_scheduled_tour(tour_id)
+            del self.scheduled_tours[tour_id]
             return True, log_data
         
+        except Exception as error:
+            print_exception(error)
+            return False, ''
+        
+    
+    def edit_scheduled_tour(self, tour_id: int, description: str = None, host: str = None, timestamp: int = None) -> tuple[bool, str]:
+        """
+        Delete a Scheduled_Tour in the database and in the catalog.
+
+        Returns a tuple where the first element is a bool indicating if the operation was successful and the second element is the log data of the edited Scheduled_Tour
+        """
+        try:
+            tour = self.scheduled_tours[tour_id]
+
+            # Log purposes
+            old_description, old_host, old_timestamp = None, None, None
+            if description:
+                old_description = tour.tour_description
+            if host:
+                old_host = tour.tour_host
+            if timestamp:
+                old_timestamp = tour.starts_at_timestamp
+
+            new_description = description if description else tour.tour_description
+            new_host = host if host else tour.tour_host
+            new_timestamp = timestamp if timestamp else tour.starts_at_timestamp
+            new_updated_at = int(discord.utils.utcnow().timestamp())
+            
+            Scheduled_Tours_Database.edit_scheduled_tour(tour_id, new_description, new_host, new_timestamp, new_updated_at)
+            tour.tour_description = new_description
+            tour.tour_host = new_host
+            tour.starts_at_timestamp = new_timestamp
+            tour._updated_at_timestamp = new_updated_at
+            
+            log_data = ''
+            if old_host:
+                log_data += f'- Host: {old_host} -> {new_host}\n'
+            if old_description:
+                log_data += f'- Description: {old_description} -> {new_description}\n'
+            if old_timestamp:
+                log_data += f'- Scheduled Time: {old_timestamp} -> {new_timestamp}\n'
+
+            return True, log_data
+
         except Exception as error:
             print_exception(error)
             return False, ''

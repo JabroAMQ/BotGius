@@ -79,3 +79,18 @@ class Scheduled_Tours_Database:
         """
         remove_scheduled_tour_query = 'DELETE FROM scheduled_tours WHERE id = ?'
         cur.execute(remove_scheduled_tour_query, (id,))
+
+
+    @staticmethod
+    @connection_manager
+    def edit_scheduled_tour(id: int, description: str, host: str, timestamp: int, updated_at: int, cur: sqlite3.Cursor = None) -> None:
+        """
+        Edit a Scheduled_Tour from the Scheduled_Tours Database.\n
+        Do NOT add a `cur` value, its a placeholder which value will be replaced.
+        """
+        edit_scheduled_tour_query = '''
+            UPDATE scheduled_tours
+            SET description = ?, host = ?, timestamp = ?, updated_at = ?
+            WHERE id = ?
+        '''
+        cur.execute(edit_scheduled_tour_query, (description, host, timestamp, updated_at, id))

@@ -33,6 +33,7 @@ class Tours_Commands(Commands):
         - `/roll_blind_crews`
         - `/schedule_tour_add`
         - `/schedule_tour_delete`
+        - `/schedule_tour_edit`
         """
         @client.tree.command(name='tour_create', description='Creates a new tour')
         @app_commands.describe(
@@ -204,3 +205,15 @@ class Tours_Commands(Commands):
         @app_commands.check(self.is_user_tour_helper)
         async def schedule_tour_delete(interaction: discord.Interaction):
             await schedule_interactions.schedule_tour_delete_interaction(interaction)
+
+
+        @client.tree.command(name='schedule_tour_edit', description='Edit a scheduled tour (add edit values first, then select tour to apply)')
+        @app_commands.describe(
+            description='Tour\'s description',
+            timestamp='The POSIX timestamp (last option in hammertime)',
+            host='The host of the tour'
+        )
+        @app_commands.guild_only
+        @app_commands.check(self.is_user_tour_helper)
+        async def schedule_tour_edit(interaction: discord.Interaction, description: str = None, timestamp: app_commands.Range[int, 946681200, 4102441200] = None, host: str = None):
+            await schedule_interactions.schedule_tour_edit_interaction(interaction, description, timestamp, host)

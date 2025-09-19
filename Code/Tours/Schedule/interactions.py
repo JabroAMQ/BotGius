@@ -30,7 +30,7 @@ async def schedule_tour_add_interaction(interaction: discord.Interaction, descri
     # Add the scheduled tour
     added, log = Scheduled_Tour_Controller().add_scheduled_tour(interaction.guild_id, description, host, timestamp)
     if not added:
-        content = 'There was an error when scheduling the tour'
+        content = 'There was an error while scheduling the tour'
         await interaction.followup.send(content=content, ephemeral=True)
         return
     
@@ -49,18 +49,19 @@ async def schedule_tour_delete_interaction(interaction: discord.Interaction):
     """Interaction to handle the `/schedule_tour_delete` command. It deletes a scheduled_tour from the sheduled_tours's catalog."""
     await interaction.response.defer(ephemeral=True)
 
-    class Scheduled_Tour_Dropdown(discord.ui.Select):
-        def __init__(self, scheduled_tours: list[tuple[str, int]]):
-            options = [discord.SelectOption(label=scheduled_tour[0], value=scheduled_tour[1]) for scheduled_tour in scheduled_tours]
-            super().__init__(placeholder='Choose a Scheduled Tour', options=options)
+    class Confirm_View(discord.ui.View):
+        def __init__(self, id: int):
+            super().__init__(timeout=180)
+            self.id = id
 
-        async def callback(self, new_interaction: discord.Interaction):
+        @discord.ui.button(label="Confirm", style=discord.ButtonStyle.green)
+        async def confirm(self, new_interaction: discord.Interaction, _: discord.ui.Button):
             await new_interaction.response.defer(ephemeral=True)
 
             # Delete the scheduled tour
-            deleted, log = Scheduled_Tour_Controller().delete_scheduled_tour(int(self.values[0]))
+            deleted, log = Scheduled_Tour_Controller().delete_scheduled_tour(self.id)
             if not deleted:
-                content = 'There was an error when deleting the Scheduled_Tour'
+                content = 'There was an error while deleting the Scheduled_Tour'
                 await new_interaction.followup.send(content=content, ephemeral=True)
                 return
             
@@ -75,6 +76,21 @@ async def schedule_tour_delete_interaction(interaction: discord.Interaction):
 
             content = 'Scheduled Tour deleted successfully'
             await new_interaction.followup.send(content=content, ephemeral=True)
+            self.stop()
+
+
+    class Scheduled_Tour_Dropdown(discord.ui.Select):
+        def __init__(self, scheduled_tours: list[tuple[str, int]]):
+            options = [discord.SelectOption(label=scheduled_tour[0], value=str(scheduled_tour[1])) for scheduled_tour in scheduled_tours]
+            super().__init__(placeholder='Choose a Scheduled Tour', options=options)
+            self.options = options  # We can't stablished self.options before calling super().__init__()
+
+        async def callback(self, new_interaction: discord.Interaction):
+            selected_value = self.values[0]
+            id = int(selected_value)
+            selected_tour = next(opt.label for opt in self.options if opt.value == selected_value)
+            content = f'Confirm you want to apply the changes to the tour selected:\n{selected_tour}'
+            await new_interaction.response.send_message(content=content, view=Confirm_View(id), ephemeral=True)
 
 
     class Scheduled_Tour_Dropdown_View(discord.ui.View):
@@ -84,7 +100,7 @@ async def schedule_tour_delete_interaction(interaction: discord.Interaction):
 
 
     # Get all the scheduled tours
-    scheduled_tours = list(Scheduled_Tour_Controller().get_all_scheduled_tours(interaction.guild_id))
+    scheduled_tours = Scheduled_Tour_Controller().get_all_scheduled_tours(interaction.guild_id)
     if not scheduled_tours:
         content = 'There are no scheduled tours to delete'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -93,3 +109,81 @@ async def schedule_tour_delete_interaction(interaction: discord.Interaction):
     # Select the tour to delete
     view = Scheduled_Tour_Dropdown_View(scheduled_tours)
     await interaction.followup.send(content='Select the Scheduled Tour to delete', view=view, ephemeral=True)
+
+
+@error_handler_decorator()
+async def schedule_tour_edit_interaction(interaction: discord.Interaction, description: str = None, timestamp: int = None, host: str = None):
+    """Interaction to handle the `/schedule_tour_edit` command. It edits a scheduled_tour from the sheduled_tours's catalog."""
+    await interaction.response.defer(ephemeral=True)
+
+    class Confirm_View(discord.ui.View):
+        def __init__(self, id: int, description: str = None, timestamp: int = None, host: str = None):
+            super().__init__(timeout=180)
+            self.id = id
+            self.description = description
+            self.timestamp = timestamp
+            self.host = host
+
+        @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+        async def confirm(self, new_interaction: discord.Interaction, _: discord.ui.Button):
+            await new_interaction.response.defer(ephemeral=True)
+
+            # Edit the scheduled tour
+            edited, log = Scheduled_Tour_Controller().edit_scheduled_tour(self.id, self.description, self.host, self.timestamp)
+            if not edited:
+                content = 'There was an error while editing the Scheduled_Tour'
+                await new_interaction.followup.send(content=content, ephemeral=True)
+                return
+            
+            await _update_tour_announcements_message(new_interaction, fake_ping=True)
+
+            # Log the edition of the gamemode
+            log_thread = await Channels().get_scheduled_tours_edit_thread(new_interaction.client)
+            guild = Channels().get_guild(new_interaction.client, new_interaction.guild_id)
+            content = f'A scheduled tour was edited by {new_interaction.user.mention} in **{guild.name}**:\n{log}'
+            await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
+
+            content = 'Scheduled Tour edited successfully'
+            await new_interaction.followup.send(content=content, ephemeral=True)
+            self.stop()
+
+
+    class Scheduled_Tour_Dropdown(discord.ui.Select):
+        def __init__(self, scheduled_tours: list[tuple[str, int]], description: str = None, timestamp: int = None, host: str = None):
+            options = [discord.SelectOption(label=scheduled_tour[0], value=str(scheduled_tour[1])) for scheduled_tour in scheduled_tours]
+            super().__init__(placeholder='Choose a Scheduled Tour', options=options)
+            self.description = description
+            self.timestamp = timestamp
+            self.host = host
+            self.options = options  # We can't stablished self.options before calling super().__init__()
+
+        async def callback(self, new_interaction: discord.Interaction):
+            selected_value = self.values[0]
+            id = int(selected_value)
+            selected_tour = next(opt.label for opt in self.options if opt.value == selected_value)
+            content = f'Confirm you want to apply the changes to the tour selected:\n{selected_tour}'
+            await new_interaction.response.send_message(content=content, view=Confirm_View(id, description, timestamp, host), ephemeral=True)
+
+
+    class Scheduled_Tour_Dropdown_View(discord.ui.View):
+        def __init__(self, scheduled_tours: list[tuple[str, int]], description: str = None, timestamp: int = None, host: str = None):
+            super().__init__(timeout=180)
+            self.add_item(Scheduled_Tour_Dropdown(scheduled_tours, description, timestamp, host))
+
+
+    # Get all the scheduled tours
+    scheduled_tours = Scheduled_Tour_Controller().get_all_scheduled_tours(interaction.guild_id)
+    if not scheduled_tours:
+        content = 'There are no scheduled tours to edit'
+        await interaction.followup.send(content=content, ephemeral=True)
+        return
+    
+    # Check if at least one value has been provided
+    if not description and not timestamp and not host:
+        content = 'At least one field must be provided'
+        await interaction.followup.send(content=content, ephemeral=True)
+        return
+    
+    # Select the tour to edit
+    view = Scheduled_Tour_Dropdown_View(scheduled_tours, description, timestamp, host)
+    await interaction.followup.send(content='Select the Scheduled Tour to edit with the provided changes', view=view, ephemeral=True)
