@@ -98,6 +98,13 @@ class Match:
             one_life_challenge: str = Roll.roll(Rolls_Enum.ONE_LIFE_CHALLENGE)
             self.special_roll = f'One Life Challenge: {one_life_challenge}'
             return content + f'**One Life Challenge mode rolled:** {one_life_challenge}'
+        
+        # Uma musume
+        elif 'uma musume' in self.gamemode.name.lower():
+            uma_musume_distance: str = Roll.roll(Rolls_Enum.UMA_MUSUME_DISTANCES)
+            uma_musume_track: str = Roll.roll(Rolls_Enum.UMA_MUSUME_TRACKS)
+            self.special_roll = f'Uma Musume distance: {uma_musume_distance}\nUma Musume track: {uma_musume_track}'
+            return content + f'**Uma Musume distance rolled:** {uma_musume_distance}\n**Uma Musume track rolled:** {uma_musume_track}'
 
         # Random Metronome
         # NOTE not adding self.special_roll for metronomes on purpose
