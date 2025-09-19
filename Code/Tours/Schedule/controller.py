@@ -1,3 +1,5 @@
+import discord
+
 from Code.Tours.Schedule.database import Scheduled_Tours_Database
 from Code.Tours.Schedule.schedule import Scheduled_Tour
 from Code.Utilities.error_handler import print_exception
@@ -17,20 +19,21 @@ class Scheduled_Tour_Controller:
         self.scheduled_tours: dict[int, Scheduled_Tour] = {}
 
         for record in Scheduled_Tours_Database.get_all_scheduled_tours():
-            id, description, timestamp, host = record
-            scheduled_tour = Scheduled_Tour(id, description, timestamp, host)
+            id, description, host, starts_at, created_at, updated_at = record
+            scheduled_tour = Scheduled_Tour(id, description, host, starts_at, created_at, updated_at)
             self.scheduled_tours[id] = scheduled_tour
 
     
-    def add_scheduled_tour(self, description: str, timestamp: str, host: str) -> tuple[bool, str]:
+    def add_scheduled_tour(self, description: str, host: str, timestamp: int) -> tuple[bool, str]:
         """
         Create a new Scheduled_Tour and add it into the database and the catalog.
         
         Returns a tuple where the first element is a bool indicating if the operation was successful and the second element is the log data of the created Scheduled_Tour
         """
         try:
-            id = Scheduled_Tours_Database.add_scheduled_tour(description, timestamp, host)
-            new_scheduled_tour = Scheduled_Tour(id, description, timestamp, host)
+            created_at = int(discord.utils.utcnow().timestamp())
+            id = Scheduled_Tours_Database.add_scheduled_tour(description, host, timestamp, created_at)
+            new_scheduled_tour = Scheduled_Tour(id, description, host, timestamp, created_at, None)
             self.scheduled_tours[id] = new_scheduled_tour
             return True, new_scheduled_tour.get_log_data()
 
@@ -71,4 +74,5 @@ class Scheduled_Tour_Controller:
         for tour in sorted(self.scheduled_tours.values()):
             representation += repr(tour) + '\n'
 
-        return representation.strip()
+        representation += f'\nLast updated: <t:{int(discord.utils.utcnow().timestamp())}:R>'
+        return representation

@@ -17,6 +17,7 @@ async def _interaction_error_handler(interaction: discord.Interaction, error: Ex
     """
     if isinstance(error, (discord.errors.HTTPException, discord.errors.NotFound)):
         await interaction.followup.send(content='There was a error when sending you the answer. Please, try using the command again', ephemeral=True)
+        print_exception(error)
 
     else:
         await interaction.followup.send(content='An unknown error occured... Please try again and if the issue persists tell it to Jabro (<@427868172666929160>)', ephemeral=True)

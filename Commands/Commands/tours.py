@@ -188,12 +188,13 @@ class Tours_Commands(Commands):
         @client.tree.command(name='schedule_tour_add', description='Schedule a new tour')
         @app_commands.describe(
             description='Tour\'s description',
-            timestamp='The UNIX timestamp',
+            timestamp='The POSIX timestamp (last option in hammertime)',
             host='The host of the tour (by default your Discord guild name)'
         )
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def schedule_tour_add(interaction: discord.Interaction, description: str, timestamp: str, host: str = None):
+        async def schedule_tour_add(interaction: discord.Interaction, description: str, timestamp: app_commands.Range[int, 946681200, 4102441200], host: str = None):
+            # NOTE timestamp range is 01/01/2000 - 01/01/2100
             host = interaction.user.display_name if not host else host
             await schedule_interactions.schedule_tour_add_interaction(interaction, description, timestamp, host)
 

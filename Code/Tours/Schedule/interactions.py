@@ -5,6 +5,17 @@ from Code.Others.channels import Channels
 from Code.Tours.Schedule.controller import Scheduled_Tour_Controller
 
 
+async def _update_tour_announcements_message(client: discord.Client, fake_ping: bool = False) -> None:
+    """Update the tour announcements message with the current scheduled tours."""
+    scheduled_tours = Scheduled_Tour_Controller().represent_all_scheduled_tours()
+    scheduled_tours_message = Channels().get_tour_announcements_message(client)
+    await scheduled_tours_message.edit(content=scheduled_tours)
+
+    # Send and delete an "empty" message to create a notification in the channel
+    if fake_ping:
+        await scheduled_tours_message.channel.send(content='.', delete_after=1)
+
+
 @error_handler_decorator()
 async def schedule_tour_add_interaction(interaction: discord.Interaction, description: str, timestamp: str, host: str):
     """Interaction to handle the `/schedule_tour_add` command. It creates a new scheduled_tour and stores it in the sheduled_tours's catalog."""
@@ -15,25 +26,15 @@ async def schedule_tour_add_interaction(interaction: discord.Interaction, descri
         content = 'The maximum number of scheduled tours (25) has been reached. Please delete some scheduled tours before adding new ones.'
         await interaction.followup.send(content=content, ephemeral=True)
         return
-    
-    # Validate the timestamp
-    try:
-        timestamp = int(timestamp)
-    except ValueError:
-        content = 'The timestamp must be a valid UNIX timestamp (an integer)'
-        await interaction.followup.send(content=content, ephemeral=True)
-        return
 
     # Add the scheduled tour
-    added, log = Scheduled_Tour_Controller().add_scheduled_tour(description, timestamp, host)
+    added, log = Scheduled_Tour_Controller().add_scheduled_tour(description, host, timestamp)
     if not added:
-        content = 'There was an error when creating the Scheduled_Tour'
+        content = 'There was an error when scheduling the tour'
         await interaction.followup.send(content=content, ephemeral=True)
         return
     
-    # Update the tour announcements message
-    scheduled_tours = Scheduled_Tour_Controller().represent_all_scheduled_tours()
-    await Channels().get_tour_announcements_message(interaction.client).edit(content=scheduled_tours)
+    await _update_tour_announcements_message(interaction.client, fake_ping=True)
     
     # Log the addition of the gamemode
     log_thread = await Channels().get_scheduled_tours_add_thread(interaction.client)
@@ -62,9 +63,8 @@ async def schedule_tour_delete_interaction(interaction: discord.Interaction):
                 await new_interaction.followup.send(content=content, ephemeral=True)
                 return
             
-            # Update the tour announcements message
-            scheduled_tours = Scheduled_Tour_Controller().represent_all_scheduled_tours()
-            await Channels().get_tour_announcements_message(new_interaction.client).edit(content=scheduled_tours)
+            # NOTE We do not notify when deleting a tour. Change if desired
+            await _update_tour_announcements_message(new_interaction.client, fake_ping=False)
 
             # Log the deletion of the gamemode
             log_thread = await Channels().get_scheduled_tours_delete_thread(new_interaction.client)
