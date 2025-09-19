@@ -3,12 +3,14 @@ import discord
 class Scheduled_Tour:
     """Class representing a scheduled tour."""
     
-    def __init__(self, id: int, description: str, host: str, starts_at_timestamp: int, created_at_timestamp: int, updated_at_timestamp) -> None:
+    def __init__(self, id: int, guild_id: int, description: str, host: str, starts_at_timestamp: int, created_at_timestamp: int, updated_at_timestamp) -> None:
         """
         Parameters:
         -----------
         id: `int`
             The database ID of the scheduled tour.
+        guild_id: `int`
+            The ID of the Guild in which the tour was scheduled.
         description: `str`
             The description of the tour.
         host: `str`
@@ -26,6 +28,7 @@ class Scheduled_Tour:
             If the timestamp string is not in the correct format.
         """
         self.id = id
+        self.guild_id = guild_id
         self.tour_host = host
         self.tour_description = description
         self.starts_at_timestamp = starts_at_timestamp

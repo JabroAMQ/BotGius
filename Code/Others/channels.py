@@ -31,6 +31,8 @@ class Channels:
 
         self.tour_announcements_channel_id = channels_data['new_server']['tour_announcements']['channel']
         self.tour_announcements_message_id = channels_data['new_server']['tour_announcements']['message']
+        self.test_tour_announcements_channel_id = channels_data['test']['tour_announcements']['channel']
+        self.test_tour_announcements_message_id = channels_data['test']['tour_announcements']['message']
         
         self.logs_channel_id = channels_data['test']['logs']['channel']
         self.player_register_thread_id = channels_data['test']['logs']['threads']['player_register']
@@ -56,6 +58,18 @@ class Channels:
     def get_new_guild(self, client: discord.Client) -> discord.Guild:
         """Return the new guild object."""
         return client.get_guild(self.new_guild_id)
+    
+    def get_guild(self, client: discord.Client, guild_id: int) -> discord.Guild:
+        """Return the guild object given the `guild_id` argument."""
+        match guild_id:
+            case self.main_guild_id:
+                return self.get_main_guild(client)
+            case self.new_guild_id:
+                return self.get_new_guild(client)
+            case self.test_guild_id:
+                return self.get_test_guild(client)
+            case _:
+                raise ValueError('Unsupported guild provided')
 
 
     def get_host_channel(self, client: discord.Client) -> discord.TextChannel:
@@ -79,15 +93,35 @@ class Channels:
         return test_guild.get_channel(self.picks_channel_id)
 
 
-    def get_tour_announcements_channel(self, client: discord.Client) -> discord.TextChannel:
+    def get_main_tour_announcements_channel(self, client: discord.Client) -> discord.TextChannel:
         """Return the tour announcements channel object (from the main guild)."""
         new_guild = self.get_new_guild(client)
         return new_guild.get_channel(self.tour_announcements_channel_id)
 
-    def get_tour_announcements_message(self, client: discord.Client) -> discord.Message:
+    def get_main_tour_announcements_message(self, client: discord.Client) -> discord.Message:
         """Return the tour announcements message object (from the main guild)."""
-        tour_announcements_channel = self.get_tour_announcements_channel(client)
+        tour_announcements_channel = self.get_main_tour_announcements_channel(client)
         return tour_announcements_channel.get_partial_message(self.tour_announcements_message_id)
+    
+    def get_test_tour_announcements_channel(self, client: discord.Client) -> discord.TextChannel:
+        """Return the tour announcements channel object (from the test guild)."""
+        test_guild = self.get_test_guild(client)
+        return test_guild.get_channel(self.test_tour_announcements_channel_id)
+
+    def get_test_tour_announcements_message(self, client: discord.Client) -> discord.Message:
+        """Return the tour announcements message object (from the test guild)."""
+        test_tour_announcements_channel = self.get_test_tour_announcements_channel(client)
+        return test_tour_announcements_channel.get_partial_message(self.test_tour_announcements_message_id)
+
+    def get_tour_announcements_message(self, client: discord.Client, guild_id: int) -> discord.Message:
+        """Return the tour announcements message object (from the main/test guild depending on the `guild_id` value)."""
+        match guild_id:
+            case self.new_guild_id:
+                return self.get_main_tour_announcements_message(client)
+            case self.test_guild_id:
+                return self.get_test_tour_announcements_message(client)
+            case _:
+                raise ValueError('Unsupported guild provided')
 
 
     def get_logs_channel(self, client: discord.Client) -> discord.TextChannel:

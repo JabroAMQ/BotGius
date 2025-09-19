@@ -58,6 +58,7 @@ conn.commit()
 cur.execute("""
 CREATE TABLE IF NOT EXISTS scheduled_tours (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    guild_id INTEGER NOT NULL,
     description TEXT NOT NULL,
     host TEXT NOT NULL,
     timestamp INTEGER NOT NULL,

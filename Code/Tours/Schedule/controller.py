@@ -19,12 +19,12 @@ class Scheduled_Tour_Controller:
         self.scheduled_tours: dict[int, Scheduled_Tour] = {}
 
         for record in Scheduled_Tours_Database.get_all_scheduled_tours():
-            id, description, host, starts_at, created_at, updated_at = record
-            scheduled_tour = Scheduled_Tour(id, description, host, starts_at, created_at, updated_at)
+            id, guild_id, description, host, starts_at, created_at, updated_at = record
+            scheduled_tour = Scheduled_Tour(id, guild_id, description, host, starts_at, created_at, updated_at)
             self.scheduled_tours[id] = scheduled_tour
 
     
-    def add_scheduled_tour(self, description: str, host: str, timestamp: int) -> tuple[bool, str]:
+    def add_scheduled_tour(self, guild_id: int, description: str, host: str, timestamp: int) -> tuple[bool, str]:
         """
         Create a new Scheduled_Tour and add it into the database and the catalog.
         
@@ -32,8 +32,8 @@ class Scheduled_Tour_Controller:
         """
         try:
             created_at = int(discord.utils.utcnow().timestamp())
-            id = Scheduled_Tours_Database.add_scheduled_tour(description, host, timestamp, created_at)
-            new_scheduled_tour = Scheduled_Tour(id, description, host, timestamp, created_at, None)
+            id = Scheduled_Tours_Database.add_scheduled_tour(guild_id, description, host, timestamp, created_at)
+            new_scheduled_tour = Scheduled_Tour(id, guild_id, description, host, timestamp, created_at, None)
             self.scheduled_tours[id] = new_scheduled_tour
             return True, new_scheduled_tour.get_log_data()
 
@@ -58,21 +58,22 @@ class Scheduled_Tour_Controller:
             print_exception(error)
             return False, ''
         
-    def count_scheduled_tours(self) -> int:
-        """Return the number of Scheduled_Tours stored in the catalog."""
-        return len(self.scheduled_tours)
+    def count_scheduled_tours(self, guild_id: int) -> int:
+        """Return the number of Scheduled_Tours stored in the catalog for a specific guild."""
+        return sum(1 for tour in self.scheduled_tours.values() if tour.guild_id == guild_id)
     
-    def get_all_scheduled_tours(self) -> list[tuple[str, int]]:
-        """Return a list of tuples containing all the Scheduled_Tours representation, and its id, stored in the catalog."""
-        return [(str(tour), tour.id) for tour in sorted(self.scheduled_tours.values())]
+    def get_all_scheduled_tours(self, guild_id: int) -> list[tuple[str, int]]:
+        """Return a list of tuples containing all the Scheduled_Tours representation, and its id, stored in the catalog for a specific guild."""
+        return [(str(tour), tour.id) for tour in sorted(self.scheduled_tours.values()) if tour.guild_id == guild_id]
 
 
-    def represent_all_scheduled_tours(self) -> str:
-        """Return a str representation of all the Scheduled_Tours in the catalog."""
-        representation = '**Upcoming Scheduled Tours**:\n\n'
-        
-        for tour in sorted(self.scheduled_tours.values()):
+    def represent_all_scheduled_tours(self, guild_id: int) -> str:
+        """Return a str representation of all the Scheduled_Tours in the catalog for a specific guild."""
+        guild_scheduled_tours = [scheduled_tour for scheduled_tour in sorted(self.scheduled_tours.values()) if scheduled_tour.guild_id == guild_id]
+
+        representation = '**Upcoming Scheduled Tours**:\n\n'        
+        for tour in guild_scheduled_tours:
             representation += repr(tour) + '\n'
-
         representation += f'\nLast updated: <t:{int(discord.utils.utcnow().timestamp())}:R>'
+        
         return representation
