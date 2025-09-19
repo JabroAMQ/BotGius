@@ -75,7 +75,7 @@ class Scheduled_Tour_Controller:
             if host:
                 old_host = tour.tour_host
             if timestamp:
-                old_timestamp = tour.starts_at_timestamp
+                old_timestamp = tour.convert_to_discord_timestamp()
 
             new_description = description if description else tour.tour_description
             new_host = host if host else tour.tour_host
@@ -90,11 +90,11 @@ class Scheduled_Tour_Controller:
             
             log_data = ''
             if old_host:
-                log_data += f'- Host: {old_host} -> {new_host}\n'
+                log_data += f'- Host: {old_host} -> {tour.tour_host}\n'
             if old_description:
-                log_data += f'- Description: {old_description} -> {new_description}\n'
+                log_data += f'- Description: {old_description} -> {tour.tour_description}\n'
             if old_timestamp:
-                log_data += f'- Scheduled Time: {old_timestamp} -> {new_timestamp}\n'
+                log_data += f'- Scheduled Time: {old_timestamp} -> {tour.convert_to_discord_timestamp()}\n'
 
             return True, log_data
 
