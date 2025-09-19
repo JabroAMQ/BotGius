@@ -1,4 +1,6 @@
 """
+NOTE POSTGRESQL IS DEPRECATED
+
 For reproducibility, this is how the Players's Table was created:
 
 CREATE TABLE IF NOT EXISTS players(

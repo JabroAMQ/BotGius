@@ -3,7 +3,6 @@ from discord import app_commands
 
 from Commands.base import Commands
 from Code.Players import interactions
-from Code.Players.enums import List_From_Options, List_Sections_Options, Prefered_Gamemode_Options
 from Code.Players.main_ranking import Ranking
 
 class Players_Commands(Commands):
@@ -51,32 +50,6 @@ class Players_Commands(Commands):
         @app_commands.guild_only
         async def player_get_profile(interaction: discord.Interaction, amq_name: str = '', discord_name: str = ''):
             await interactions.player_get_profile(interaction, amq_name, discord_name)
-
-        @client.tree.command(name='player_change_list', description='Update your list information')
-        @app_commands.describe(
-            list_name='The name of your list',
-            list_from='The platform where your list is from',
-            list_sections='The sections of your list to use'
-        )
-        @app_commands.choices(
-            list_from = [app_commands.Choice(name=f, value=f) for f in [option.name for option in List_From_Options]],
-            list_sections = [app_commands.Choice(name=c, value=c) for c in [option.name.replace('_', ' / ') for option in List_Sections_Options]]
-        )
-        @app_commands.guild_only
-        async def player_change_list(
-            interaction: discord.Interaction,
-            list_name: str,
-            list_from: app_commands.Choice[str],
-            list_sections: app_commands.Choice[str]
-        ):
-            await interactions.player_change_list(interaction, list_name, list_from.value, list_sections.value)
-        
-        @client.tree.command(name='player_change_mode', description='Update your favourite or most hated gamemodes')
-        @app_commands.describe(type='Which gamemode to update')
-        @app_commands.choices(type=[app_commands.Choice(name=option.name, value=option.value) for option in Prefered_Gamemode_Options])
-        @app_commands.guild_only
-        async def player_change_mode(interaction: discord.Interaction, type: app_commands.Choice[int]):
-            await interactions.player_change_mode(interaction, type)
 
 
         @client.tree.command(name='player_change_rank', description='Change the rank of a player')

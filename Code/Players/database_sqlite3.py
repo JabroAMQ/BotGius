@@ -4,59 +4,25 @@ For reproducibility, this is how the Players's Table was created:
 CREATE TABLE IF NOT EXISTS players (
     id INTEGER PRIMARY KEY NOT NULL,
     amq TEXT UNIQUE NOT NULL,
-
     rank TEXT DEFAULT 'None',
-    elo INTEGER DEFAULT 0,
-
-    list_name TEXT,
-    list_from TEXT,
-    list_sections TEXT,
-
-    fav_1v1 INTEGER,
-    hated_1v1 INTEGER,
-    fav_2v2 INTEGER,
-    hated_2v2 INTEGER,
-    fav_4v4 INTEGER,
-    hated_4v4 INTEGER,
-
-    is_banned BOOLEAN DEFAULT 0,
-
-    FOREIGN KEY (fav_1v1) REFERENCES gamemodes(id) ON DELETE SET NULL,
-    FOREIGN KEY (hated_1v1) REFERENCES gamemodes(id) ON DELETE SET NULL,
-    FOREIGN KEY (fav_2v2) REFERENCES gamemodes(id) ON DELETE SET NULL,
-    FOREIGN KEY (hated_2v2) REFERENCES gamemodes(id) ON DELETE SET NULL,
-    FOREIGN KEY (fav_4v4) REFERENCES gamemodes(id) ON DELETE SET NULL,
-    FOREIGN KEY (hated_4v4) REFERENCES gamemodes(id) ON DELETE SET NULL
+    is_banned BOOLEAN DEFAULT 0
 );
 """
-
 import sqlite3
 
 from Code.Utilities.database_connection_sqlite3 import connection_manager
-
 
 class Players_Database:
     """Static class to handle connections with the Players Database."""
     
     @staticmethod
     @connection_manager
-    def get_all_players(cur: sqlite3.Cursor = None) \
-        -> list[tuple[int, str, str, int, str | None, str | None, str | None, int | None, int | None, int | None, int | None, int | None, int | None, bool]]:
+    def get_all_players(cur: sqlite3.Cursor = None) -> list[tuple[int, str, str, bool]]:
         """
         Return a list of tuple containing the Players's data with the following order:
         - `discord_id`
         - `amq_name`
         - `rank`
-        - `elo`
-        - `list_name`
-        - `list_from`
-        - `list_sections`
-        - `fav_1v1_gamemode_id`
-        - `hated_1v1_gamemode_id`
-        - `fav_2v2_gamemode_id`
-        - `hated_2v2_gamemode_id`
-        - `fav_4v4_gamemode_id`
-        - `hated_4v4_gamemode_id`
         - `is_banned`
         
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
@@ -108,48 +74,3 @@ class Players_Database:
         change_player_is_banned_query = 'UPDATE players SET is_banned = ? WHERE id = ?'
         player = (is_banned, discord_id)
         cur.execute(change_player_is_banned_query, player)
-
-    @staticmethod
-    @connection_manager
-    def change_player_list_data(
-        discord_id: int,
-        new_list_name: str,
-        new_list_from: str,
-        new_list_sections: str,
-        cur: sqlite3.Cursor = None
-    ) -> None:
-        """
-        Change the Player's list information from the `discord_id` player in the Playerd's Database.
-        Do NOT add a `cur` value, its a placeholder which value will be replaced.
-        """
-        change_player_list_data_query = '''
-            UPDATE players
-            SET list_name = ?, list_from = ?, list_sections = ?
-            WHERE id = ?
-        '''
-        player = (new_list_name, new_list_from, new_list_sections, discord_id)
-        cur.execute(change_player_list_data_query, player)
-
-    @staticmethod
-    @connection_manager
-    def change_player_preferred_gamemodes_data(
-        discord_id: int,
-        new_fav_1v1_gamemode_id: int,
-        new_fav_2v2_gamemode_id: int,
-        new_fav_4v4_gamemode_id: int,
-        new_hated_1v1_gamemode_id: int,
-        new_hated_2v2_gamemode_id: int,
-        new_hated_4v4_gamemode_id: int,
-        cur: sqlite3.Cursor = None
-    ) -> None:
-        """
-        Change the Player's preferred gamemodes from the `discord_id` player in the Playerd's Database.
-        Do NOT add a `cur` value, its a placeholder which value will be replaced.
-        """
-        change_player_preferred_gamemodes_data_query = '''
-            UPDATE players
-            SET fav_1v1 = ?, fav_2v2 = ?, fav_4v4 = ?, hated_1v1 = ?, hated_2v2 = ?, hated_4v4 = ?
-            WHERE id = ?
-        '''
-        player = (new_fav_1v1_gamemode_id, new_fav_2v2_gamemode_id, new_fav_4v4_gamemode_id, new_hated_1v1_gamemode_id, new_hated_2v2_gamemode_id, new_hated_4v4_gamemode_id, discord_id)
-        cur.execute(change_player_preferred_gamemodes_data_query, player)

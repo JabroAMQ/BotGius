@@ -4,7 +4,6 @@ import discord
 
 from Code.Players.player import Player
 from Code.Players.database_sqlite3 import Players_Database
-from Code.Players.enums import Prefered_Gamemode_Options
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 
 class Players_Controller:
@@ -27,41 +26,9 @@ class Players_Controller:
             self._add_player_to_catalogs(*player_data)
 
 
-    def _add_player_to_catalogs(
-        self,
-        discord_id: int,
-        amq_name: str,
-        rank: str = 'None',
-        elo: int = 0,
-        list_name: str = 'TBD',
-        list_from: str = 'TBD',
-        list_sections: str = 'TBD',
-        fav_1v1_gamemode_id: int = None,
-        hated_1v1_gamemode_id: int = None,
-        fav_2v2_gamemode_id: int = None,
-        hated_2v2_gamemode_id: int = None,
-        fav_4v4_gamemode_id: int = None,
-        hated_4v4_gamemode_id: int = None,
-        is_banned: bool = False
-    ) -> None:
+    def _add_player_to_catalogs(self, discord_id: int, amq_name: str, rank: str = 'None', is_banned: bool = False) -> None:
         """Add a player to the Players's Catalogs (by `discord_id` and `amq_name`)."""
-        player = Player(
-            discord_id=discord_id,
-            amq_name=amq_name,
-            rank=rank,
-            elo=elo,
-            list_name=list_name,
-            list_from=list_from,
-            list_sections=list_sections,
-            fav_1v1_gamemode_id=fav_1v1_gamemode_id,
-            fav_2v2_gamemode_id=fav_2v2_gamemode_id,
-            fav_4v4_gamemode_id=fav_4v4_gamemode_id,
-            hated_1v1_gamemode_id=hated_1v1_gamemode_id,
-            hated_2v2_gamemode_id=hated_2v2_gamemode_id,
-            hated_4v4_gamemode_id=hated_4v4_gamemode_id,
-            is_banned=is_banned
-        )
-
+        player = Player(discord_id=discord_id, amq_name=amq_name, rank=rank, is_banned=is_banned)
         self.players_by_ids[discord_id] = player
         self.players_by_amq_name[amq_name.lower()] = player
     
@@ -111,10 +78,6 @@ class Players_Controller:
         discord_id = possibilities.get(closest_match)
         return self.players_by_ids.get(discord_id) if discord_id is not None else None
 
-
-    def get_all_players_with_gamemode_referenced(self, gamemode: Gamemode) -> list[Player]:
-        """Return a list with all the players that have referenced the gamemode as one of their favourite/most hated gamemodes."""
-        return [player for player in self.players_by_ids.values() if player.has_gamemode_referenced(gamemode)]
     
     def get_all_banned_players(self) -> list[Player]:
         """Return a list wirh all the players that are currently banned."""
@@ -221,57 +184,3 @@ class Players_Controller:
         Players_Database.change_is_baned(player.discord_id, player.is_banned)
 
         return True, True, player
-    
-
-    def change_player_list(
-        self,
-        discord_id: int,
-        new_list_name: str,
-        new_list_from: str,
-        new_list_sections: str
-    ) -> tuple[bool, str]:
-        """
-        Change the player's list information with the one provided.\n
-        Return `False` if the user is not registered in the Players's Database, and `True` otherwise.\n
-        Also return a log str providing the changes applied to the player's list.
-        """
-        player = self.players_by_ids.get(discord_id)
-        if player is None:
-            return False, None
-        
-        player.list_name = new_list_name
-        player.list_from = new_list_from
-        player.list_sections = new_list_sections
-
-        Players_Database.change_player_list_data(discord_id, new_list_name, new_list_from, new_list_sections)
-        
-        return True, player.display_list_info()
-    
-
-    def change_player_prefered_gamemodes(
-        self,
-        discord_id: int,
-        prefered_gamemode_option: int,
-        gamemode_id: int,
-    ) -> bool:
-        """
-        Change the player's prefered gamemodes information with the one provided.\n
-        Return `False` if the user is not registered in the Players's Database, and `True` otherwise.
-        """
-        player = self.players_by_ids.get(discord_id)
-        if player is None:
-            return False
-
-        prefered_gamemode_option_name = Prefered_Gamemode_Options(prefered_gamemode_option).name    # getting fav_1v1_gamemode / fav_2v2_gamemode / etc. name
-        setattr(player, prefered_gamemode_option_name.lower(), gamemode_id)                         # modifying the property (fav_1v1_gamemode) with the gamemode selected (dynamically)
-
-        Players_Database.change_player_preferred_gamemodes_data(
-            discord_id=discord_id,
-            new_fav_1v1_gamemode_id=player._fav_1v1_gamemode_id,
-            new_fav_2v2_gamemode_id=player._fav_2v2_gamemode_id,
-            new_fav_4v4_gamemode_id=player._fav_4v4_gamemode_id,
-            new_hated_1v1_gamemode_id=player._hated_1v1_gamemode_id,
-            new_hated_2v2_gamemode_id=player._hated_2v2_gamemode_id,
-            new_hated_4v4_gamemode_id=player._hated_4v4_gamemode_id
-        )
-        return True
