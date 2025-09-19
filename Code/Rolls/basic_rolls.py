@@ -124,10 +124,27 @@ class Roll:
                 roll = random.choice(one_life_challenge_names)
                 return f'**One Life Challenge rolled:** {roll}' if as_str else roll
             
-            case enums.Rolls_Enum.UMA_MUSUME:
-                uma_musume_types_names = [type.name.capitalize() for type in enums.Uma_Musume]
-                roll = random.choice(uma_musume_types_names)
-                return f'**Uma Musume type rolled:** {roll}' if as_str else roll
+            case enums.Rolls_Enum.UMA_MUSUME_DISTANCES:
+                distances_dict = {
+                    enums.Uma_Musume_Distances.SPRINT: 60,
+                    enums.Uma_Musume_Distances.MILE: 70,
+                    enums.Uma_Musume_Distances.MEDIUM: 80,
+                    enums.Uma_Musume_Distances.LONG: 90
+                }
+                roll = random.choice(list(enums.Uma_Musume_Distances))
+                value = distances_dict[roll]
+                return f'**Uma Musume distance rolled:** {roll.name.capitalize()} (Points goal {value})' if as_str else f'{roll.name.capitalize()} (Points goal {value})'
+            
+            case enums.Rolls_Enum.UMA_MUSUME_TRACKS:
+                tracks_dict = {
+                    enums.Uma_Musume_Tracks.FIRM: 'OPs 0-100',
+                    enums.Uma_Musume_Tracks.GOOD: 'OPEDs 0-100',
+                    enums.Uma_Musume_Tracks.SOFT: 'OPEDINs 25-60',
+                    enums.Uma_Musume_Tracks.HEAVY: 'OPEDINs 25-100'
+                }
+                roll = random.choice(list(enums.Uma_Musume_Tracks))
+                value = tracks_dict[roll]
+                return f'**Uma Musume track rolled:** {roll.name.capitalize()} ({value})' if as_str else f'{roll.name.capitalize()} ({value})'
 
             case _:
                 raise ValueError('Invalied "type" value')

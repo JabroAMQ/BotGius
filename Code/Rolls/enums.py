@@ -60,12 +60,20 @@ class One_Life_Challenge(Enum):
     _6S_4X = 4
 
 
-class Uma_Musume(Enum):
-    """Enumerate class to represent the different Uma Musume types?"""
+class Uma_Musume_Distances(Enum):
+    """Enumerate class to represent the different Uma Musume distances."""
     SPRINT = 0
     MILE = 1
     MEDIUM = 2
     LONG = 3
+
+
+class Uma_Musume_Tracks(Enum):
+    """Enumerate class to represent the different Uma Musume tracks."""
+    FIRM = 0
+    GOOD = 1
+    SOFT = 2
+    HEAVY = 3
 
 
 class Rolls_Enum(Enum):
@@ -88,7 +96,8 @@ class Rolls_Enum(Enum):
     MASTERY_MODE = 15
     YEAR = 16
     ONE_LIFE_CHALLENGE = 17
-    UMA_MUSUME = 18
+    UMA_MUSUME_DISTANCES = 18
+    UMA_MUSUME_TRACKS = 19
 
 
 class Roll_Gamemode(Enum):
