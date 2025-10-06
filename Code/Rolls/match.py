@@ -58,8 +58,15 @@ class Match:
         
         # Global Player
         elif 'global player' in self.gamemode.name.lower() and not 'picked' in self.gamemode.name.lower():
-            global_player: GlobalPlayer = Roll.roll(Rolls_Enum.ACTIVE_GLOBAL_PLAYER)
+            global_player: GlobalPlayer = Roll.roll(Rolls_Enum.ACTIVE_GLOBAL_PLAYER) if 'active' in self.gamemode.name.lower() else Roll.roll(Rolls_Enum.ALL_GLOBAL_PLAYER)
             self.special_roll = f'Player: {global_player.player_name} (list: {global_player.list_name} ({global_player.list_from}))'
+
+            # We roll Type 7 as well for Active Global Players List 1v1 and 2v2
+            if self.gamemode.name.lower() in ['active global players list 1v1', 'active global players list 2v2']:
+                type_7: str = Roll.roll(Rolls_Enum.TYPE_7)
+                self.special_roll += f'\n\nType 7: {type_7}'
+                return content + repr(global_player) + f'\n**Type 7 rolled:** {type_7}'
+
             return content + repr(global_player)
 
         # Random Genre
