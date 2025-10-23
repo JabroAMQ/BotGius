@@ -22,12 +22,15 @@ class Roles:
         roles_data = load_yaml_content(yaml_route=yaml_route)
 
         self.main_guild_id: int = roles_data['teams']['main']['id']
+        self.new_server_guild_id: int = roles_data['teams']['new_server']['id']
         self.test_guild_id: int = roles_data['teams']['test']['id']
 
         self.main_guild_roles_ids: list[int] = roles_data['teams']['main']['roles']
+        self.new_server_guild_roles_ids: list[int] = roles_data['teams']['new_server']['roles']
         self.test_guild_roles_ids: list[int] = roles_data['teams']['test']['roles']
 
-        self.common_ping: str = roles_data['pings']['tour_addicts']
+        self.main_guild_common_ping: str = roles_data['pings']['tour_addicts']
+        self.new_guild_common_ping: str = roles_data['pings']['tour_addicts_new_sever']
 
     
     def _get_team_roles(self, guild: discord.Guild, role_index: int = 0) -> tuple[discord.Role, list[discord.Role]]:
@@ -46,6 +49,11 @@ class Roles:
                 role = all_roles.pop(role_index)
                 return role, all_roles
             
+            case self.new_server_guild_id:
+                all_roles = [guild.get_role(role_id) for role_id in self.new_server_guild_roles_ids]
+                role = all_roles.pop(role_index)
+                return role, all_roles
+            
             case self.test_guild_id:
                 all_roles = [guild.get_role(role_id) for role_id in self.test_guild_roles_ids]
                 role = all_roles.pop(role_index)
@@ -55,9 +63,20 @@ class Roles:
                 raise ValueError('Invalid Guild ID')
 
 
-    def get_common_ping_role(self) -> str:
-        """Return a string containing the mention of the common_ping role."""        
+    def get_common_ping_role(self, guild: discord.Guild) -> str:
+        """Return a string containing the mention of the common_ping role."""
+        # TODO Remove this once the bot is only hosted on the new server
+        """
+        change self.main_guild_common_ping and self.new_guild_common_ping to "self.common_ping"
         return self.common_ping
+        """
+        match guild.id:
+            case self.main_guild_id:
+                return self.main_guild_common_ping
+            case self.new_server_guild_id:
+                return self.new_guild_common_ping
+            case _:
+                return self.main_guild_common_ping  # It really doesn't matter since this is getting deleted
     
 
     async def remove_team_roles(self, guild: discord.Guild, player_id: int):
