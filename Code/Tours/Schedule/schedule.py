@@ -59,7 +59,9 @@ class Scheduled_Tour:
         return self.starts_at_timestamp < value.starts_at_timestamp
 
     def __str__(self) -> str:
-        return f'{self.tour_host}\'s tour: {self.tour_description}'
+        tour_str = f'{self.tour_host}\'s tour: {self.tour_description}'
+        # NOTE Discord Select Dropdowns have a max of 100 characters per option
+        return tour_str[:97] + '...' if len(tour_str) > 100 else tour_str
 
     def __repr__(self) -> str:
         now_timestamp = int(discord.utils.utcnow().timestamp())
