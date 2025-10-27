@@ -22,9 +22,10 @@ class Channels:
 
         self.main_guild_id = channels_data['main']['guild']
         self.test_guild_id = channels_data['test']['guild']
-        self.new_guild_id = channels_data['new_server']['guild']        # NOTE delete when moved
+        self.new_guild_id = channels_data['new_server']['guild']                # NOTE delete when moved
 
         self.host_channel_id = channels_data['main']['host_chat']
+        self.new_host_channel_id = channels_data['new_server']['host_chat']     # NOTE delete when moved
         self.feedback_channel_id = channels_data['test']['feedback']
         self.report_channel_id = channels_data['test']['report']
         self.picks_channel_id = channels_data['test']['picks']
@@ -77,6 +78,12 @@ class Channels:
         """Return the host channel object (from the main guild)."""
         main_guild = self.get_main_guild(client)
         return main_guild.get_channel(self.host_channel_id)
+    
+    # NOTE Remove when moved
+    def get_new_host_channel(self, client: discord.Client) -> discord.TextChannel:
+        """Return the host channel object (from the new guild)."""
+        new_guild = self.get_new_guild(client)
+        return new_guild.get_channel(self.new_host_channel_id)
 
     def get_feedback_channel(self, client: discord.Client) -> discord.TextChannel:
         """Return the feedback channel object (from the test guild)."""

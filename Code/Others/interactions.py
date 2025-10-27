@@ -92,8 +92,10 @@ async def feedback(interaction: discord.Interaction, image: discord.Attachment =
             
             feedback_channel = Channels().get_feedback_channel(new_interaction.client)
             host_channel = Channels().get_host_channel(new_interaction.client)
+            new_host_channel = Channels().get_new_host_channel(new_interaction.client)  # NOTE Remove when moved
             await to_webhook(interaction=new_interaction, webhook_name='Feedback', channel=feedback_channel, embed=embed, inform=False)
             await to_webhook(interaction=new_interaction, webhook_name='Feedback', channel=host_channel, embed=embed)
+            await to_webhook(interaction=new_interaction, webhook_name='Feedback', channel=new_host_channel, embed=embed)  # NOTE Remove when moved
 
     if image:
         image_ok = await _validate_image(interaction, image)
