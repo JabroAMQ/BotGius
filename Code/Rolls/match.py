@@ -94,6 +94,12 @@ class Match:
             self.special_roll = f'Type 5: {type_5}'
             return content + f'**Type 5 rolled:** {type_5}'
         
+        # Unwatched (1v1, 2v2 or 3v3 exclusively)
+        elif {'unwatched 1v1', 'unwatched 2v2', 'unwatched 3v3'} in self.gamemode.name.lower():
+            type_7: str = Roll.roll(Rolls_Enum.TYPE_7)
+            self.special_roll = f'Type 7: {type_7}'
+            return content + f'**Type 7 rolled:** {type_7}'
+        
         # Random/Watched Year
         elif 'year' in self.gamemode.name.lower() and ('random' in self.gamemode.name.lower() or 'watched' in self.gamemode.name.lower()):
             year: int = Roll.roll(Rolls_Enum.YEAR)
