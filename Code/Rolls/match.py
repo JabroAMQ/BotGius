@@ -95,7 +95,7 @@ class Match:
             return content + f'**Type 5 rolled:** {type_5}'
         
         # Unwatched (1v1, 2v2 or 3v3 exclusively)
-        elif {'unwatched 1v1', 'unwatched 2v2', 'unwatched 3v3'} in self.gamemode.name.lower():
+        elif 'unwatched 1v1' in self.gamemode.name.lower() or 'unwatched 2v2' in self.gamemode.name.lower() or 'unwatched 3v3' in self.gamemode.name.lower():
             type_7: str = Roll.roll(Rolls_Enum.TYPE_7)
             self.special_roll = f'Type 7: {type_7}'
             return content + f'**Type 7 rolled:** {type_7}'
