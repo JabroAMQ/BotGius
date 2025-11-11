@@ -101,7 +101,7 @@ class Match:
             return content + f'**Type 7 rolled:** {type_7}'
         
         # Random/Watched Year
-        elif 'year' in self.gamemode.name.lower() and ('random' in self.gamemode.name.lower() or 'watched' in self.gamemode.name.lower()):
+        elif 'year' in self.gamemode.name.lower() and not 'picked' in self.gamemode.name.lower():
             year: int = Roll.roll(Rolls_Enum.YEAR)
             self.special_roll = f'Year: {year}'
             return content + f'**Year rolled:** {year}'
