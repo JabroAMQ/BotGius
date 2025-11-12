@@ -29,6 +29,9 @@ class Roles:
         self.new_server_guild_roles_ids: list[int] = roles_data['teams']['new_server']['roles']
         self.test_guild_roles_ids: list[int] = roles_data['teams']['test']['roles']
 
+        self.new_server_guild_drafter_role_id: int = roles_data['teams']['new_server']['drafter_role']
+        self.test_guild_drafter_role_id: int = roles_data['teams']['test']['drafter_role']
+
         self.main_guild_common_ping: str = roles_data['pings']['tour_addicts']
         self.new_guild_common_ping: str = roles_data['pings']['tour_addicts_new_sever']
 
@@ -136,3 +139,55 @@ class Roles:
             await member.add_roles(*roles_to_add)
         except Exception as e:
             print(f'Couldn\'t remove role from player {player_id}: {e}')
+
+
+    async def add_drafter_role(self, guild: discord.Guild, player_id: int):
+        """
+        Add the drafter role to the player (identified by its discord id `player_id`) in the guild provided.
+        
+        Raises:
+        -----------
+        - ValueError: if the player or guild ids are not valid.
+        """
+        member = guild.get_member(player_id)
+        if member is None:
+            raise ValueError('Invalid User ID')
+        
+        match guild.id:
+            case self.new_server_guild_id:
+                drafter_role = guild.get_role(self.new_server_guild_drafter_role_id)
+            case self.test_guild_id:
+                drafter_role = guild.get_role(self.test_guild_drafter_role_id)
+            case _:
+                raise ValueError('Invalid Guild ID')
+
+        try:
+            await member.add_roles(drafter_role)
+        except Exception as e:
+            print(f'Couldn\'t add drafter role to player {player_id}: {e}')
+
+    
+    async def remove_drafter_role(self, guild: discord.Guild, player_id: int):
+        """
+        Remove the drafter role from the player (identified by its discord id `player_id`) in the guild provided.
+        
+        Raises:
+        -----------
+        - ValueError: if the player is not valid.
+        """
+        match guild.id:
+            case self.new_server_guild_id:
+                drafter_role = guild.get_role(self.new_server_guild_drafter_role_id)
+            case self.test_guild_id:
+                drafter_role = guild.get_role(self.test_guild_drafter_role_id)
+            case _:
+                return  # No drafter role to remove
+            
+        member = guild.get_member(player_id)
+        if member is None:
+            raise ValueError('Invalid User ID')
+
+        try:
+            await member.remove_roles(drafter_role)
+        except Exception as e:
+            print(f'Couldn\'t remove drafter role from player {player_id}: {e}')

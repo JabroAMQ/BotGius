@@ -1,6 +1,7 @@
 import discord
 
 from Code.Tours.tour import Tour
+from Code.Others.roles import Roles
 from Code.Utilities.error_handler import error_handler_decorator
 
 class Tours_Controller:
@@ -90,7 +91,10 @@ class Tours_Controller:
     
 
     async def end_current_tour(self, tour: Tour, guild: discord.Guild) -> None:
-        """Ends the tour that is currently active."""        
+        """Ends the tour that is currently active."""
+        # Remove the drafter roles from the players
+        [await Roles().remove_drafter_role(guild, player.discord_id) for player in tour.players]
+
         # Remove the roles from the players
         [await team.reset_roles(guild) for team in tour.teams]
         

@@ -163,6 +163,14 @@ class Tours_Commands(Commands):
             await interactions.team_get_all_roles(interaction)
 
 
+        @client.tree.command(name='give_drafter_role', description='Add the drafter role to the players indicated')
+        @app_commands.describe(players='AMQ name of the player(s) to add the drafter role to')
+        @app_commands.guild_only
+        @app_commands.check(self.is_user_tour_helper)
+        async def give_drafter_role(interaction: discord.Interaction, players: str):
+            await interactions.give_drafter_role(interaction, players)
+
+
         @client.tree.command(name='roll_groups', description='Split the players into groups based on the selected criteria')
         @app_commands.describe(number_of_groups='Number of groups to split the players into', criteria='Type of randomization to apply')
         @app_commands.choices(criteria=[app_commands.Choice(name=type.name.replace('_', ' ').capitalize(), value=type.value) for type in Roll_Teams])

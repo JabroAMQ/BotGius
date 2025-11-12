@@ -602,6 +602,61 @@ async def team_players_remove(interaction: discord.Interaction, team_index: int,
 
 
 @error_handler_decorator()
+async def team_get_all_roles(interaction: discord.Interaction):
+    """Interaction to handle the `/team_get_all_roles` command. It adds all team roles to the interaction's user."""
+    await interaction.response.defer(ephemeral=True)
+    await Roles().add_all_team_roles(interaction.guild, interaction.user.id)
+    content = 'All roles added successfully!'
+    await interaction.followup.send(content=content, ephemeral=True)
+
+
+@error_handler_decorator()
+async def give_drafter_role(interaction: discord.Interaction, players_str: str):
+    """Interaction to handle the `/give_drafter_role` command. It gives the drafter role to the specified players."""
+    await interaction.response.defer(ephemeral=True)
+
+    tour = await Tours_Controller().get_current_tour(interaction)
+    if tour is None:
+        content = 'There is not a tour active at the moment'
+        await interaction.followup.send(content=content, ephemeral=True)
+        return
+    
+    not_found, not_added = ([] for _ in range(2))
+    players_str = re.sub(' +', ' ', players_str)
+    for player_name in players_str.split(' '):
+        # Obtain the players from the input string of the host
+        player = tour.get_tour_player(player_name)
+        if player is None:
+            player_name = discord.utils.escape_markdown(player_name)
+            not_found.append(player_name)
+            continue
+
+        # Add the drafter role
+        try:
+            await Roles().add_drafter_role(interaction.guild, player.discord_id)
+        except Exception as e:
+            print(e)
+            player_name = discord.utils.escape_markdown(player.amq_name)
+            not_added.append(player_name)
+            continue
+
+    # Inform the host
+    content = ''
+    if not_found:
+        content += f'- **Couldn\'t find player from name provided in players\'s list:** {", ".join(not_found)}\n'
+    if not_added:
+        content += f'- **Couldn\'t add drafter role to these players:** {", ".join(not_added)}\n'
+    content += 'Drafter roles added successfully to the not mentioned players!'
+    await interaction.followup.send(content=content, ephemeral=True)
+
+    # Log the command usage
+    args = [
+        f'`players`: **{discord.utils.escape_markdown(players_str)}**'
+    ]
+    await _log_command(interaction, 'give_drafter_role', tour, args)
+
+
+@error_handler_decorator()
 async def team_randomize(interaction: discord.Interaction, number_of_teams: int, criteria: int):
     """Interaction to handle the `/team_randomize` command. It divides the players into groups and creates tour's teams based on the result."""
 
@@ -692,15 +747,6 @@ async def team_randomize(interaction: discord.Interaction, number_of_teams: int,
     content = f'These are the teams rolled based on the {type.name.replace("_", " ").capitalize()} criteria:\n\n{results_str}'
     view = Team_Randomize_View(tour=tour, players=player_list, type=type, number_of_teams=number_of_teams, teams=teams)
     await interaction.followup.send(content=content, view=view, ephemeral=True)
-
-
-@error_handler_decorator()
-async def team_get_all_roles(interaction: discord.Interaction):
-    """Interaction to handle the `/team_get_all_roles` command. It adds all team roles to the interaction's user."""
-    await interaction.response.defer(ephemeral=True)
-    await Roles().add_all_team_roles(interaction.guild, interaction.user.id)
-    content = 'All roles added successfully!'
-    await interaction.followup.send(content=content, ephemeral=True)
 
 
 @error_handler_decorator()
