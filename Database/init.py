@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS players (
     id INTEGER PRIMARY KEY NOT NULL,
     amq TEXT UNIQUE NOT NULL,
     rank TEXT DEFAULT 'None',
-    is_banned BOOLEAN DEFAULT 0
+    is_banned BOOLEAN DEFAULT 0,
+    is_list_banned BOOLEAN DEFAULT 0
 );
 ''')
 conn.commit()

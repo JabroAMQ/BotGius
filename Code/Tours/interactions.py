@@ -52,7 +52,7 @@ async def _log_command(interaction: discord.Interaction, command_name: str, tour
 
 
 @error_handler_decorator()
-async def tour_create(interaction: discord.Interaction, timer: int = None, size: int = None, info: str = '', custom_ping: str = ''):
+async def tour_create(interaction: discord.Interaction, timer: int = None, size: int = None, is_watched: bool = False, info: str = '', custom_ping: str = ''):
     """Interaction to handle the `/tour_create` command. It creates a new tour and stores it in the tours's catalog."""
     await interaction.response.defer(ephemeral=True)
     join_emoji, leave_emoji = Emojis().get_tour_emojis(interaction.user.id)
@@ -86,6 +86,10 @@ async def tour_create(interaction: discord.Interaction, timer: int = None, size:
             # Also we let tour helpers add banned people from `/tour_players_add` command (ban only affect if joning through this button)
             if player.is_banned:
                 content = 'You couldn\'t join the tour because you are banned :worried:'
+                await new_interaction.followup.send(content=content, ephemeral=True)
+                return
+            if self.tour.is_watched and player.is_list_banned:
+                content = 'You couldn\'t join the tour because you are banned from watched tours :worried:'
                 await new_interaction.followup.send(content=content, ephemeral=True)
                 return
             
@@ -126,6 +130,7 @@ async def tour_create(interaction: discord.Interaction, timer: int = None, size:
         guild=interaction.guild,
         timer=timer,
         size=size,
+        is_watched=is_watched,
         elo=False,
         info=info
     )
@@ -144,12 +149,12 @@ async def tour_create(interaction: discord.Interaction, timer: int = None, size:
 
 
 @error_handler_decorator()
-async def tour_edit(interaction: discord.Interaction, timer: int | None, max_size: int | None, is_open: bool | None, info: bool | None):
+async def tour_edit(interaction: discord.Interaction, timer: int | None, max_size: int | None, is_watched: bool | None, is_open: bool | None, info: bool | None):
     """Interaction to handel the `/tour_edit` command. It allows the host to modify sign-ups related parameters's values from the active tour."""
     await interaction.response.defer(ephemeral=True)
 
     # Make sure at least one value was provided
-    if timer is None and max_size is None and is_open is None and info is None:
+    if timer is None and max_size is None and is_watched is None and is_open is None and info is None:
         content = 'At least one parameter must be provided!'
         await interaction.followup.send(content=content, ephemeral=True)
         return
@@ -164,6 +169,7 @@ async def tour_edit(interaction: discord.Interaction, timer: int | None, max_siz
     content = 'This is the result:\n'
     queue_to_player_list = False        # whether to try to move queue to player list after applying the tour changes
     player_list_to_queue = False        # whether to try to move player list to queue (max size has been reduced to a value lower than the current player list size)
+    check_player_lists = False          # whether we need to check if there is a player with banned list (is_watched changed to True)
 
 
     if timer is not None:
@@ -179,6 +185,13 @@ async def tour_edit(interaction: discord.Interaction, timer: int | None, max_siz
         
         tour.max_players_size = max_size
         content += '- Max Size modified successfully.\n'
+
+    if is_watched is not None:
+        if is_watched:
+            check_player_lists = True
+
+        tour.is_watched = is_watched
+        content += '- "Watched Tour" modified successfully.\n'
 
     if is_open is not None:
         queue_to_player_list = True
@@ -201,6 +214,7 @@ async def tour_edit(interaction: discord.Interaction, timer: int | None, max_siz
             moved_players.insert(0, discord.utils.escape_markdown(last_player.amq_name))
             await tour.from_player_list_to_queue(interaction.client, last_player)
         content += ', '.join(moved_players)
+        content += '\n'
 
         # Display the players's list / queue changes
         players = tour.display_tour_players_and_queue()
@@ -216,7 +230,18 @@ async def tour_edit(interaction: discord.Interaction, timer: int | None, max_siz
         # Display the players's list / queue changes
         players = tour.display_tour_players_and_queue()
         await tour.players_message.edit(content=players)
+
+    # Check if there is any player with banned list that needs to be removed from the tour
+    if check_player_lists:
+        banned_players: list[Player] = []
+
+        for player in tour.players + tour.queue:
+            if player.is_list_banned:
+                banned_players.append(player)
     
+        if banned_players:
+            content += '**The next players are banned from watched tours, consider removing them if the tour is watched:**\n'
+            content += ', '.join([discord.utils.escape_markdown(player.amq_name) for player in banned_players])
 
     # Display the embed changes and inform the host about the result
     embed = tour.generate_join_embed()
@@ -227,6 +252,7 @@ async def tour_edit(interaction: discord.Interaction, timer: int | None, max_siz
     args = [
         f'`timer`: **{timer}**' if timer is not None else None,
         f'`max_size`: **{max_size}**' if max_size is not None else None,
+        f'`is_watched`: **{is_watched}**' if is_watched is not None else None,
         f'`is_open`: **{is_open}**' if is_open is not None else None,
         f'`info`: **{discord.utils.escape_markdown(info)}**' if info is not None else None
     ]

@@ -17,6 +17,8 @@ class Moderation_Commands(Commands):
         - `/reset_data`
         - `/ban_player`
         - `/list_banned_players`
+        - `/ban_player_list`
+        - `/list_watched_banned_players`
         """
         @client.tree.command(name='reset_data', description='Retrieve again the information from the sheets to keep it updated')
         @app_commands.guild_only
@@ -43,3 +45,23 @@ class Moderation_Commands(Commands):
         @app_commands.check(self.is_user_tour_helper)
         async def list_banned_players(interaction: discord.Interaction):
             await interactions.list_banned_players(interaction)
+
+
+        @client.tree.command(name='ban_player_list', description='Ban/Unban a player from watched tours specifically')
+        @app_commands.describe(
+            amq_name='The AMQ name of the player',
+            is_now_list_banned='Whether you want to ban (True) or unban (False) the user from watched tours'    
+        )
+        @app_commands.choices(is_now_list_banned=[app_commands.Choice(name=str(i), value=int(i)) for i in [True, False]])
+        @app_commands.guild_only
+        @app_commands.check(self.is_user_tour_helper)
+        async def ban_player_list(interaction: discord.Interaction, amq_name: str, is_now_list_banned: app_commands.Choice[int]):
+            is_now_list_banned = bool(is_now_list_banned.value)
+            await interactions.ban_player_list(interaction, amq_name, is_now_list_banned)
+
+
+        @client.tree.command(name='list_watched_banned_players', description='List all banned players from watched tours')
+        @app_commands.guild_only
+        @app_commands.check(self.is_user_tour_helper)
+        async def list_watched_banned_players(interaction: discord.Interaction):
+            await interactions.list_watched_banned_players(interaction)

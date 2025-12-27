@@ -39,6 +39,7 @@ class Tours_Commands(Commands):
         @app_commands.describe(
             timer='Number of minutes before sign ups get closed',
             size='Maximum number of tour players',
+            is_watched='Whether the tour is watched (to prevent players with banned list from joining)',
             info='Tour\'s description',
             ping='Custom role ping. Tour Addict one will always be added at the end'
         )
@@ -48,16 +49,17 @@ class Tours_Commands(Commands):
             interaction: discord.Interaction,
             timer: app_commands.Range[int, 1, 180] = None,
             size: app_commands.Range[int, 4, 128] = None,
+            is_watched: bool = False,
             info: str = '',
             ping: str = ''
         ):
-            await interactions.tour_create(interaction, timer, size, info, ping)
-
+            await interactions.tour_create(interaction, timer, size, is_watched, info, ping)
 
         @client.tree.command(name='tour_edit', description='Edit some parameters from the active tour')
         @app_commands.describe(
             timer='Number of minutes before sign ups get closed',
             size='Maximum number of tour players',
+            is_watched='Whether the tour is watched (to prevent players with banned list from joining)',
             looking_for_players = 'Whether player can still join at least to the queue',
             info='Tour\'s description'
         )
@@ -67,11 +69,11 @@ class Tours_Commands(Commands):
             interaction: discord.Interaction,
             timer: app_commands.Range[int, 1, 180] = None,
             size: app_commands.Range[int, 4, 128] = None,
+            is_watched: bool = False,
             looking_for_players: bool = None,
             info: str = None
         ):
-            await interactions.tour_edit(interaction, timer, size, looking_for_players, info)
-
+            await interactions.tour_edit(interaction, timer, size, is_watched, looking_for_players, info)
 
         
         @client.tree.command(name='tour_quit', description='Allows you to leave the current tour')

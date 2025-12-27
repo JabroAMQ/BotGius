@@ -1,18 +1,17 @@
 import discord
 
 from Code.Players.main_ranking import Ranking, Rank
-from Code.Gamemodes.controller import Main_Controller as Gamemodes_Controller
-from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 
 class Player:
     """Class that instanciates a Player object containing the information that is stored in the database."""
 
-    def __init__(self, discord_id: int, amq_name: str, rank: str = 'None', is_banned: bool = False) -> None:
+    def __init__(self, discord_id: int, amq_name: str, rank: str = 'None', is_banned: bool = False, is_list_banned: bool = False) -> None:
         """Constructor of the Player class."""
         self._discord_id = discord_id
         self._amq_name = amq_name
         self._rank = rank
         self._is_banned = is_banned
+        self._is_list_banned = is_list_banned
 
     # No setter, final
     @property
@@ -47,6 +46,14 @@ class Player:
     @is_banned.setter
     def is_banned(self, new_is_banned: bool) -> None:
         self._is_banned = new_is_banned
+
+    @property
+    def is_list_banned(self) -> bool:
+        return self._is_list_banned
+    
+    @is_list_banned.setter
+    def is_list_banned(self, new_is_list_banned: bool) -> None:
+        self._is_list_banned = new_is_list_banned
 
 
     async def get_profile_embed(self, client: discord.Client) -> discord.Embed:

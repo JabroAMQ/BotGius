@@ -16,6 +16,7 @@ class Tour:
         tour_id: int,
         host: discord.User,
         guild: discord.Guild,
+        is_watched: bool = False,
         timer: float = None,
         max_players_size: int = None,
         counts_for_elo: bool = False,
@@ -25,6 +26,7 @@ class Tour:
         self._tour_id = tour_id
         self._guild_id = guild.id
         self._host = host
+        self._is_watched = is_watched
         self._is_tour_open = True
         self._is_tour_active = True
 
@@ -59,6 +61,15 @@ class Tour:
     @property
     def host(self) -> discord.User:
         return self._host
+    
+
+    @property
+    def is_watched(self) -> bool:
+        return self._is_watched
+    
+    @is_watched.setter
+    def is_watched(self, new_is_watched: bool) -> None:
+        self._is_watched = new_is_watched
     
 
     @property

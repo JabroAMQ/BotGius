@@ -40,6 +40,7 @@ class Channels:
         self.player_change_amq_thread_id = channels_data['test']['logs']['threads']['player_change_amq']
         self.player_change_rank_thread_id = channels_data['test']['logs']['threads']['player_change_rank']
         self.player_change_ban_thread_id = channels_data['test']['logs']['threads']['player_change_ban']
+        self.player_change_list_ban_thread_id = channels_data['test']['logs']['threads']['player_change_list_ban']
         self.gamemode_add_thread_id = channels_data['test']['logs']['threads']['gamemode_add']
         self.gamemode_delete_thread_id = channels_data['test']['logs']['threads']['gamemode_delete']
         self.gamemode_edit_thread_id = channels_data['test']['logs']['threads']['gamemode_edit']
@@ -163,6 +164,13 @@ class Channels:
         test_guild = self.get_test_guild(client)
         # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.player_change_ban_thread_id)
+        return thread
+    
+    async def get_player_change_list_ban_thread(self, client: discord.Client) -> discord.Thread:
+        """Return the `/player_change_list_ban` command's log thread object (from the test guild)."""
+        test_guild = self.get_test_guild(client)
+        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
+        thread = await test_guild.fetch_channel(self.player_change_list_ban_thread_id)
         return thread
 
     async def get_gamemode_add_thread(self, client: discord.Client) -> discord.Thread:

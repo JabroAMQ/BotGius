@@ -29,6 +29,7 @@ class Tours_Controller:
         guild: discord.Guild,
         timer: int = None,
         size: int = None,
+        is_watched: bool = False,
         elo: bool = False,
         info: str = ''
     ) -> Tour:
@@ -39,7 +40,7 @@ class Tours_Controller:
         tour_id = self._tour_cont
         self._tour_cont += 1
 
-        tour = Tour(tour_id=tour_id, host=host, guild=guild, timer=timer, max_players_size=size, counts_for_elo=elo, tour_info=info)
+        tour = Tour(tour_id=tour_id, host=host, guild=guild, timer=timer, max_players_size=size, is_watched=is_watched, counts_for_elo=elo, tour_info=info)
         self.tours[tour_id] = tour
         return tour
     
