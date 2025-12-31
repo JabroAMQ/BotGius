@@ -69,7 +69,7 @@ class Tours_Commands(Commands):
             interaction: discord.Interaction,
             timer: app_commands.Range[int, 1, 180] = None,
             size: app_commands.Range[int, 4, 128] = None,
-            is_watched: bool = False,
+            is_watched: bool = None,
             looking_for_players: bool = None,
             info: str = None
         ):
