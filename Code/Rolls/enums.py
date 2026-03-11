@@ -47,8 +47,7 @@ class Mastery_Modes(Enum):
     NOVICE = 0
     INTERMEDIATE = 1
     EXPERT = 2
-    ALIEN = 3
-    FULL = 4
+    FULL = 3
 
 
 class One_Life_Challenge(Enum):
