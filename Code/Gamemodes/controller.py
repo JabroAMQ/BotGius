@@ -12,6 +12,8 @@ from Code.Gamemodes.SpecialLists.og_specialList import OG_SpecialList
 from Code.Gamemodes.SpecialLists.cq_specialList import CQ_SpecialList
 from Code.Gamemodes.GlobalPlayers.controller import GlobalPlayer_Controller
 from Code.Gamemodes.GlobalPlayers.global_players import GlobalPlayer
+from Code.Gamemodes.Spotlight.controller import Spotlight_Controller
+from Code.Gamemodes.Spotlight.classes import Male_Artist, Male_VA, Female_Artist, Female_VA, Group, Composer, Franchise
 
 class Main_Controller:
     """Controller to encapsule the Players Logic from the rest of the application."""
@@ -45,6 +47,9 @@ class Main_Controller:
 
         all_global_players, active_global_players = Sheet_Controller().get_global_players()
         self.global_players = GlobalPlayer_Controller(all_global_players, active_global_players)
+
+        spotlight_dict = Sheet_Controller().get_spotlight_data()
+        self.spotlight = Spotlight_Controller(spotlight_dict)
 
         self.genres = [genre.name.replace('_', ' ') for genre in Genres]
 
@@ -88,6 +93,27 @@ class Main_Controller:
             case InfoType.ACTIVE_GLOBAL_PLAYERS.value:
                 return self.global_players.info_active_global_players()
             
+            case InfoType.SPOTLIGHT_MALE_ARTISTS.value:
+                return self.spotlight.info_male_artists()
+            
+            case InfoType.SPOTLIGHT_MALE_VAS.value:
+                return self.spotlight.info_male_VAs()
+            
+            case InfoType.SPOTLIGHT_FEMALE_ARTISTS.value:
+                return self.spotlight.info_female_artists()
+            
+            case InfoType.SPOTLIGHT_FEMALE_VAS.value:
+                return self.spotlight.info_female_VAs()
+            
+            case InfoType.SPOTLIGHT_GROUPS.value:
+                return self.spotlight.info_groups()
+            
+            case InfoType.SPOTLIGHT_COMPOSERS.value:
+                return self.spotlight.info_composers()
+            
+            case InfoType.SPOTLIGHT_FRANCHISES.value:
+                return self.spotlight.info_franchises()
+            
             case _:
                 raise ValueError('Invalid type value!')
 
@@ -128,6 +154,34 @@ class Main_Controller:
         """Return a list with all the active global players stored."""
         return self.global_players.get_active_global_players()
     
+    def get_spotlight_male_artists(self) -> list[Male_Artist]:
+        """Return a list with all the male artists stored."""
+        return self.spotlight.get_all_male_artists()
+    
+    def get_spotlight_male_VAs(self) -> list[Male_VA]:
+        """Return a list with all the male voice actors stored."""
+        return self.spotlight.get_all_male_VAs()
+    
+    def get_spotlight_female_artists(self) -> list[Female_Artist]:
+        """Return a list with all the female artists stored."""
+        return self.spotlight.get_all_female_artists()
+    
+    def get_spotlight_female_VAs(self) -> list[Female_VA]:
+        """Return a list with all the female voice actors stored."""
+        return self.spotlight.get_all_female_VAs()
+    
+    def get_spotlight_groups(self) -> list[Group]:
+        """Return a list with all the groups stored."""
+        return self.spotlight.get_all_groups()
+    
+    def get_spotlight_composers(self) -> list[Composer]:
+        """Return a list with all the composers stored."""
+        return self.spotlight.get_all_composers()
+    
+    def get_spotlight_franchises(self) -> list[Franchise]:
+        """Return a list with all the franchises stored."""
+        return self.spotlight.get_all_franchises()
+
     def get_genres(self) -> list[str]:
         """Return a list with all the anime genres stored."""
         return copy(self.genres)

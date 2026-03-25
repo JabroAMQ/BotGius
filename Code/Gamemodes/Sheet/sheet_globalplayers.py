@@ -25,7 +25,7 @@ def _get_all_players(all_players_worksheet: gspread.worksheet.Worksheet) -> list
         A comment that the player has left as additional information.
     """
     all_players = []
-    check_set = {'\xa0', '', None}
+    check_set = {'\xa0', '', None, '#¡REF!'}
 
     # NOTE skipping row 0 as it is the header row
     for row in all_players_worksheet.get_all_values()[1:]:
@@ -67,7 +67,7 @@ def _get_active_players(active_players_worksheet: gspread.worksheet.Worksheet) -
         A comment that the player has left as additional information.
     """
     active_players = []
-    check_set = {'\xa0', '', None}
+    check_set = {'\xa0', '', None, '#REF!'}
 
     # NOTE skipping row 0 as it is the header row
     for row in active_players_worksheet.get_all_values()[1:]:
@@ -113,12 +113,12 @@ def get_global_players_data(client: gspread.Client) -> tuple[
         A comment that the player has left as additional information.
     """
     spreadsheet = client.open_by_key(_MAIN_SHEET_KEY)
-
+    all_sheets = spreadsheet.worksheets()
     # NOTE skipping worksheet 0 as it is a hidden "Archive" sheet that we will ignore
-    input_data, active_players, inactive_players = (spreadsheet.get_worksheet(i) for i in range(1, 4))
-    #print(input_data.title, active_players.title, inactive_players.title)
+    # TODO inactive players data?
+    input_data, active_players = all_sheets[1:3]
+    #print(input_data.title, active_players.title)
     
-    # TODO store inactive players data?
     all_players = _get_all_players(input_data)
     active_players = _get_active_players(active_players)
     

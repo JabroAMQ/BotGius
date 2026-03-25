@@ -145,8 +145,9 @@ def get_botgius_data(client: gspread.Client) -> tuple[
         These are Community Quizes to get only the songs from the composer/shows/whatever rather than all songs from the shows like in OG_SpecialLists.
     """
     spreadsheet = client.open_by_key(_MAIN_SHEET_KEY)
-
-    descriptions_ws, metronomes_ws, items_ws, tags_ws, og_artists_ws, cq_artists_ws, og_specialLists_ws, cq_specialLists_ws = (spreadsheet.get_worksheet(i) for i in range(8))
+    all_sheets = spreadsheet.worksheets()
+    descriptions_ws, metronomes_ws, items_ws, tags_ws, og_artists_ws, cq_artists_ws, og_specialLists_ws, cq_specialLists_ws = all_sheets[:8]
+    
     descriptions = _get_gamemodes_description(descriptions_ws)
     metronomes = _get_default(metronomes_ws)
     items = _get_default(items_ws)

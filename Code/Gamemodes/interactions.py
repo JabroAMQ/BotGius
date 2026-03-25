@@ -4,7 +4,7 @@ from Code.Utilities.error_handler import error_handler_decorator
 from Code.Gamemodes.controller import Main_Controller
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 from Code.Rolls.basic_rolls import Roll
-from Code.Rolls.enums import Rolls_Enum, Roll_Gamemode
+from Code.Rolls.enums import Rolls_Enum, Roll_Gamemode, Rolls_Spotlght
 from Code.Others.channels import Channels
 
 @error_handler_decorator()
@@ -257,6 +257,15 @@ async def roll(interaction: discord.Interaction, type: int):
     await interaction.response.defer(ephemeral=False)
     enum_type = Rolls_Enum(type)
     roll = Roll.roll(enum_type, as_str=True)
+    await interaction.followup.send(content=roll, ephemeral=False)
+
+
+@error_handler_decorator()
+async def roll_spotlight(interaction: discord.Interaction, type: int):
+    """Interaction to handle the `/roll_spotlight` command. It rolls a possible spotlight value given the type chosen."""
+    await interaction.response.defer(ephemeral=False)
+    enum_type = Rolls_Spotlght(type)
+    roll = Roll.roll_spotlight(enum_type, as_str=True)
     await interaction.followup.send(content=roll, ephemeral=False)
 
 

@@ -9,6 +9,7 @@ from Code.Gamemodes.Artists.cq_artist import CQ_Artist
 from Code.Gamemodes.SpecialLists.og_specialList import OG_SpecialList
 from Code.Gamemodes.SpecialLists.cq_specialList import CQ_SpecialList
 from Code.Gamemodes.GlobalPlayers.global_players import GlobalPlayer
+from Code.Gamemodes.Spotlight.classes import Male_Artist, Male_VA, Female_Artist, Female_VA, Group, Composer, Franchise
 
 class Roll:
     """Static class that contains methods to produce all basic rolls."""
@@ -149,6 +150,42 @@ class Roll:
             case _:
                 raise ValueError('Invalied "type" value')
 
+
+    @staticmethod
+    def roll_spotlight(type: enums.Rolls_Enum, as_str: bool = False) -> Male_Artist | Male_VA | Female_Artist | Female_VA | Group | Composer | Franchise:
+        """Roll a spotlight artist/group/etc."""
+        match type:
+            case enums.Rolls_Spotlght.MALE_ARTIST:
+                roll = random.choice(Main_Controller().get_spotlight_male_artists())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Spotlght.MALE_VA:
+                roll = random.choice(Main_Controller().get_spotlight_male_VAs())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Spotlght.FEMALE_ARTIST:
+                roll = random.choice(Main_Controller().get_spotlight_female_artists())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Spotlght.FEMALE_VA:
+                roll = random.choice(Main_Controller().get_spotlight_female_VAs())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Spotlght.GROUP:
+                roll = random.choice(Main_Controller().get_spotlight_groups())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Spotlght.COMPOSER:
+                roll = random.choice(Main_Controller().get_spotlight_composers())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Spotlght.FRANCHISE:
+                roll = random.choice(Main_Controller().get_spotlight_franchises())
+                return repr(roll) if as_str else roll
+            
+            case _:
+                raise ValueError('Invalied "type" value')
+            
 
     @staticmethod
     def roll_gamemode(type: enums.Roll_Gamemode = enums.Roll_Gamemode.ALL_GAMEMODES) -> Gamemode:

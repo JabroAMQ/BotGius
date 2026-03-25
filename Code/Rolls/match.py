@@ -1,5 +1,5 @@
 from Code.Rolls.basic_rolls import Roll
-from Code.Rolls.enums import Rolls_Enum
+from Code.Rolls.enums import Rolls_Enum, Rolls_Spotlght
 from Code.Players.player import Player
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 from Code.Gamemodes.Artists.cq_artist import CQ_Artist
@@ -133,6 +133,43 @@ class Match:
                 metronomes += f'**Metronome for {player.amq_name} ->** {Roll.roll(Rolls_Enum.METRONOME, as_str=False)}\n'
             return content + metronomes
 
+        # Spotlight
+        elif 'spotlight' in self.gamemode.name.lower():
+            # NOTE Check female before male as "female" word is included in "male" word, so checking "male" first will include male and female 
+            if 'female artist' in self.gamemode.name.lower():
+                spotlight_roll = Roll.roll_spotlight(Rolls_Spotlght.FEMALE_ARTIST)
+                self.special_roll = f'Spotlight - Female Artist: {spotlight_roll.artist_name} (quiz ID: {spotlight_roll.community_quiz_id})'
+                return content + repr(spotlight_roll)
+            
+            if 'female va' in self.gamemode.name.lower():
+                spotlight_roll = Roll.roll_spotlight(Rolls_Spotlght.FEMALE_VA)
+                self.special_roll = f'Spotlight - Female VA: {spotlight_roll.artist_name} (quiz ID: {spotlight_roll.community_quiz_id})'
+                return content + repr(spotlight_roll)
+            
+            if 'male artist' in self.gamemode.name.lower():
+                spotlight_roll = Roll.roll_spotlight(Rolls_Spotlght.MALE_ARTIST)
+                self.special_roll = f'Spotlight - Male Artist: {spotlight_roll.artist_name} (quiz ID: {spotlight_roll.community_quiz_id})'
+                return content + repr(spotlight_roll)
+            
+            if 'male va' in self.gamemode.name.lower():
+                spotlight_roll = Roll.roll_spotlight(Rolls_Spotlght.MALE_VA)
+                self.special_roll = f'Spotlight - Male VA: {spotlight_roll.artist_name} (quiz ID: {spotlight_roll.community_quiz_id})'
+                return content + repr(spotlight_roll)
+            
+            if 'group' in self.gamemode.name.lower():
+                spotlight_roll = Roll.roll_spotlight(Rolls_Spotlght.GROUP)
+                self.special_roll = f'Spotlight - Group: {spotlight_roll.group_name} (quiz ID: {spotlight_roll.community_quiz_id})'
+                return content + repr(spotlight_roll)
+            
+            if 'composer' in self.gamemode.name.lower():
+                spotlight_roll = Roll.roll_spotlight(Rolls_Spotlght.COMPOSER)
+                self.special_roll = f'Spotlight - Composer: {spotlight_roll.composer_name} (quiz ID: {spotlight_roll.community_quiz_id})'
+                return content + repr(spotlight_roll)
+            
+            if 'franchise' in self.gamemode.name.lower():
+                spotlight_roll = Roll.roll_spotlight(Rolls_Spotlght.FRANCHISE)
+                self.special_roll = f'Spotlight - Franchise: {spotlight_roll.franchise_name} (quiz ID: {spotlight_roll.community_quiz_id})'
+                return content + repr(spotlight_roll)
 
         # If the gamemode isn't special, we return None
         return None

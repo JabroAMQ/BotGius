@@ -99,6 +99,17 @@ class Rolls_Enum(Enum):
     UMA_MUSUME_TRACKS = 19
 
 
+class Rolls_Spotlght(Enum):
+    """Enumerate class to represent the different rollable spotlight stuff possible."""
+    MALE_ARTIST = 0
+    MALE_VA = 1
+    FEMALE_ARTIST = 2
+    FEMALE_VA = 3
+    GROUP = 4
+    COMPOSER = 5
+    FRANCHISE = 6
+
+
 class Roll_Gamemode(Enum):
     """Enumerate class to represent the different rollable gamemodes types possible."""
     ALL_GAMEMODES = 0

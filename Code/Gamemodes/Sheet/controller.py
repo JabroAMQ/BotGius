@@ -7,6 +7,7 @@ from google.oauth2.service_account import Credentials
 
 from Code.Gamemodes.Sheet.sheet_botgius import get_botgius_data
 from Code.Gamemodes.Sheet.sheet_globalplayers import get_global_players_data
+from Code.Gamemodes.Sheet.sheet_spotlight import get_spotlight_groups
 
 dotenv.load_dotenv()
 
@@ -95,3 +96,30 @@ class Sheet_Controller:
             These are Community Quizes to get only the songs from the composer/shows/whatever rather than all songs from the shows like in OG_SpecialLists.
         """
         return get_botgius_data(self.client)
+    
+    def get_spotlight_data(self) -> dict[str, list[tuple[str, str]]]:
+        """
+        Method to retrieve the information from the spotlight spreadsheet.
+
+        Return:
+        -----------
+        A dictionary with the next 7 keys:
+        - 'male_artists': A list of tuples with all the Male Artist information (see _get_default() docstring for further explanation).
+        - 'male_vas': A list of tuples with all the Male VA information (see _get_default() docstring for further explanation).
+        - 'female_artists': A list of tuples with all the Female Artist information (see _get_default() docstring for further explanation).
+        - 'female_vas': A list of tuples with all the Female VA information (see _get_default() docstring for further explanation).
+        - 'groups': A list of tuples with all the Groups information (see _get_default() docstring for further explanation).
+        - 'composers': A list of tuples with all the Composers information (see _get_default() docstring for further explanation).
+        - 'franchises': A list of tuples with all the Franchises information (see _get_default() docstring for further explanation).
+        """
+        spotlight_info = get_spotlight_groups(self.client)
+        spotlight_dict = {
+            'male_artists': spotlight_info[0],
+            'male_vas': spotlight_info[1],
+            'female_artists': spotlight_info[2],
+            'female_vas': spotlight_info[3],
+            'groups': spotlight_info[4],
+            'composers': spotlight_info[5],
+            'franchises': spotlight_info[6]
+        }
+        return spotlight_dict
