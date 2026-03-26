@@ -21,17 +21,23 @@ class Teams_Roll:
 
             case Roll_Teams.FULL_RANDOM:
                 teams = Teams_Roll._roll_teams_random(player_list_copy, num_teams)
+                teams_str = Teams_Roll._teams_as_str(teams, show_team_value=True)
             
-            case Roll_Teams.BALANCED:
-                teams = Teams_Roll._roll_teams_balanced(player_list_copy, num_teams)
+            case Roll_Teams.BALANCED_SNAKE:
+                teams = Teams_Roll._roll_teams_balanced_snake(player_list_copy, num_teams)
+                teams_str = Teams_Roll._teams_as_str(teams, show_team_value=True)
+
+            case Roll_Teams.BALANCED_GREEDY:
+                teams = Teams_Roll._roll_teams_balanced_greedy(player_list_copy, num_teams)
+                teams_str = Teams_Roll._teams_as_str(teams, show_team_value=True)
             
             case Roll_Teams.GROUPED_BY_STRENGTH:
                 teams = Teams_Roll._roll_teams_grouped_by_strength(player_list_copy, num_teams)
+                teams_str = Teams_Roll._teams_as_str(teams, show_team_value=False)
 
             case _:
                 raise ValueError('Invalid "type" provided!')
 
-        teams_str = Teams_Roll._teams_as_str(teams)
         return teams, teams_str
 
 
@@ -54,11 +60,12 @@ class Teams_Roll:
 
 
     @staticmethod
-    def _roll_teams_balanced(player_list: list[Player], num_teams: int) -> list[list[Player]]:
+    def _roll_teams_balanced_snake(player_list: list[Player], num_teams: int) -> list[list[Player]]:
         """
         Split the `player_list` into `num_teams` teams.\n
         All teams will have the same number of players.\n
-        All teams will have as similar strength as possible.
+        All teams will have as similar strength as possible.\n
+        Balancing done via Snake / Zig-Zag pattern.
         """
         # Manually sort the players to not take into account the `amq_name` value
         # Sorted based on `rank` and, for those with the same rank, random (so different results can be provided given the same arguments)
@@ -77,6 +84,40 @@ class Teams_Roll:
                 team_idx = num_teams - 1 - (i % num_teams)
 
             teams[team_idx].append(player)
+
+        return teams
+    
+
+    @staticmethod
+    def _roll_teams_balanced_greedy(player_list: list[Player], num_teams: int) -> list[list[Player]]:
+        """
+        Split the `player_list` into `num_teams` teams.\n
+        All teams will have the same number of players.\n
+        All teams will have as similar strength as possible.\n
+        Balancing done via Greedy pattern, meaning that players are sorted by strength and then assigned one by one to the currently weakest team.
+        """
+        # Manually sort the players to not take into account the `amq_name` value
+        # Sorted based on `rank` and, for those with the same rank, random (so different results can be provided given the same arguments)
+        random.shuffle(player_list)
+        player_list = sorted(player_list, key=lambda x: x.rank)
+
+        teams = [[] for _ in range(num_teams)]
+        team_strengths = [0] * num_teams
+        max_players_per_team = len(player_list) // num_teams
+
+        for player in player_list:
+            # Filter for teams that aren't 'full' yet
+            available_indices = [
+                i for i, team in enumerate(teams) 
+                if len(team) < max_players_per_team
+            ]
+            
+            # From the available teams, pick the one with the lowest strength
+            best_idx = min(available_indices, key=lambda i: team_strengths[i])
+            
+            # Assign and update
+            teams[best_idx].append(player)
+            team_strengths[best_idx] += player.rank.value
 
         return teams
     
@@ -103,12 +144,29 @@ class Teams_Roll:
     
 
     @staticmethod
-    def _teams_as_str(teams: list[list[Player]]) -> str:
+    def _teams_as_str(teams: list[list[Player]], show_team_value: bool = False) -> str:
         """Return a string representation for the `teams` rolled."""
         teams_as_str = ''
+
         for i, team in enumerate(teams):
             team_players = [f'{player.amq_name} ({player.rank.name})' for player in team]
             teams_as_str += f'**Group {i+1} ({len(team)}):** '
             teams_as_str += ', '.join(team_players)
             teams_as_str += '\n'
+
+        if show_team_value:
+            teams_as_str += '\n'
+
+            for i, team in enumerate(teams):
+                team_players = []
+                team_rank = 0
+
+                for player in team:
+                    team_players.append(f'{player.amq_name} ({player.rank.value})')
+                    team_rank += player.rank.value
+
+                teams_as_str += f'**Group {i+1} (Total Rank: {team_rank}):** '
+                teams_as_str += ', '.join(team_players)
+                teams_as_str += '\n'
+
         return teams_as_str

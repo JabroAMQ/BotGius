@@ -135,5 +135,6 @@ class Roll_Gamemode(Enum):
 class Roll_Teams(Enum):
     """Enumerate class to represent the different rollable teams/groups types possible."""
     FULL_RANDOM = 0
-    BALANCED = 1
-    GROUPED_BY_STRENGTH = 2
+    BALANCED_SNAKE = 1
+    BALANCED_GREEDY = 2
+    GROUPED_BY_STRENGTH = 3
