@@ -4,14 +4,19 @@ import discord
 
 class Rank:
     """Class to represent a possible player' rank."""
-    def __init__(self, rank_name: str, rank_value: int) -> None:
+    def __init__(self, rank_name: str, rank_position: int, rank_value: int) -> None:
         self._name = rank_name
+        self._position = rank_position
         self._value = rank_value
 
     @property
     def name(self) -> str:
         return self._name
-    
+
+    @property
+    def position(self) -> int:
+        return self._position
+
     @property
     def value(self) -> int:
         return self._value
@@ -19,12 +24,12 @@ class Rank:
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Rank):
             return NotImplemented
-        return self.value == other.value
+        return self.position == other.position
     
     def __lt__(self, other: object) -> bool:
         if not isinstance(other, Rank):
             return NotImplemented
-        return self.value > other.value
+        return self.position < other.position
     
     def __add__(self, other: object) -> int:
         if not isinstance(other, Rank):
@@ -35,7 +40,34 @@ class Rank:
 class Ranking:
     """Class which contains all the possible player's ranks."""
     _instance = None
-    def __new__(cls) -> None:
+    # NOTE Keep the ranks ordered from the highest to the lowest, as the position is used to order the ranks
+    _RANKS: list[tuple[str, int]] = [
+        ('Anything Goes', 23),
+        ('Ubers', 21),
+        ('SS+', 19),
+        ('SS', 18),
+        ('SS-', 17),
+        ('S+', 16),
+        ('S', 15),
+        ('S-', 14),
+        ('A+', 13),
+        ('A', 12),
+        ('A-', 11),
+        ('B+', 10),
+        ('B', 9),
+        ('B-', 8),
+        ('C+', 7),
+        ('C', 6),
+        ('C-', 5),
+        ('D+', 4),
+        ('D', 3),
+        ('D-', 2),
+        ('F', 1),
+        ('EMQ', 0),
+        ('None', 0)
+    ]
+    
+    def __new__(cls) -> 'Ranking':
         """Override the __new__ method to return the existing instance of the class if it exists or create a new instance if it doesn't exist yet.\n"""
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -43,31 +75,15 @@ class Ranking:
         return cls._instance
     
     def _set_data(self) -> None:
+        self.rank_names = []
+        self.ranks_by_names = {}
+        self.rank_by_positions = {}
 
-        # NOTE Ideally this should be an Enum class but '+' or '-' can't be set as part of a variable name...
-        self.rank_names = [
-            'Anything Goes',
-            'Ubers',
-            'SS+', 'SS', 'SS-',
-            'S+', 'S', 'S-',
-            'A+', 'A', 'A-',
-            'B+', 'B', 'B-',
-            'C+', 'C', 'C-',
-            'D+', 'D', 'D-',
-            'F',
-            'EMQ', 'None'
-        ]
-        # NOTE we have to reverse rank values to make sure Anything Goes has the highest value and None the lowest one
-        reversed_ranks = self.rank_names[::-1]
-
-        self.ranks_by_names = {
-            name: Rank(rank_name=name, rank_value=value+1)
-            for value, name in enumerate(reversed_ranks)
-        }
-        self.ranks_by_values = {
-            rank.value: rank
-            for rank in self.ranks_by_names.values()
-        }
+        for rank_position, (rank_name, rank_value) in enumerate(self._RANKS):
+            rank = Rank(rank_name, rank_position, rank_value)
+            self.rank_names.append(rank_name)
+            self.ranks_by_names[rank_name] = rank
+            self.rank_by_positions[rank_position] = rank
 
 
     def get_rank(self, rank_name: str) -> Rank:
@@ -88,20 +104,18 @@ class Ranking:
         # Importing inside function to avoid circular import error
         from Code.Players.controller import Players_Controller
 
-        # Wrap-around logic for the UI pages (1-23)
+        # Wrap-around logic for the UI pages
         total_ranks = len(self.rank_names)
-        if page < 1: page = total_ranks
-        if page > total_ranks: page = 1
-        
-        # Map Page 1 -> Anything Goes (Index 0 in rank_names list)
-        rank_name = self.rank_names[page - 1]
-        selected_rank = self.ranks_by_names[rank_name]
+        if page < 0: page = total_ranks-1
+        if page >= total_ranks: page = 0
+        selected_rank = self.rank_by_positions[page]
         
         # Filter players
         all_players = Players_Controller().players_by_amq_name.values()
         valid_entries = []
         for player in sorted(all_players):
             if player.rank == selected_rank:
+                # We show only the players that are in the guild where the command was executed
                 member = guild.get_member(player.discord_id)
                 if member:
                     name = discord.utils.escape_markdown(player.amq_name)
@@ -113,7 +127,7 @@ class Ranking:
             description='\n'.join(valid_entries),
             colour=discord.Colour.green()
         )
-        embed.set_footer(text=f'Page {page} / {total_ranks}')
+        embed.set_footer(text=f'Page {page+1} / {total_ranks}')
 
         # Return the validated page number to keep the View in sync
         return embed, page

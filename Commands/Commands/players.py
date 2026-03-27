@@ -66,7 +66,7 @@ class Players_Commands(Commands):
         
         @client.tree.command(name='player_show_ranking', description='Display the ranking of all the players')
         @app_commands.describe(rank_page='Initial page of the ranking to display')
-        @app_commands.choices(rank_page = [app_commands.Choice(name=rank_name, value=rank_name) for rank_name in Ranking().rank_names])
+        @app_commands.choices(rank_page = [app_commands.Choice(name=rank.name, value=rank.position) for rank in Ranking().ranks_by_names.values()])
         @app_commands.guild_only
-        async def player_show_ranking(interaction: discord.Interaction, rank_page: app_commands.Choice[str]):
-            await interactions.player_show_ranking(interaction, rank_page.name)
+        async def player_show_ranking(interaction: discord.Interaction, rank_page: app_commands.Choice[int]):
+            await interactions.player_show_ranking(interaction, rank_page.value)

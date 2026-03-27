@@ -10,7 +10,7 @@ class Tours_Controller:
     # The tour is created and stored here but the tour logic is called directly from the interactions
 
     _instance = None
-    def __new__(cls) -> None:
+    def __new__(cls) -> 'Tours_Controller':
         """Override the __new__ method to return the existing instance of the class if it exists or create a new instance if it doesn't exist yet.\n"""
         if cls._instance is None:
             cls._instance = super().__new__(cls)

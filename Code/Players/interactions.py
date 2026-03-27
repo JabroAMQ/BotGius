@@ -2,10 +2,7 @@ import discord
 
 from Code.Utilities.error_handler import error_handler_decorator
 from Code.Players.controller import Players_Controller
-from Code.Players.player import Player
 from Code.Players.main_ranking import Ranking
-from Code.Gamemodes.controller import Main_Controller
-from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 from Code.Others.channels import Channels
 
 @error_handler_decorator()
@@ -143,7 +140,7 @@ async def player_change_rank(interaction: discord.Interaction, amq_name: str, ne
 
 
 @error_handler_decorator()
-async def player_show_ranking(interaction: discord.Interaction, rank_page: str):
+async def player_show_ranking(interaction: discord.Interaction, rank_page: int):
     """
     Interaction to handle the `/player_show_ranking` command. It displays an embed with all the players that have `rank_page` as their Rank
     and a view with 2 buttons that allows the users to display the information about other ranks.
@@ -169,11 +166,6 @@ async def player_show_ranking(interaction: discord.Interaction, rank_page: str):
 
 
     await interaction.response.defer(ephemeral=False)
-
-    total_ranks = len(Ranking().rank_names)
-    rank = Ranking().get_rank(rank_page)
-    initial_page_request = (total_ranks + 1) - rank.value
-    embed, current_page = Ranking().get_rank_embed(interaction.guild, initial_page_request)
-    
+    embed, current_page = Ranking().get_rank_embed(interaction.guild, rank_page)
     view = Player_Show_Ranking_View(current_page)
     await interaction.followup.send(embed=embed, view=view, ephemeral=False)

@@ -14,7 +14,7 @@ dotenv.load_dotenv()
 class Sheet_Controller:
     """Controller to encapsule the Sheet data extraction Logic from the rest of the application."""
     _instance = None
-    def __new__(cls):
+    def __new__(cls) -> 'Sheet_Controller':
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance._set_data()
