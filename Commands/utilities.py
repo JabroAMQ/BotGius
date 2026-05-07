@@ -71,7 +71,7 @@ def load_controllers() -> None:
 class Tour_Helpers:
     """Singleton class to get the list of tour helpers/admins."""
     _instance = None
-    def __new__(cls) -> None:
+    def __new__(cls) -> 'Tour_Helpers':
         """Override the __new__ method to return the existing instance of the class if it exists or create a new instance if it doesn't exist yet.\n"""
         if cls._instance is None:
             cls._instance = super().__new__(cls)

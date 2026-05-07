@@ -1,3 +1,5 @@
+import asyncio
+
 import discord
 
 from Commands.utilities import Tour_Helpers
@@ -21,12 +23,15 @@ async def reset_data(interaction: discord.Interaction):
     """
     await interaction.response.defer(ephemeral=True)
 
-    Gamemodes_Controller()._set_data()
-    Channels()._set_data()
-    Emojis()._set_data()
-    Roles()._set_data()
-    Tour_Helpers()._set_data()
+    def reload_all_data():
+        Gamemodes_Controller()._set_data()
+        Channels()._set_data()
+        Emojis()._set_data()
+        Roles()._set_data()
+        Tour_Helpers()._set_data()
 
+    await asyncio.to_thread(reload_all_data)
+    
     content = 'The lists were updated successfully!'
     await interaction.followup.send(content=content, ephemeral=True)
 
