@@ -120,6 +120,68 @@ class Teams_Roll:
             team_strengths[best_idx] += player.rank.value
 
         return teams
+
+    @staticmethod
+    def _roll_teams_optimal(player_list: list[Player], num_teams: int) -> list[list[Player]]:
+        """
+        Split the `player_list` into `num_teams` teams.\n
+        All teams will have the same number of players.\n
+        All teams will have as similar strength as possible.\n
+        Balancing done via Optimal pattern, meaning that all possible combinations are evaluated to find the one that minimizes the difference in strength teams.\n
+
+        NOTE Very computationally expensive. Before using, improve it first / Limit it usage / Return early if a certain threshold is reached.
+        """
+        return NotImplementedError('Optimal team rolling is not implemented yet!')
+        """
+        # Manually sort the players to not take into account the `amq_name` value
+        # Sorted based on `rank` and, for those with the same rank, random (so different results can be provided given the same arguments)
+        random.shuffle(player_list)
+        players = sorted(player_list, key=lambda x: x.rank)
+        
+        best_teams = None
+        min_diff = float('inf')
+        num_players = len(players)
+        team_size = num_players // num_teams
+        current_teams = [[] for _ in range(num_teams)]
+        team_sums = [0] * num_teams
+
+        def backtrack(idx: int) -> None:
+            nonlocal min_diff, best_teams
+            
+            # If we reached the end, we compare
+            if idx == num_players:
+                diff = max(team_sums) - min(team_sums)
+                if diff < min_diff:
+                    min_diff = diff
+                    best_teams = [team[:] for team in current_teams]
+                return
+
+            player = players[idx]
+            val = player.rank.value
+
+            # We try to put the player in each team
+            for i in range(num_teams):
+                if len(current_teams[i]) < team_size:
+                    # Prunning: if the current sum of this team minus the current minimum already exceeds min_diff, it's unlikely to improve
+                    # but to be 100% optimal, we only prune if the "gap" is unsolvable.
+                    current_teams[i].append(player)
+                    team_sums[i] += val
+                    
+                    # Prunning: if the team was empty, we don't try to put the player in the next empty teams (avoids redundant permutations)
+                    is_empty = len(current_teams[i]) == 1
+                    
+                    backtrack(idx + 1)
+                    
+                    # Undo
+                    team_sums[i] -= val
+                    current_teams[i].pop()
+                    
+                    if is_empty: 
+                        break
+
+        backtrack(0)
+        return best_teams
+        """
     
 
     @staticmethod
