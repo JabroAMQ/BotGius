@@ -1,5 +1,3 @@
-from copy import copy
-
 import discord
 
 class Rank:
@@ -124,9 +122,29 @@ class Ranking:
 
         embed = discord.Embed(
             title=selected_rank.name,
-            description='\n'.join(valid_entries),
             colour=discord.Colour.green()
         )
+
+        if not valid_entries:
+            embed.description = 'No players in this rank'
+        else:
+            # Distribute players across multiple fields
+            # Discord allows us to have 25 fields of 1024 character max
+            # This solves the 4096 character "normal message" limit
+            current_field_text = ''
+            for entry in valid_entries:
+                # 1020 is a safe threshold below the strict 1024 limit (+1 accounts for '\n')
+                if len(current_field_text) + len(entry) + 1 > 1020:
+                    # '\u200b': invisible character to "ignore" the filed title
+                    embed.add_field(name='\u200b', value=current_field_text, inline=False)
+                    current_field_text = entry
+                else:
+                    current_field_text += f'\n{entry}' if current_field_text else entry
+
+            # Add the last remaining chunk of players
+            if current_field_text:
+                embed.add_field(name='\u200b', value=current_field_text, inline=False)
+
         embed.set_footer(text=f'Page {page+1} / {total_ranks}')
 
         # Return the validated page number to keep the View in sync
