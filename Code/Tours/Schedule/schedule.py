@@ -60,16 +60,15 @@ class Scheduled_Tour:
 
     def __str__(self) -> str:
         tour_str = f'{self.tour_host}\'s tour: {self.tour_description}'
-        # NOTE Discord Select Dropdowns have a max of 100 characters per option
-        return tour_str[:97] + '...' if len(tour_str) > 100 else tour_str
+        return tour_str
 
     def __repr__(self) -> str:
         now_timestamp = int(discord.utils.utcnow().timestamp())
-        if self._updated_at_timestamp and now_timestamp - self._updated_at_timestamp < 86400:   # 1 day = 86400 seconds
-            return f'- ⚙️ {self.convert_to_discord_timestamp()} {self.tour_description}, hosted by {self.tour_host}'
+        emoji = ''
 
-        elif now_timestamp - self._created_at_timestamp < 86400:                                # 1 day = 86400 seconds
-            return f'- 🆕 {self.convert_to_discord_timestamp()} {self.tour_description}, hosted by {self.tour_host}'
+        if self._updated_at_timestamp and now_timestamp - self._updated_at_timestamp < 86400:   # 1 day = 86400 seconds
+            emoji = ' ⚙️ '
+        elif now_timestamp - self._created_at_timestamp < 86400:
+            emoji = ' 🆕 '
         
-        else:
-            return f'- {self.convert_to_discord_timestamp()} {self.tour_description}, hosted by {self.tour_host}'
+        return f'{emoji}{self.convert_to_discord_timestamp()} {self.tour_description}, hosted by {self.tour_host}'

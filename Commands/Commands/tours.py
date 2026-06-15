@@ -211,19 +211,21 @@ class Tours_Commands(Commands):
 
 
         @client.tree.command(name='schedule_tour_delete', description='Delete a scheduled tour')
+        @app_commands.describe(id='The position of the tour in the server\'s scheduled tours message')
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def schedule_tour_delete(interaction: discord.Interaction):
-            await schedule_interactions.schedule_tour_delete_interaction(interaction)
+        async def schedule_tour_delete(interaction: discord.Interaction, id: int):
+            await schedule_interactions.schedule_tour_delete_interaction(interaction, id)
 
 
-        @client.tree.command(name='schedule_tour_edit', description='Edit a scheduled tour (add edit values first, then select tour to apply)')
+        @client.tree.command(name='schedule_tour_edit', description='Edit a scheduled tour')
         @app_commands.describe(
+            id='The position of the tour in the server\'s scheduled tours message',
             description='Tour\'s description',
             timestamp='The POSIX timestamp (last option in hammertime)',
-            host='The host of the tour'
+            host='The host of the tour (by default your Discord guild name)'
         )
         @app_commands.guild_only
         @app_commands.check(self.is_user_tour_helper)
-        async def schedule_tour_edit(interaction: discord.Interaction, description: str = None, timestamp: app_commands.Range[int, 946681200, 4102441200] = None, host: str = None):
-            await schedule_interactions.schedule_tour_edit_interaction(interaction, description, timestamp, host)
+        async def schedule_tour_edit(interaction: discord.Interaction, id: int, description: str = None, timestamp: app_commands.Range[int, 946681200, 4102441200] = None, host: str = None):
+            await schedule_interactions.schedule_tour_edit_interaction(interaction, id, description, timestamp, host)
