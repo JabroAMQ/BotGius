@@ -30,10 +30,8 @@ class Channels:
         self.report_channel_id = channels_data['test']['report']
         self.picks_channel_id = channels_data['test']['picks']
 
-        self.tour_announcements_channel_id = channels_data['new_server']['tour_announcements']['channel']           # NOTE change to main when moved
-        self.tour_announcements_message_id = channels_data['new_server']['tour_announcements']['message']           # NOTE change to main when moved
-        self.test_tour_announcements_channel_id = channels_data['test']['tour_announcements']['channel']
-        self.test_tour_announcements_message_id = channels_data['test']['tour_announcements']['message']
+        self.tour_announcements_channel_id = channels_data['new_server']['tour_announcements']      # NOTE change to main when moved
+        self.test_tour_announcements_channel_id = channels_data['test']['tour_announcements']
         
         self.logs_channel_id = channels_data['test']['logs']['channel']
         self.player_register_thread_id = channels_data['test']['logs']['threads']['player_register']
@@ -106,29 +104,19 @@ class Channels:
         """Return the tour announcements channel object (from the main guild)."""
         new_guild = self.get_new_guild(client)      # NOTE Change to Main for consistance when fully moved
         return new_guild.get_channel(self.tour_announcements_channel_id)
-
-    async def get_main_tour_announcements_message(self, client: discord.Client) -> discord.Message:
-        """Return the tour announcements message object (from the main guild)."""
-        tour_announcements_channel = self.get_main_tour_announcements_channel(client)
-        return await tour_announcements_channel.fetch_message(self.tour_announcements_message_id)
     
     def get_test_tour_announcements_channel(self, client: discord.Client) -> discord.TextChannel:
         """Return the tour announcements channel object (from the test guild)."""
         test_guild = self.get_test_guild(client)
         return test_guild.get_channel(self.test_tour_announcements_channel_id)
 
-    async def get_test_tour_announcements_message(self, client: discord.Client) -> discord.Message:
-        """Return the tour announcements message object (from the test guild)."""
-        test_tour_announcements_channel = self.get_test_tour_announcements_channel(client)
-        return await test_tour_announcements_channel.fetch_message(self.test_tour_announcements_message_id)
-
-    async def get_tour_announcements_message(self, client: discord.Client, guild_id: int) -> discord.Message:
-        """Return the tour announcements message object (from the main/test guild depending on the `guild_id` value)."""
+    def get_tour_announcements_channel(self, client: discord.Client, guild_id: int) -> discord.TextChannel:
+        """Return the tour announcements channel (from the main/test guild depending on the `guild_id` value)."""
         match guild_id:
             case self.new_guild_id:         # NOTE Change to main when moved
-                return await self.get_main_tour_announcements_message(client)
+                return self.get_main_tour_announcements_channel(client)
             case self.test_guild_id:
-                return await self.get_test_tour_announcements_message(client)
+                return self.get_test_tour_announcements_channel(client)
             case _:
                 raise ValueError('Unsupported guild provided')
 

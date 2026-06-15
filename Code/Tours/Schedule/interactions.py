@@ -3,29 +3,13 @@ import discord
 from Code.Utilities.error_handler import error_handler_decorator
 from Code.Others.channels import Channels
 from Code.Tours.Schedule.controller import Scheduled_Tour_Controller
-
-
-async def _update_tour_announcements_message(interaction: discord.Interaction, fake_ping: bool = False) -> None:
-    """Update the tour announcements message with the current scheduled tours."""
-    scheduled_tours = Scheduled_Tour_Controller().represent_all_scheduled_tours(interaction.guild_id)
-    scheduled_tours_message = await Channels().get_tour_announcements_message(interaction.client, interaction.guild_id)
-    await scheduled_tours_message.edit(content=scheduled_tours)
-
-    # Send and delete an "empty" message to create a notification in the channel
-    if fake_ping:
-        await scheduled_tours_message.channel.send(content='.', delete_after=1)
+from Code.Tours.Schedule.displayer import Scheduled_Tour_Messages_Displayer
 
 
 @error_handler_decorator()
 async def schedule_tour_add_interaction(interaction: discord.Interaction, description: str, timestamp: str, host: str):
     """Interaction to handle the `/schedule_tour_add` command. It creates a new scheduled_tour and stores it in the sheduled_tours's catalog."""
     await interaction.response.defer(ephemeral=True)
-
-    add_ok = await Scheduled_Tour_Controller().allow_additions(interaction)
-    if not add_ok:
-        content = 'We are already too close to the discord\'s message length limit (2000 characters). If you ever see this, notify it to look for solutions'
-        await interaction.followup.send(content=content, ephemeral=True)
-        return
     
     # Add the scheduled tour
     added, log = Scheduled_Tour_Controller().add_scheduled_tour(interaction.guild_id, description, host, timestamp)
@@ -34,13 +18,14 @@ async def schedule_tour_add_interaction(interaction: discord.Interaction, descri
         await interaction.followup.send(content=content, ephemeral=True)
         return
     
-    await _update_tour_announcements_message(interaction, fake_ping=True)
+    await Scheduled_Tour_Messages_Displayer().refresh_scheduled_tours_messages(interaction.client, interaction.guild_id, fake_ping=True)
     
     # Log the addition of the gamemode
     log_thread = await Channels().get_scheduled_tours_add_thread(interaction.client)
     guild = Channels().get_guild(interaction.client, interaction.guild_id)
     content = f'A new tour was scheduled by {interaction.user.mention} in **{guild.name}**:\n{log}'
     await log_thread.send(content=content, allowed_mentions=discord.AllowedMentions.none())
+
     await interaction.followup.send(content='Tour scheduled successfully', ephemeral=True)
 
 
@@ -66,7 +51,7 @@ async def schedule_tour_delete_interaction(interaction: discord.Interaction, fix
                 return
             
             # NOTE We do not notify when deleting a tour. Change if desired
-            await _update_tour_announcements_message(new_interaction, fake_ping=False)
+            await Scheduled_Tour_Messages_Displayer().refresh_scheduled_tours_messages(new_interaction.client, new_interaction.guild_id, fake_ping=False)
 
             # Log the deletion of the gamemode
             log_thread = await Channels().get_scheduled_tours_delete_thread(new_interaction.client)
@@ -80,7 +65,7 @@ async def schedule_tour_delete_interaction(interaction: discord.Interaction, fix
 
 
     # Get the scheduled tour, ensuring fixed_id exists
-    exists, tour = Scheduled_Tour_Controller().get_tour_from_fixed_id(interaction.guild_id, fixed_id)
+    exists, tour = Scheduled_Tour_Messages_Displayer().get_tour_from_fixed_id(interaction.guild_id, fixed_id)
     if not exists:
         content = 'A scheduled tour with the given ID couldn\'t be found'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -116,9 +101,9 @@ async def schedule_tour_edit_interaction(interaction: discord.Interaction, fixed
                 await new_interaction.followup.send(content=content, ephemeral=True)
                 return
             
-            await _update_tour_announcements_message(new_interaction, fake_ping=True)
+            await Scheduled_Tour_Messages_Displayer().refresh_scheduled_tours_messages(new_interaction.client, new_interaction.guild_id, fake_ping=True)
 
-            # Log the edition of the gamemode
+            # Log the edition of the tour
             log_thread = await Channels().get_scheduled_tours_edit_thread(new_interaction.client)
             guild = Channels().get_guild(new_interaction.client, new_interaction.guild_id)
             content = f'A scheduled tour was edited by {new_interaction.user.mention} in **{guild.name}**:\n{log}'
@@ -136,15 +121,9 @@ async def schedule_tour_edit_interaction(interaction: discord.Interaction, fixed
         return
     
     # Get the scheduled tour, ensuring fixed_id exists
-    exists, tour = Scheduled_Tour_Controller().get_tour_from_fixed_id(interaction.guild_id, fixed_id)
+    exists, tour = Scheduled_Tour_Messages_Displayer().get_tour_from_fixed_id(interaction.guild_id, fixed_id)
     if not exists:
         content = 'A scheduled tour with the given ID couldn\'t be found'
-        await interaction.followup.send(content=content, ephemeral=True)
-        return
-
-    edit_ok = await Scheduled_Tour_Controller().allow_modifications(interaction, fixed_id, description, timestamp, host)
-    if not edit_ok:
-        content = 'Applying these changes will reach discord\'s message length limit (2000 characters). If you ever see this, notify it to look for solutions'
         await interaction.followup.send(content=content, ephemeral=True)
         return
 
