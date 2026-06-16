@@ -93,26 +93,23 @@ async def player_change_other_amq(interaction: discord.Interaction, player_old_a
 
 
 @error_handler_decorator()
-async def player_get_profile(interaction: discord.Interaction, amq_name: str, discord_name: str):
-    """
-    Interaction to handle the `/player_get_profile` command. It displays an embed with information abou the user
-    and a view with 2 buttons that allows the users to display more information abou them.
-    """
+async def player_get_profile(interaction: discord.Interaction, amq_name: str = None, discord_member: discord.Member = None):
+    """Interaction to handle the `/player_get_profile` command. It displays an embed with information about the user."""
     await interaction.response.defer(ephemeral=False)
     
     # Obtain the player:
-    # - If neither amq_name nor discord_name were provided -> obtain the player who is using the command
-    # - If both amq_name and discord_name were provided -> amq_name value is used (discord_name is ignored)
-    if not amq_name and not discord_name:
+    # - If neither amq_name nor discord_member were provided -> obtain the player who is using the command
+    # - If both amq_name and discord_member were provided -> amq_name value is used (discord_member is ignored)
+    if not amq_name and not discord_member:
         player = Players_Controller().get_player(interaction.user.id)
     elif not amq_name:
-        player = Players_Controller().get_player_from_discord_name(interaction.guild, discord_name)
+        player = Players_Controller().get_player(discord_member.id)
     else:
         player = Players_Controller().get_player(amq_name)
     
     # Check if player was obtained successfully
     if player is None:
-        content = 'I couldn\'t find a player with the provided argument :worried:'
+        content = 'I couldn\'t find a registered player with the provided argument :worried:'
         await interaction.followup.send(content=content, ephemeral=False)
         return
 

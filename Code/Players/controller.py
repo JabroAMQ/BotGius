@@ -1,7 +1,5 @@
 import difflib
 
-import discord
-
 from Code.Players.player import Player
 from Code.Players.database_sqlite3 import Players_Database
 
@@ -56,26 +54,6 @@ class Players_Controller:
         
         else:
             raise ValueError('Invalid `id_or_name` value type!')
-
-
-    def get_player_from_discord_name(self, guild: discord.Guild, discord_name: str) -> Player | None:
-        """Return the `Player` object associated to the discord account which has the closest name to `discord_name` among all the `guild`'s members."""
-        possibilities = {}
-        for member in guild.members:
-            possibilities[member.name.lower()] = member.id
-            if member.nick:
-                possibilities[member.nick.lower()] = member.id
-            if member.global_name:
-                possibilities[member.global_name.lower()] = member.id
-        
-        closest_matches = difflib.get_close_matches(discord_name.lower(), possibilities.keys())
-        closest_match = closest_matches[0] if closest_matches else None
-        
-        if closest_match is None:
-            return None
-
-        discord_id = possibilities.get(closest_match)
-        return self.players_by_ids.get(discord_id) if discord_id is not None else None
 
     
     def get_all_banned_players(self) -> list[Player]:

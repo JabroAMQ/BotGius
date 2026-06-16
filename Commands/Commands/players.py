@@ -46,10 +46,10 @@ class Players_Commands(Commands):
 
 
         @client.tree.command(name='player_get_profile', description='Get the profile of a given user')
-        @app_commands.describe(amq_name='The amq name of the user', discord_name='The discord name of the user')
+        @app_commands.describe(amq_name='The amq name of the user', discord_member='The discord member of the server')
         @app_commands.guild_only
-        async def player_get_profile(interaction: discord.Interaction, amq_name: str = '', discord_name: str = ''):
-            await interactions.player_get_profile(interaction, amq_name, discord_name)
+        async def player_get_profile(interaction: discord.Interaction, amq_name: str = '', discord_member: discord.Member = None):
+            await interactions.player_get_profile(interaction, amq_name, discord_member)
 
 
         @client.tree.command(name='player_change_rank', description='Change the rank of a player')
