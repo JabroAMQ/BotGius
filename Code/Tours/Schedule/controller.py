@@ -2,7 +2,6 @@ import discord
 
 from Code.Tours.Schedule.database import Scheduled_Tours_Database
 from Code.Tours.Schedule.schedule import Scheduled_Tour
-from Code.Others.channels import Channels
 from Code.Utilities.error_handler import print_exception
 
 class Scheduled_Tour_Controller:

@@ -22,15 +22,13 @@ class Channels:
 
         self.main_guild_id = channels_data['main']['guild']
         self.test_guild_id = channels_data['test']['guild']
-        self.new_guild_id = channels_data['new_server']['guild']                # NOTE delete when moved
 
         self.host_channel_id = channels_data['main']['host_chat']
-        self.new_host_channel_id = channels_data['new_server']['host_chat']     # NOTE delete when moved
         self.feedback_channel_id = channels_data['test']['feedback']
         self.report_channel_id = channels_data['test']['report']
         self.picks_channel_id = channels_data['test']['picks']
 
-        self.tour_announcements_channel_id = channels_data['new_server']['tour_announcements']      # NOTE change to main when moved
+        self.tour_announcements_channel_id = channels_data['main']['tour_announcements']
         self.test_tour_announcements_channel_id = channels_data['test']['tour_announcements']
         
         self.logs_channel_id = channels_data['test']['logs']['channel']
@@ -56,17 +54,11 @@ class Channels:
         """Return the test guild object."""
         return client.get_guild(self.test_guild_id)
     
-    def get_new_guild(self, client: discord.Client) -> discord.Guild:       # NOTE Remove when moved
-        """Return the new guild object."""
-        return client.get_guild(self.new_guild_id)
-    
     def get_guild(self, client: discord.Client, guild_id: int) -> discord.Guild:
         """Return the guild object given the `guild_id` argument."""
         match guild_id:
             case self.main_guild_id:
                 return self.get_main_guild(client)
-            case self.new_guild_id:                                         # NOTE Remove when moved
-                return self.get_new_guild(client)
             case self.test_guild_id:
                 return self.get_test_guild(client)
             case _:
@@ -77,12 +69,6 @@ class Channels:
         """Return the host channel object (from the main guild)."""
         main_guild = self.get_main_guild(client)
         return main_guild.get_channel(self.host_channel_id)
-    
-    # NOTE Remove when moved
-    def get_new_host_channel(self, client: discord.Client) -> discord.TextChannel:
-        """Return the host channel object (from the new guild)."""
-        new_guild = self.get_new_guild(client)
-        return new_guild.get_channel(self.new_host_channel_id)
 
     def get_feedback_channel(self, client: discord.Client) -> discord.TextChannel:
         """Return the feedback channel object (from the test guild)."""
@@ -102,8 +88,8 @@ class Channels:
 
     def get_main_tour_announcements_channel(self, client: discord.Client) -> discord.TextChannel:
         """Return the tour announcements channel object (from the main guild)."""
-        new_guild = self.get_new_guild(client)      # NOTE Change to Main for consistance when fully moved
-        return new_guild.get_channel(self.tour_announcements_channel_id)
+        main_guild = self.get_main_guild(client)
+        return main_guild.get_channel(self.tour_announcements_channel_id)
     
     def get_test_tour_announcements_channel(self, client: discord.Client) -> discord.TextChannel:
         """Return the tour announcements channel object (from the test guild)."""
@@ -113,7 +99,7 @@ class Channels:
     def get_tour_announcements_channel(self, client: discord.Client, guild_id: int) -> discord.TextChannel:
         """Return the tour announcements channel (from the main/test guild depending on the `guild_id` value)."""
         match guild_id:
-            case self.new_guild_id:         # NOTE Change to main when moved
+            case self.main_guild_id:
                 return self.get_main_tour_announcements_channel(client)
             case self.test_guild_id:
                 return self.get_test_tour_announcements_channel(client)
@@ -136,76 +122,65 @@ class Channels:
     async def get_player_change_amq_thread(self, client: discord.Client) -> discord.Thread:
         """Return the `/player_change_amq` command's log thread object (from the test guild)."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.player_change_amq_thread_id)
         return thread
 
     async def get_player_change_rank_thread(self, client: discord.Client) -> discord.Thread:
         """Return the `/player_change_rank` command's log thread object (from the test guild)."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.player_change_rank_thread_id)
         return thread
     
     async def get_player_change_ban_thread(self, client: discord.Client) -> discord.Thread:
         """Return the `/player_change_ban` command's log thread object (from the test guild)."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.player_change_ban_thread_id)
         return thread
     
     async def get_player_change_list_ban_thread(self, client: discord.Client) -> discord.Thread:
         """Return the `/player_change_list_ban` command's log thread object (from the test guild)."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.player_change_list_ban_thread_id)
         return thread
 
     async def get_gamemode_add_thread(self, client: discord.Client) -> discord.Thread:
         """Return the `/gamemode_add` command's log thread object (from the test guild)."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.gamemode_add_thread_id)
         return thread
 
     async def get_gamemode_delete_thread(self, client: discord.Client) -> discord.Thread:
         """Return the `/gamemode_delete` command's log thread object (from the test guild)."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.gamemode_delete_thread_id)
         return thread
 
     async def get_gamemode_edit_thread(self, client: discord.Client) -> discord.Thread:
         """Return the `/gamemode_edit` command's log thread object (from the test guild)."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.gamemode_edit_thread_id)
         return thread
     
     async def get_commands_usage_thread(self, client: discord.Client) -> discord.Thread:
         """Return the log thread object (from the test guild) used for keeping track of important (mainly tour) commands."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.commands_usage_thread_id)
         return thread
     
     async def get_scheduled_tours_add_thread(self, client: discord.Client) -> discord.Thread:
         """Return the `/schedule_tour_add` command's log thread object (from the test guild)."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.scheduled_tours_add_thread_id)
         return thread
     
     async def get_scheduled_tours_delete_thread(self, client: discord.Client) -> discord.Thread:
         """Return the `/schedule_tour_delete` command's log thread object (from the test guild)."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.scheduled_tours_delete_thread_id)
         return thread
     
     async def get_scheduled_tours_edit_thread(self, client: discord.Client) -> discord.Thread:
         """Return the `/schedule_tour_edit` command's log thread object (from the test guild)."""
         test_guild = self.get_test_guild(client)
-        # NOTE not using guild.get_thread as if the thread is archived, it isn't stored in the cache (will return `None`)
         thread = await test_guild.fetch_channel(self.scheduled_tours_edit_thread_id)
         return thread
