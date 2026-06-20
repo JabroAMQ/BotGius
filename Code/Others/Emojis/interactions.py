@@ -3,6 +3,25 @@ import discord
 from Code.Utilities.error_handler import error_handler_decorator
 from Code.Others.Emojis.controller import Emojis_Controller
 
+async def _validate_emoji_attachment(interaction: discord.Interaction, attachment: discord.Attachment) -> bool:
+    """Ensure that the attachment is a valid Discord emoji and respects size constraints."""
+    allowed_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.webp')
+    if (not attachment.content_type or 
+        not attachment.content_type.startswith('image/') or 
+        not attachment.filename.lower().endswith(allowed_extensions)):
+        
+        content = 'Unsupported format file. Only .PNG, .JPG, .JPEG, .GIF and .WEBP allowed'
+        await interaction.followup.send(content, ephemeral=True)
+        return False
+    
+    MAX_EMOJI_SIZE = 256 * 1024
+    if attachment.size > MAX_EMOJI_SIZE:
+        content = f'The file uploaded is too heavy. Maximum emoji size is 256KB'
+        await interaction.followup.send(content, ephemeral=True)
+        return False
+    
+    return True
+
 async def _show_preview(interaction: discord.Interaction) -> discord.ui.View:
     """Shows how the host's "Join" and "Leave" buttons look currently when hosting a tour"""
     emoji_join, emoji_leave = Emojis_Controller().get_tour_emojis(interaction.user.id)
@@ -27,6 +46,10 @@ async def _show_preview(interaction: discord.Interaction) -> discord.ui.View:
 async def emoji_add(interaction: discord.Interaction, emoji: discord.Attachment, is_join: bool):
     """Interaction to handle the `/emoji_add` command. It uploads the `emoji` file to the bot as the custom join/leave emoji, depending of the `is_join` value."""
     await interaction.response.defer(ephemeral=True)
+
+    emoji_ok = await _validate_emoji_attachment(interaction, emoji)
+    if not emoji_ok:
+        return
     
     emoji_added = await Emojis_Controller().add_emoji(interaction, emoji, is_join)
     if not emoji_added:
