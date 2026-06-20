@@ -14,7 +14,6 @@ class BotGius(discord.Client):
         self.sync_commands = False
         self.tree = discord.app_commands.CommandTree(self)
         load_app_commands(self)
-        load_controllers()
 
         @self.tree.error
         async def on_app_command_error(interaction: discord.Interaction, error: discord.app_commands.AppCommandError):
@@ -34,6 +33,8 @@ class BotGius(discord.Client):
 
     async def setup_hook(self):
         """Hook to set up bot commands, used for syncing with Discord."""
+        await load_controllers(self)
+
         if self.sync_commands:
             commands = await self.tree.sync()
             print(f'Synced {len(commands)} commands.')

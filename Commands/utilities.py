@@ -12,7 +12,7 @@ from Code.Tours.Schedule.controller import Scheduled_Tour_Controller
 from Code.Players.controller import Players_Controller
 from Code.Players.main_ranking import Ranking
 from Code.Others.channels import Channels
-from Code.Others.emojis import Emojis
+from Code.Others.Emojis.controller import Emojis_Controller
 from Code.Others.roles import Roles
 
 def load_app_commands(client: discord.Client):
@@ -54,7 +54,7 @@ def load_app_commands(client: discord.Client):
                 print_exception(error)
 
 
-def load_controllers() -> None:
+async def load_controllers(client: discord.Client) -> None:
     """Auxiliar function to load the singleton controllers so that delay is not introduced when they are first needed."""
     # Saving the references is not needed
     Main_Controller()
@@ -63,9 +63,10 @@ def load_controllers() -> None:
     Players_Controller()
     Ranking()
     Channels()
-    Emojis()
     Roles()
     Tour_Helpers()
+
+    await Emojis_Controller().initialize(client)
 
 
 class Tour_Helpers:

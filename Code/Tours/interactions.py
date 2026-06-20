@@ -13,7 +13,7 @@ from Code.Rolls.teams import Teams_Roll
 from Code.Rolls.blind_crews import Blind_Crews
 from Code.Rolls.enums import Roll_Teams, Roll_Gamemode
 from Code.Others.channels import Channels
-from Code.Others.emojis import Emojis
+from Code.Others.Emojis.controller import Emojis_Controller
 from Code.Others.roles import Roles
 
 
@@ -55,7 +55,7 @@ async def _log_command(interaction: discord.Interaction, command_name: str, tour
 async def tour_create(interaction: discord.Interaction, timer: int = None, size: int = None, is_watched: bool = False, info: str = '', custom_ping: str = ''):
     """Interaction to handle the `/tour_create` command. It creates a new tour and stores it in the tours's catalog."""
     await interaction.response.defer(ephemeral=True)
-    join_emoji, leave_emoji = Emojis().get_tour_emojis(interaction.user.id)
+    join_emoji, leave_emoji = Emojis_Controller().get_tour_emojis(interaction.user.id)
 
 
     class Tour_Create_View(discord.ui.View):
@@ -136,7 +136,7 @@ async def tour_create(interaction: discord.Interaction, timer: int = None, size:
     )
 
     custom_subcontent = f'{custom_ping.strip()} ' if custom_ping else ''
-    common_subcontent = f'{Roles().get_ping_role(interaction.guild)} {Emojis().get_other_emoji("20espiando")}'
+    common_subcontent = f'{Roles().get_ping_role(interaction.guild)} {Emojis_Controller().get_extra_emoji()}'
     content = f'{custom_subcontent}{common_subcontent}'
     embed = tour.generate_join_embed()
     view = Tour_Create_View(tour=tour)

@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS players (
 ''')
 conn.commit()
 
-cur.execute("""
+cur.execute('''
 CREATE TABLE IF NOT EXISTS scheduled_tours (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     guild_id INTEGER NOT NULL,
@@ -42,12 +42,24 @@ CREATE TABLE IF NOT EXISTS scheduled_tours (
     created_at INTEGER NOT NULL,
     updated_at INTEGER
 );
-""")
+''')
 conn.commit()
 
-cur.executescript(populate_gamemodes)
-cur.executescript(populate_players)
+cur.execute('''
+CREATE TABLE IF NOT EXISTS emojis (
+    emoji_id INTEGER PRIMARY KEY,
+    emoji_name TEXT UNIQUE NOT NULL,
+    host_id INTEGER,
+    is_join BOOLEAN NOT NULL,
+    is_leave BOOLEAN NOT NULL,
+    is_poll BOOLEAN NOT NULL
+);
+''')
 conn.commit()
+
+#cur.executescript(populate_gamemodes)
+#cur.executescript(populate_players)
+#conn.commit()
 
 cur.close()
 conn.close()

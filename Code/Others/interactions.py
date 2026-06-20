@@ -6,7 +6,7 @@ from Code.Utilities.to_file import send_message_as_file
 from Code.Utilities.to_webhook import to_webhook
 from Code.Gamemodes.controller import Main_Controller as Gamemodes_Controller
 from Code.Players.controller import Players_Controller
-from Code.Others.emojis import Emojis
+from Code.Others.Emojis.controller import Emojis_Controller
 from Code.Others.channels import Channels
 
 async def _validate_image(interaction: discord.Interaction, image: discord.Attachment) -> bool:
@@ -175,7 +175,7 @@ async def pick(interaction: discord.Interaction, decision: str):
 async def poll(interaction: discord.Interaction, poll_name: str, options: list[str]):
     """Interaction to handle the `/poll` command. It sends an embed with the options provided adding one reaction per possible option."""
     await interaction.response.defer(ephemeral=False)
-    reactions = Emojis().get_poll_emojis(len(options))
+    reactions = Emojis_Controller().get_poll_emojis(len(options))
 
     poll_options = [f'{reaction} {option}' for option, reaction in zip(options, reactions)]
     poll_options = '\n'.join(poll_options)

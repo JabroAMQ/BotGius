@@ -9,7 +9,6 @@ from Code.Utilities.to_file import send_message_as_file
 from Code.Gamemodes.controller import Main_Controller as Gamemodes_Controller
 from Code.Players.controller import Players_Controller
 from Code.Others.channels import Channels
-from Code.Others.emojis import Emojis
 from Code.Others.roles import Roles
 
 @error_handler_decorator()
@@ -26,7 +25,6 @@ async def reset_data(interaction: discord.Interaction):
     def reload_all_data():
         Gamemodes_Controller()._set_data()
         Channels()._set_data()
-        Emojis()._set_data()
         Roles()._set_data()
         Tour_Helpers()._set_data()
 

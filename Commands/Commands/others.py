@@ -3,6 +3,7 @@ from discord import app_commands
 
 from Commands.base import Commands
 from Code.Others import interactions
+from Code.Others.Emojis import interactions as interactions_emojis
 from Code.Gamemodes.enums import InfoType
 
 class Others_Commands(Commands):
@@ -21,6 +22,9 @@ class Others_Commands(Commands):
         - `/report`
         - `/pick`
         - `/poll`
+        - `/emoji_add`
+        - `/emoji_delete`
+        - `/emoji_check`
         """
         @client.tree.command(name='info', description='Check stored information (gamemodes, artists, metronomes, etc.)')
         @app_commands.describe(type='The type of list you want to retrieve')
@@ -78,3 +82,30 @@ class Others_Commands(Commands):
             all_options = [option1, option2, option3, option4, option5, option6, option7, option8, option9]
             poll_options = [option for option in all_options if option]
             await interactions.poll(interaction, poll_name, poll_options)
+
+
+        @client.tree.command(name='emoji_add', description='Add your custom emoji (join/leave)')
+        @app_commands.describe(emoji = 'The emoji you want to upload as a file', is_join = 'Whether the emoji being uploaded is for the "Join" one ("Leave" otherwise)')
+        @app_commands.choices(is_join=[app_commands.Choice(name=str(i), value=int(i)) for i in [True, False]])
+        @app_commands.guild_only
+        @app_commands.check(self.is_user_tour_helper)
+        async def emoji_add(interaction: discord.Interaction, emoji: discord.Attachment, is_join: app_commands.Choice[int]):
+            is_join = bool(is_join.value)
+            await interactions_emojis.emoji_add(interaction, emoji, is_join)
+
+
+        @client.tree.command(name='emoji_delete', description='Delete one of your custom emoji (join/leave)')
+        @app_commands.describe(is_join = 'Whether you want to delete your "Join" emoji (or "Leave" otherwise)')
+        @app_commands.choices(is_join=[app_commands.Choice(name=str(i), value=int(i)) for i in [True, False]])
+        @app_commands.guild_only
+        @app_commands.check(self.is_user_tour_helper)
+        async def emoji_delete(interaction: discord.Interaction, is_join: app_commands.Choice[int]):
+            is_join = bool(is_join.value)
+            await interactions_emojis.emoji_delete(interaction, is_join)
+
+
+        @client.tree.command(name='emoji_check', description='Show how your "Join" and "Leave" buttons look currently when hosting a tour')
+        @app_commands.guild_only
+        @app_commands.check(self.is_user_tour_helper)
+        async def emoji_check(interaction: discord.Interaction):
+            await interactions_emojis.emoji_check(interaction)
