@@ -99,7 +99,7 @@ class Rolls_Enum(Enum):
     UMA_MUSUME_TRACKS = 19
 
 
-class Rolls_Spotlght(Enum):
+class Rolls_Spotlight(Enum):
     """Enumerate class to represent the different rollable spotlight stuff possible."""
     MALE_ARTIST = 0
     MALE_VA = 1

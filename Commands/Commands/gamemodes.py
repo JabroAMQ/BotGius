@@ -3,7 +3,7 @@ from discord import app_commands
 
 from Commands.base import Commands
 from Code.Gamemodes import interactions
-from Code.Rolls.enums import Rolls_Enum, Roll_Gamemode, Rolls_Spotlght
+from Code.Rolls.enums import Rolls_Enum, Roll_Gamemode, Rolls_Spotlight
 
 class Gamemodes_Commands(Commands):
     """Class that contains the Gamemodes related commands's headers to load into the Discord Client."""
@@ -123,6 +123,6 @@ class Gamemodes_Commands(Commands):
         
         @client.tree.command(name='roll_spotlight', description='For rolling spotlight artists/groups/etc')
         @app_commands.describe(type='Type of spotlight to roll')
-        @app_commands.choices(type=[app_commands.Choice(name=type.name.replace('_', ' ').capitalize(), value=type.value) for type in Rolls_Spotlght])
+        @app_commands.choices(type=[app_commands.Choice(name=type.name.replace('_', ' ').capitalize(), value=type.value) for type in Rolls_Spotlight])
         async def roll_spotlight(interaction: discord.Interaction, type: app_commands.Choice[int]):
             await interactions.roll_spotlight(interaction, type.value)

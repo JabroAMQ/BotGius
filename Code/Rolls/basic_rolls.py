@@ -155,31 +155,31 @@ class Roll:
     def roll_spotlight(type: enums.Rolls_Enum, as_str: bool = False) -> Male_Artist | Male_VA | Female_Artist | Female_VA | Group | Composer | Franchise:
         """Roll a spotlight artist/group/etc."""
         match type:
-            case enums.Rolls_Spotlght.MALE_ARTIST:
+            case enums.Rolls_Spotlight.MALE_ARTIST:
                 roll = random.choice(Main_Controller().get_spotlight_male_artists())
                 return repr(roll) if as_str else roll
             
-            case enums.Rolls_Spotlght.MALE_VA:
+            case enums.Rolls_Spotlight.MALE_VA:
                 roll = random.choice(Main_Controller().get_spotlight_male_VAs())
                 return repr(roll) if as_str else roll
             
-            case enums.Rolls_Spotlght.FEMALE_ARTIST:
+            case enums.Rolls_Spotlight.FEMALE_ARTIST:
                 roll = random.choice(Main_Controller().get_spotlight_female_artists())
                 return repr(roll) if as_str else roll
             
-            case enums.Rolls_Spotlght.FEMALE_VA:
+            case enums.Rolls_Spotlight.FEMALE_VA:
                 roll = random.choice(Main_Controller().get_spotlight_female_VAs())
                 return repr(roll) if as_str else roll
             
-            case enums.Rolls_Spotlght.GROUP:
+            case enums.Rolls_Spotlight.GROUP:
                 roll = random.choice(Main_Controller().get_spotlight_groups())
                 return repr(roll) if as_str else roll
             
-            case enums.Rolls_Spotlght.COMPOSER:
+            case enums.Rolls_Spotlight.COMPOSER:
                 roll = random.choice(Main_Controller().get_spotlight_composers())
                 return repr(roll) if as_str else roll
             
-            case enums.Rolls_Spotlght.FRANCHISE:
+            case enums.Rolls_Spotlight.FRANCHISE:
                 roll = random.choice(Main_Controller().get_spotlight_franchises())
                 return repr(roll) if as_str else roll
             
