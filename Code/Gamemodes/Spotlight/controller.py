@@ -1,4 +1,4 @@
-from Code.Gamemodes.Spotlight.classes import Male_Artist, Male_VA, Female_Artist, Female_VA, Group, Composer, Franchise
+from Code.Gamemodes.Spotlight.classes import Male_Artist, Male_VA, Female_Artist, Female_VA, Group, Composer, Franchise, Community, Studio
 
 class Spotlight_Controller:
     """Controller to encapsule the Spotlight Logic from the rest of the application."""
@@ -45,6 +45,16 @@ class Spotlight_Controller:
             for franchise in self.spotlight_dict['franchises']
         }
 
+        self.communities = {
+            community[0]: Community(*community)
+            for community in self.spotlight_dict['communities']
+        }
+        
+        self.studios = {
+            studio[0]:  Studio(*studio)
+            for studio in self.spotlight_dict['studios']
+        }
+
 
     def get_all_male_artists(self) -> list[Male_Artist]:
         """Return a list with all the Male Artists."""
@@ -73,6 +83,14 @@ class Spotlight_Controller:
     def get_all_franchises(self) -> list[Franchise]:
         """Return a list with all the Franchises."""
         return list(self.franchises.values())
+    
+    def get_all_communities(self) -> list[Community]:
+        """Return a list with all the Communities."""
+        return list(self.communities.values())
+    
+    def get_all_studios(self) -> list[Studio]:
+        """Return a list with all the Studios."""
+        return list(self.studios.values())
 
 
     def info_male_artists(self) -> list[str]:
@@ -151,3 +169,25 @@ class Spotlight_Controller:
             for franchise in self.get_all_franchises()
         ]
         return sorted(franchises, key=str.lower)
+    
+    def info_communities(self) -> list[str]:
+        """
+        Return a list with all the community spotlights stored in the spotlight catalog.\n
+        The list is sorted by the community spotlight names and contains strings with compressed information from the community spotlights.
+        """
+        communities: list[str] = [
+            str(communities)
+            for communities in self.get_all_communities()
+        ]
+        return sorted(communities, key=str.lower)
+    
+    def info_studios(self) -> list[str]:
+        """
+        Return a list with all the studios stored in the spotlight catalog.\n
+        The list is sorted by the studio names and contains strings with compressed information from the studios.
+        """
+        studios: list[str] = [
+            str(studio)
+            for studio in self.get_all_studios()
+        ]
+        return sorted(studios, key=str.lower)

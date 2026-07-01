@@ -9,7 +9,7 @@ from Code.Gamemodes.Artists.cq_artist import CQ_Artist
 from Code.Gamemodes.SpecialLists.og_specialList import OG_SpecialList
 from Code.Gamemodes.SpecialLists.cq_specialList import CQ_SpecialList
 from Code.Gamemodes.GlobalPlayers.global_players import GlobalPlayer
-from Code.Gamemodes.Spotlight.classes import Male_Artist, Male_VA, Female_Artist, Female_VA, Group, Composer, Franchise
+from Code.Gamemodes.Spotlight.classes import Male_Artist, Male_VA, Female_Artist, Female_VA, Group, Composer, Franchise, Community, Studio
 
 class Roll:
     """Static class that contains methods to produce all basic rolls."""
@@ -152,7 +152,7 @@ class Roll:
 
 
     @staticmethod
-    def roll_spotlight(type: enums.Rolls_Enum, as_str: bool = False) -> Male_Artist | Male_VA | Female_Artist | Female_VA | Group | Composer | Franchise:
+    def roll_spotlight(type: enums.Rolls_Enum, as_str: bool = False) -> Male_Artist | Male_VA | Female_Artist | Female_VA | Group | Composer | Franchise | Community | Studio:
         """Roll a spotlight artist/group/etc."""
         match type:
             case enums.Rolls_Spotlight.MALE_ARTIST:
@@ -181,6 +181,14 @@ class Roll:
             
             case enums.Rolls_Spotlight.FRANCHISE:
                 roll = random.choice(Main_Controller().get_spotlight_franchises())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Spotlight.COMMUNITY:
+                roll = random.choice(Main_Controller().get_spotlight_communities())
+                return repr(roll) if as_str else roll
+            
+            case enums.Rolls_Spotlight.STUDIO:
+                roll = random.choice(Main_Controller().get_spotlight_studios())
                 return repr(roll) if as_str else roll
             
             case _:
@@ -247,6 +255,9 @@ class Roll:
 
             case enums.Roll_Gamemode.ONLY_RANDOM_TEAMS_MODES:
                 gamemodes = [gamemode for gamemode in gamemodes if not gamemode.watched_song_selection and gamemode.size > 1]
+
+            case enums.Roll_Gamemode.ONLY_SPOTLIGHT:
+                gamemodes = [gamemode for gamemode in gamemodes if 'spotlight' in gamemode.name.lower()]
 
             case _:
                 raise ValueError('Invalied "type" value')

@@ -12,7 +12,7 @@ def _get_default(worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str]
     The first column contain the name of the artist/group, and the second column contains its community quiz ID.\n
     Return a list of tuples with the information stored in the sheet.
     """
-    all_artists = []
+    all_rolls = []
     check_set = {'\xa0', '', None}
 
     # NOTE skipping row 0 as it is the header row
@@ -25,11 +25,13 @@ def _get_default(worksheet: gspread.worksheet.Worksheet) -> list[tuple[str, str]
                 print(f'SPOTLIGHT: Skipping row ({row[0]}, {row[2]}) due to containing some empty value')
             continue
 
-        all_artists.append((row[0], row[2]))
+        all_rolls.append((row[0], row[2]))
 
-    return all_artists
+    return all_rolls
 
 def get_spotlight_groups(client: gspread.Client) -> tuple[
+        list[tuple[str, str]],
+        list[tuple[str, str]],
         list[tuple[str, str]],
         list[tuple[str, str]],
         list[tuple[str, str]],
@@ -43,7 +45,7 @@ def get_spotlight_groups(client: gspread.Client) -> tuple[
 
     Return:
     -----------
-    A tuple with the next 7 elements (ordered as follow):
+    A tuple with the next 9 elements (ordered as follow):
     - Male Artist: `list[tuple[str, str]]`
         A list of tuples with all the Male Artist information (see _get_default() docstring for further explanation).
     - Male VA: `list[tuple[str, str]]`
@@ -58,11 +60,15 @@ def get_spotlight_groups(client: gspread.Client) -> tuple[
         A list of tuples with all the Composers information (see _get_default() docstring for further explanation).
     - Franchises: `list[tuple[str, str]]`
         A list of tuples with all the Franchises information (see _get_default() docstring for further explanation).
+    - Communities: `list[tuple[str, str]]`
+        A list of tuples with all the Community spotlights information (see _get_default() docstring for further explanation).
+    - Studios: `list[tuple[str, str]]`
+        A list of tuples with all the Studios information (see _get_default() docstring for further explanation).
     """
     spreadsheet = client.open_by_key(_MAIN_SHEET_KEY)
     all_sheets = spreadsheet.worksheets()
     # NOTE skipping worksheet 0 as it not contain useful information for the bot
-    male_artists_ws, male_vas_ws, female_artists_ws, female_vas_ws, groups_ws, composers_ws, franchises_ws = all_sheets[1:8]
+    male_artists_ws, male_vas_ws, female_artists_ws, female_vas_ws, groups_ws, composers_ws, franchises_ws, communities_ws, studios_ws = all_sheets[1:10]
 
     male_artists = _get_default(male_artists_ws)
     male_vas = _get_default(male_vas_ws)
@@ -71,5 +77,7 @@ def get_spotlight_groups(client: gspread.Client) -> tuple[
     groups = _get_default(groups_ws)
     composers = _get_default(composers_ws)
     franchises = _get_default(franchises_ws)
+    communities = _get_default(communities_ws)
+    studios = _get_default(studios_ws)
 
-    return male_artists, male_vas, female_artists, female_vas, groups, composers, franchises
+    return male_artists, male_vas, female_artists, female_vas, groups, composers, franchises, communities, studios

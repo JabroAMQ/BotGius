@@ -108,6 +108,8 @@ class Rolls_Spotlight(Enum):
     GROUP = 4
     COMPOSER = 5
     FRANCHISE = 6
+    COMMUNITY = 7
+    STUDIO = 8
 
 
 class Roll_Gamemode(Enum):
@@ -130,6 +132,7 @@ class Roll_Gamemode(Enum):
     ONLY_TEAMS_MODES = 15
     ONLY_WATCHED_TEAMS_MODES = 16
     ONLY_RANDOM_TEAMS_MODES = 17
+    ONLY_SPOTLIGHT = 18
 
 
 class Roll_Teams(Enum):

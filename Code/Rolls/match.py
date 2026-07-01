@@ -170,6 +170,16 @@ class Match:
                 spotlight_roll = Roll.roll_spotlight(Rolls_Spotlight.FRANCHISE)
                 self.special_roll = f'Spotlight - Franchise: {spotlight_roll.franchise_name} (quiz ID: {spotlight_roll.community_quiz_id})'
                 return content + repr(spotlight_roll)
+            
+            if 'studio' in self.gamemode.name.lower():
+                spotlight_roll = Roll.roll_spotlight(Rolls_Spotlight.STUDIO)
+                self.special_roll = f'Spotlight - Studio: {spotlight_roll.studio_name} (quiz ID: {spotlight_roll.community_quiz_id})'
+                return content + repr(spotlight_roll)
+            
+            if 'community' in self.gamemode.name.lower():
+                spotlight_roll = Roll.roll_spotlight(Rolls_Spotlight.COMMUNITY)
+                self.special_roll = f'Spotlight - Community: {spotlight_roll.community_name} (quiz ID: {spotlight_roll.community_quiz_id})'
+                return content + repr(spotlight_roll)
 
         # If the gamemode isn't special, we return None
         return None

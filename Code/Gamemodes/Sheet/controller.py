@@ -111,6 +111,8 @@ class Sheet_Controller:
         - 'groups': A list of tuples with all the Groups information (see _get_default() docstring for further explanation).
         - 'composers': A list of tuples with all the Composers information (see _get_default() docstring for further explanation).
         - 'franchises': A list of tuples with all the Franchises information (see _get_default() docstring for further explanation).
+        - 'communities': A list of tuples with all the Community Spotlights information (see _get_default() docstring for further explanation).
+        - 'studios': A list of tuples with all the Studios information (see _get_default() docstring for further explanation).
         """
         spotlight_info = get_spotlight_groups(self.client)
         spotlight_dict = {
@@ -120,6 +122,8 @@ class Sheet_Controller:
             'female_vas': spotlight_info[3],
             'groups': spotlight_info[4],
             'composers': spotlight_info[5],
-            'franchises': spotlight_info[6]
+            'franchises': spotlight_info[6],
+            'communities': spotlight_info[7],
+            'studios': spotlight_info[8]
         }
         return spotlight_dict

@@ -172,3 +172,55 @@ class Franchise:
         franchise = f'**Franchise selected:** {self.franchise_name}\n'
         franchise += f'**Community Quiz ID:** {self.community_quiz_id}\n'
         return franchise
+    
+
+class Community:
+    """Class that instanciates a Community Spotlight object containing the information that is stored in the spotlight's sheet."""
+    def __init__(self, community_name: str, community_quiz_id: str) -> None:
+        """
+        Constructor of the Community class.\n
+        Parameters:
+        -----------
+        - Community Name: `str`
+            The name of the community spotlight.
+        - Community Quiz ID: `str`
+            The ID of the community in the Community Quiz.
+        """
+        self.community_name = community_name
+        self.community_quiz_id = community_quiz_id
+
+    def __str__(self) -> str:
+        """Return a string representation of the Community Spotlight object. Use it to display community info in a compressed way (e.g. displaying info from all communities spotlights)"""
+        return f'{self.community_name} - {self.community_quiz_id}'
+
+    def __repr__(self) -> str:
+        """Return a string representation of the Community Spotlight object. Use it to display community info in a extended way (e.g. displaying info from only one community spotlight)"""
+        community = f'**Community Spotlight selected:** {self.community_name}\n'
+        community += f'**Community Quiz ID:** {self.community_quiz_id}\n'
+        return community
+    
+
+class Studio:
+    """Class that instanciates a Studio object containing the information that is stored in the spotlight's sheet."""
+    def __init__(self, studio_name: str, community_quiz_id: str) -> None:
+        """
+        Constructor of the Studio class.\n
+        Parameters:
+        -----------
+        - Studio Name: `str`
+            The name of the studio.
+        - Community Quiz ID: `str`
+            The ID of the community in the Community Quiz.
+        """
+        self.studio_name = studio_name
+        self.community_quiz_id = community_quiz_id
+
+    def __str__(self) -> str:
+        """Return a string representation of the Studio object. Use it to display community info in a compressed way (e.g. displaying info from all studios)"""
+        return f'{self.studio_name} - {self.community_quiz_id}'
+
+    def __repr__(self) -> str:
+        """Return a string representation of the Studio object. Use it to display community info in a extended way (e.g. displaying info from only one studio)"""
+        studio = f'**Studio selected:** {self.studio_name}\n'
+        studio += f'**Community Quiz ID:** {self.community_quiz_id}\n'
+        return studio

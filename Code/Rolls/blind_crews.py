@@ -46,11 +46,23 @@ class Blind_Crews:
         # 1. Roll the Gamemode
         gamemode = Roll.roll_gamemode(self.type)
 
-        # Make sure that there are at least enough players in team_1 and team_2
-        # NOTE In case not, roll any 1v1 gamemode
-        # TODO Is it possible to improve this?
-        if gamemode.size > len(team_1) or gamemode.size > len(team_2):
-            gamemode = Roll.roll_gamemode(enums.Roll_Gamemode.ONLY_1V1)
+        # Reroll if the gamemode's size is higher than any of the reamining team's length
+        cont = 0
+        while gamemode.size > len(team_1) or gamemode.size > len(team_2):
+
+            # Fallback just in case...
+            if cont >= 50:
+                print(f'The gamemode has been rerolled {cont} times without finding the desire properties. Most likely there is some mistake here...')
+                print(f'type: {self.type.name}')
+                print(f'team_1 len: {len(team_1)}')
+                print(f'team_2 len: {len(team_2)}')
+                print(f'Last mode rolled before fallback:\n{gamemode.display_all_details()}')
+
+                gamemode = Roll.roll_gamemode(enums.Roll_Gamemode.ONLY_1V1)
+                break
+            
+            gamemode = Roll.roll_gamemode(self.type)
+            cont += 1
 
         # 2. Roll the Players from both teams
         selected_team_1, selected_team_2 = [[] for _ in range(2)]

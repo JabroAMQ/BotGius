@@ -13,7 +13,7 @@ from Code.Gamemodes.SpecialLists.cq_specialList import CQ_SpecialList
 from Code.Gamemodes.GlobalPlayers.controller import GlobalPlayer_Controller
 from Code.Gamemodes.GlobalPlayers.global_players import GlobalPlayer
 from Code.Gamemodes.Spotlight.controller import Spotlight_Controller
-from Code.Gamemodes.Spotlight.classes import Male_Artist, Male_VA, Female_Artist, Female_VA, Group, Composer, Franchise
+from Code.Gamemodes.Spotlight.classes import Male_Artist, Male_VA, Female_Artist, Female_VA, Group, Composer, Franchise, Community, Studio
 
 class Main_Controller:
     """Controller to encapsule the Players Logic from the rest of the application."""
@@ -114,6 +114,12 @@ class Main_Controller:
             case InfoType.SPOTLIGHT_FRANCHISES.value:
                 return self.spotlight.info_franchises()
             
+            case InfoType.SPOTLIGHT_COMMUNITIES.value:
+                return self.spotlight.info_communities()
+            
+            case InfoType.SPOTLIGHT_STUDIOS.value:
+                return self.spotlight.info_studios()
+            
             case _:
                 raise ValueError('Invalid type value!')
 
@@ -181,6 +187,14 @@ class Main_Controller:
     def get_spotlight_franchises(self) -> list[Franchise]:
         """Return a list with all the franchises stored."""
         return self.spotlight.get_all_franchises()
+    
+    def get_spotlight_communities(self) -> list[Community]:
+        """Return a list with all the community spotlights stored."""
+        return self.spotlight.get_all_communities()
+    
+    def get_spotlight_studios(self) -> list[Studio]:
+        """Return a list with all the studios stored."""
+        return self.spotlight.get_all_studios()
 
     def get_genres(self) -> list[str]:
         """Return a list with all the anime genres stored."""
