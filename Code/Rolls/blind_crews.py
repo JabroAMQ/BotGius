@@ -125,11 +125,11 @@ class Blind_Crews:
             gamemode_name = match.gamemode.name
 
             # 2. Get team 1 players names
-            team_1_names = [player.amq_name for player in match.team_1]
+            team_1_names = [f'{player.amq_name} ({player.rank.name})' for player in match.team_1]
             team_1_names = ' '.join(team_1_names)
 
             # 3. Get team 2 players names
-            team_2_names = [player.amq_name for player in match.team_2]
+            team_2_names = [f'{player.amq_name} ({player.rank.name})' for player in match.team_2]
             team_2_names = ' '.join(team_2_names)
 
             # 4. Get the distribution (if any)
@@ -142,7 +142,7 @@ class Blind_Crews:
             if duels:
                 content += f'**{i+1}) {gamemode_name}:**\n'
             else:
-                content += f'**{i+1}) {gamemode_name}:** {team_1_names} VS {team_2_names} --> \n'
+                content += f'**{i+1}) {gamemode_name}:** {team_1_names} VS {team_2_names}\n'
 
             if distribution is not None:
                 content += f'{distribution}\n'
