@@ -1,5 +1,5 @@
+asyncpg
 discord
 gspread
-psycopg2
 python-dotenv
 PyYAML

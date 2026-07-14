@@ -12,7 +12,7 @@ async def schedule_tour_add_interaction(interaction: discord.Interaction, descri
     await interaction.response.defer(ephemeral=True)
     
     # Add the scheduled tour
-    added, log = Scheduled_Tour_Controller().add_scheduled_tour(interaction.guild_id, description, host, timestamp)
+    added, log = await Scheduled_Tour_Controller().add_scheduled_tour(interaction.guild_id, description, host, timestamp)
     if not added:
         content = 'There was an error while scheduling the tour'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -44,7 +44,7 @@ async def schedule_tour_delete_interaction(interaction: discord.Interaction, fix
             await new_interaction.response.defer(ephemeral=True)
 
             # Delete the scheduled tour
-            deleted, log = Scheduled_Tour_Controller().delete_scheduled_tour(self.id)
+            deleted, log = await Scheduled_Tour_Controller().delete_scheduled_tour(self.id)
             if not deleted:
                 content = 'There was an error while deleting the Scheduled_Tour'
                 await new_interaction.followup.send(content=content, ephemeral=True)
@@ -95,7 +95,7 @@ async def schedule_tour_edit_interaction(interaction: discord.Interaction, fixed
             await new_interaction.response.defer(ephemeral=True)
 
             # Edit the scheduled tour
-            edited, log = Scheduled_Tour_Controller().edit_scheduled_tour(self.id, self.description, self.host, self.timestamp)
+            edited, log = await Scheduled_Tour_Controller().edit_scheduled_tour(self.id, self.description, self.host, self.timestamp)
             if not edited:
                 content = 'There was an error while editing the Scheduled_Tour'
                 await new_interaction.followup.send(content=content, ephemeral=True)

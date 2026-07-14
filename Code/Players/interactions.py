@@ -11,7 +11,7 @@ async def player_register(interaction: discord.Interaction, amq_name: str):
     await interaction.response.defer(ephemeral=True)
     
     amq_name = amq_name.replace(' ', '_')
-    register_ok, other_player_ping = Players_Controller().register_player(discord_id=interaction.user.id, amq_name=amq_name)
+    register_ok, other_player_ping = await Players_Controller().register_player(discord_id=interaction.user.id, amq_name=amq_name)
     amq_name = discord.utils.escape_markdown(amq_name)
 
     if not register_ok:
@@ -37,7 +37,7 @@ async def player_change_amq(interaction: discord.Interaction, new_amq_name: str)
     # Make sure the name does not contains spaces
     new_amq_name = new_amq_name.replace(' ', '_')
     
-    change_amq_ok, log_value = Players_Controller().change_player_amq(discord_id=interaction.user.id, new_amq_name=new_amq_name)
+    change_amq_ok, log_value = await Players_Controller().change_player_amq(discord_id=interaction.user.id, new_amq_name=new_amq_name)
     
     if not change_amq_ok:
         if log_value is None:
@@ -77,7 +77,7 @@ async def player_change_other_amq(interaction: discord.Interaction, player_old_a
     except (discord.errors.NotFound, discord.errors.HTTPException):
         player_mention = '(???)'
 
-    change_amq_ok, log_value = Players_Controller().change_player_amq(discord_id=player.discord_id, new_amq_name=player_new_amq)
+    change_amq_ok, log_value = await Players_Controller().change_player_amq(discord_id=player.discord_id, new_amq_name=player_new_amq)
     
     if not change_amq_ok:
         content = f'The change couldn\'t be applied as `{discord.utils.escape_markdown(player_new_amq)}` is already used as the `amq_name` of {log_value}.'
@@ -122,7 +122,7 @@ async def player_change_rank(interaction: discord.Interaction, amq_name: str, ne
     """Interaction to handle the `/player_change_rank` command. It modifies the `rank` field of the player with `name` == `amq_name`."""
     await interaction.response.defer(ephemeral=True)
 
-    applied, player, old_rank = Players_Controller().change_player_rank(amq_name, new_rank)
+    applied, player, old_rank = await Players_Controller().change_player_rank(amq_name, new_rank)
     if not applied:
         content = f'A player with name "{amq_name}" couldn\'t be found'
         await interaction.followup.send(content=content, ephemeral=True)

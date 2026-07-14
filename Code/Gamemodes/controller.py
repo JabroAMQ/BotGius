@@ -38,10 +38,8 @@ class Main_Controller:
         - Global Players
         - Genres
         """
-        gamemodes_descriptions, self.metronomes, self.items, self.tags, og_artists, cq_artists, og_special_lists, cq_special_lists = Sheet_Controller().get_sheet_data()
+        self._gamemodes_descriptions, self.metronomes, self.items, self.tags, og_artists, cq_artists, og_special_lists, cq_special_lists = Sheet_Controller().get_sheet_data()
         
-        self.gamemodes = Gamemodes_Controller(gamemodes_descriptions)
-
         self.artists = Artist_Controller(og_artists, cq_artists)
         self.special_lists = SpecialList_Controller(og_special_lists, cq_special_lists)
 
@@ -52,6 +50,11 @@ class Main_Controller:
         self.spotlight = Spotlight_Controller(spotlight_dict)
 
         self.genres = [genre.name.replace('_', ' ') for genre in Genres]
+
+    async def initialize(self) -> None:
+        """Fetches DB entries"""
+        self.gamemodes = Gamemodes_Controller()
+        await self.gamemodes.initialize(self._gamemodes_descriptions)
 
 
     def info(self, type: int) -> list[str]:
@@ -213,7 +216,7 @@ class Main_Controller:
         return copy(self.items)
 
 
-    def add_gamemode(
+    async def add_gamemode(
         self,
         gamemode_name: str,
         gamemode_size: int,
@@ -229,7 +232,7 @@ class Main_Controller:
         - A boolean which is `True` if the gamemode could be stored, `False` otherwise, this is, a gamemode with that name already existed in memory.
         - A log str providing the gamemode's data.
         """
-        return self.gamemodes.add_gamemode(
+        return await self.gamemodes.add_gamemode(
             gamemode_name=gamemode_name,
             gamemode_size=gamemode_size,
             gamemode_code=gamemode_code,
@@ -239,11 +242,11 @@ class Main_Controller:
             is_equal_dist_rollable=is_equal_dist_rollable
         )
 
-    def delete_gamemode(self, gamemode: Gamemode) -> bool:
+    async def delete_gamemode(self, gamemode: Gamemode) -> bool:
         """Delete the gamemode provided as argument. Return `True` if the gamemode was deleted successfully, `False` otherwise."""
-        return self.gamemodes.delete_gamemode(gamemode)
-    
-    
+        return await self.gamemodes.delete_gamemode(gamemode)
+
+
     def get_gamemode_old_values(
         self,
         gamemode: Gamemode,
@@ -267,7 +270,7 @@ class Main_Controller:
             new_equal=new_equal
         )
 
-    def edit_gamemode(
+    async def edit_gamemode(
         self,
         gamemode_name: str,
         new_name: str | None,
@@ -281,7 +284,7 @@ class Main_Controller:
         If a `new_...` field is `None` it will be ignored, this is, it won't be modified.
         Return `True` if changes could be applied and `False` if an error was raised when applying the changes in the database.
         """
-        return self.gamemodes.edit_gamemode(
+        return await self.gamemodes.edit_gamemode(
             gamemode_name=gamemode_name,
             new_name=new_name,
             new_code=new_code,

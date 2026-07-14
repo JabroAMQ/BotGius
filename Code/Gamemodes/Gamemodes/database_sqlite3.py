@@ -1,4 +1,6 @@
 """
+NOTE sqlite3 is deprecated
+
 For reproducibility, this is how the Gamemodes's Table was created:
 
 CREATE TABLE IF NOT EXISTS gamemodes(

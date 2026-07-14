@@ -2,7 +2,7 @@ import random
 
 import discord
 
-from Code.Others.Emojis.database import Emojis_Database
+from Code.Others.Emojis.database_postgresql import Emojis_Database
 from Code.Others.Emojis.emoji import MyEmoji
 from Code.Utilities.error_handler import print_exception
 
@@ -30,7 +30,7 @@ class Emojis_Controller:
         self._emojis_by_ids.clear()
         
         try:
-            db_emojis = Emojis_Database.get_all_emojis()
+            db_emojis = await Emojis_Database.get_all_emojis()
             discord_emojis = await bot.fetch_application_emojis()
             discord_emojis_dict = {e.id: e for e in discord_emojis}
 
@@ -121,7 +121,7 @@ class Emojis_Controller:
     async def _delete_emoji_instance(self, emoji: MyEmoji) -> None:
         """Private core method to delete an emoji from Discord API, Database, and Catalogs at once."""
         await emoji.discord_obj.delete()        
-        Emojis_Database.delete_custom_emoji(emoji.emoji_id)
+        await Emojis_Database.delete_custom_emoji(emoji.emoji_id)
         
         if emoji.emoji_id in self._emojis_by_ids:
             del self._emojis_by_ids[emoji.emoji_id]
@@ -164,7 +164,7 @@ class Emojis_Controller:
             self._emojis_by_ids[new_my_emoji.emoji_id] = new_my_emoji
             self._emojis_by_names[new_my_emoji.emoji_name] = new_my_emoji
 
-            Emojis_Database.add_custom_emoji(
+            await Emojis_Database.add_custom_emoji(
                 new_my_emoji.emoji_id, 
                 new_my_emoji.emoji_name, 
                 new_my_emoji.host_id, 

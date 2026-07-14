@@ -39,7 +39,7 @@ async def ban_player(interaction: discord.Interaction, amq_name: str, is_banned:
     """Interaction to handle the `/ban_player` command. It bans/unbans the `is_banned` field of the player with `name` == `amq_name`."""
     await interaction.response.defer(ephemeral=True)
 
-    player_found, change_applied, player = Players_Controller().change_player_ban(amq_name, is_banned)
+    player_found, change_applied, player = await Players_Controller().change_player_ban(amq_name, is_banned)
     if not player_found:
         content = f'A player with name "{amq_name}" couldn\'t be found'
         await interaction.followup.send(content=content, ephemeral=True)
@@ -61,7 +61,7 @@ async def ban_player_list(interaction: discord.Interaction, amq_name: str, is_li
     """Interaction to handle the `/ban_player_list` command. It bans/unbans the `is_list_banned` field of the player with `name` == `amq_name`."""
     await interaction.response.defer(ephemeral=True)
 
-    player_found, change_applied, player = Players_Controller().change_player_list_ban(amq_name, is_list_banned)
+    player_found, change_applied, player = await Players_Controller().change_player_list_ban(amq_name, is_list_banned)
     if not player_found:
         content = f'A player with name "{amq_name}" couldn\'t be found'
         await interaction.followup.send(content=content, ephemeral=True)

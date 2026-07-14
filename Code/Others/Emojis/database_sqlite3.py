@@ -1,4 +1,6 @@
 """
+NOTE sqlite3 is deprecated
+
 For reproducibility, this is how the Players's Table was created:
 
 CREATE TABLE IF NOT EXISTS emojis (

@@ -1,7 +1,7 @@
 import difflib
 
 from Code.Players.player import Player
-from Code.Players.database_sqlite3 import Players_Database
+from Code.Players.database_postgresql import Players_Database
 
 class Players_Controller:
     """Controller to encapsule the Players Logic from the rest of the application."""
@@ -18,10 +18,11 @@ class Players_Controller:
         self.players_by_ids: dict[int, Player] = {}
         self.players_by_amq_name: dict[str, Player] = {}
 
-        players = Players_Database.get_all_players()
+    async def initialize(self) -> None:
+        """Fetches DB entries"""
+        players = await Players_Database.get_all_players()
         for player_data in players:
             self._add_player_to_catalogs(*player_data)
-
 
     def _add_player_to_catalogs(self, discord_id: int, amq_name: str, rank: str = 'None', is_banned: bool = False, is_list_banned: bool = False) -> None:
         """Add a player to the Players's Catalogs (by `discord_id` and `amq_name`)."""
@@ -65,7 +66,7 @@ class Players_Controller:
         return [player for player in self.players_by_ids.values() if player.is_list_banned]
 
 
-    def register_player(self, discord_id: int, amq_name: str) -> tuple[bool, str | None]:
+    async def register_player(self, discord_id: int, amq_name: str) -> tuple[bool, str | None]:
         """
         Add a player to the Players's Database and Catalogs (by `discord_id` and `amq_name`).\n
         Only `discord_id` and `amq_name` are required as the rest of the Player's fields will be initialized as the default values.\n
@@ -83,11 +84,11 @@ class Players_Controller:
             return False, other_player.discord_ping
 
         self._add_player_to_catalogs(discord_id, amq_name)
-        Players_Database.add_player(discord_id, amq_name)
+        await Players_Database.add_player(discord_id, amq_name)
         return True, None
 
 
-    def change_player_amq(self, discord_id: int, new_amq_name: str) -> tuple[bool, str | None]:
+    async def change_player_amq(self, discord_id: int, new_amq_name: str) -> tuple[bool, str | None]:
         """
         Change the player's amq name with `discord_id` to `new_amq_name`.\n
         The method return a tuple which first element is a boolean that can be `False` if:
@@ -116,11 +117,11 @@ class Players_Controller:
         self.players_by_amq_name[player.amq_name.lower()] = player
 
         # Apply the change into the database
-        Players_Database.change_player_amq(player.discord_id, player.amq_name)
+        await Players_Database.change_player_amq(player.discord_id, player.amq_name)
         return True, old_amq_name
     
 
-    def change_player_rank(self, player_amq_name: str, new_rank: str) -> tuple[bool, Player, str]:
+    async def change_player_rank(self, player_amq_name: str, new_rank: str) -> tuple[bool, Player, str]:
         """
         Change the rank of the player with name == `player_amq_name`.\n
         Returns a boolean telling the user whether the change could be applied.\n
@@ -136,12 +137,12 @@ class Players_Controller:
         player.rank = new_rank
 
         # Update rank in database
-        Players_Database.change_player_rank(player.discord_id, player.rank.name)
+        await Players_Database.change_player_rank(player.discord_id, player.rank.name)
 
         return True, player, old_rank
     
 
-    def change_player_ban(self, player_amq_name: str, new_is_banned: bool) -> tuple[bool, bool, Player | None]:
+    async def change_player_ban(self, player_amq_name: str, new_is_banned: bool) -> tuple[bool, bool, Player | None]:
         """
         Change the `is_banned` value of the player with name == `player_amq_name`.\n
         Returns a tuple:
@@ -162,12 +163,12 @@ class Players_Controller:
         player.is_banned = new_is_banned
 
         # Update is_banned in database
-        Players_Database.change_is_baned(player.discord_id, player.is_banned)
+        await Players_Database.change_is_banned(player.discord_id, player.is_banned)
 
         return True, True, player
     
 
-    def change_player_list_ban(self, player_amq_name: str, new_is_list_banned: bool) -> tuple[bool, bool, Player | None]:
+    async def change_player_list_ban(self, player_amq_name: str, new_is_list_banned: bool) -> tuple[bool, bool, Player | None]:
         """
         Change the `is_list_banned` value of the player with name == `player_amq_name`.\n
         Returns a tuple:
@@ -188,6 +189,6 @@ class Players_Controller:
         player.is_list_banned = new_is_list_banned
 
         # Update is_list_banned in database
-        Players_Database.change_is_list_baned(player.discord_id, player.is_list_banned)
+        await Players_Database.change_is_list_banned(player.discord_id, player.is_list_banned)
 
         return True, True, player

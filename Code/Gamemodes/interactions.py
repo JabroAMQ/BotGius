@@ -21,7 +21,7 @@ async def gamemode_add(
     """Interaction to handle the `/gamemode_add` command. It stores in the gamemodes's Database and Catalog the new gamemode created with the provided information."""
     await interaction.response.defer(ephemeral=True)
 
-    has_gamemode_been_added, log = Main_Controller().add_gamemode(
+    has_gamemode_been_added, log = await Main_Controller().add_gamemode(
         gamemode_name=gamemode_name,
         gamemode_size=gamemode_size,
         gamemode_code=gamemode_code,
@@ -60,7 +60,7 @@ async def gamemode_delete(interaction: discord.Interaction, gamemode_name: str):
                 return
 
             # Delete gamemode
-            Main_Controller().delete_gamemode(self.gamemode)
+            await Main_Controller().delete_gamemode(self.gamemode)
             self.already_deleted = True
 
             # Send log and confirmation messages
@@ -124,7 +124,7 @@ async def gamemode_edit(
             self.changes_already_applied = True
 
             # Edit the gamemode
-            changes_applied = Main_Controller().edit_gamemode(
+            changes_applied = await Main_Controller().edit_gamemode(
                 gamemode_name=self.gamemode.name,
                 new_name=self.name,
                 new_code=self.code,

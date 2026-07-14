@@ -1,4 +1,6 @@
 """
+NOTE sqlite3 is deprecated
+
 For reproducibility, this is how the Players's Table was created:
 
 CREATE TABLE IF NOT EXISTS players (
@@ -67,7 +69,7 @@ class Players_Database:
 
     @staticmethod
     @connection_manager
-    def change_is_baned(discord_id: int, is_banned: bool, cur: sqlite3.Cursor = None) -> None:
+    def change_is_banned(discord_id: int, is_banned: bool, cur: sqlite3.Cursor = None) -> None:
         """
         Change the Player's "is_banned" attribute to `is_banned` from the `discord_id` player in the Player's Database.
         Do NOT add a `cur` value, its a placeholder which value will be replaced.
@@ -78,7 +80,7 @@ class Players_Database:
 
     @staticmethod
     @connection_manager
-    def change_is_list_baned(discord_id: int, is_list_banned: bool, cur: sqlite3.Cursor = None) -> None:
+    def change_is_list_banned(discord_id: int, is_list_banned: bool, cur: sqlite3.Cursor = None) -> None:
         """
         Change the Player's "is_list_banned" attribute to `is_list_banned` from the `discord_id` player in the Player's Database.
         Do NOT add a `cur` value, its a placeholder which value will be replaced.

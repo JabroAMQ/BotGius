@@ -57,15 +57,15 @@ def load_app_commands(client: discord.Client):
 async def load_controllers(client: discord.Client) -> None:
     """Auxiliar function to load the singleton controllers so that delay is not introduced when they are first needed."""
     # Saving the references is not needed
-    Main_Controller()
     Tours_Controller()
-    Scheduled_Tour_Controller()
-    Players_Controller()
     Ranking()
     Channels()
     Roles()
     Tour_Helpers()
 
+    await Main_Controller().initialize()
+    await Players_Controller().initialize()
+    await Scheduled_Tour_Controller().initialize()
     await Emojis_Controller().initialize(client)
 
 

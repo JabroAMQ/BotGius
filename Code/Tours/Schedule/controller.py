@@ -1,6 +1,6 @@
 import discord
 
-from Code.Tours.Schedule.database import Scheduled_Tours_Database
+from Code.Tours.Schedule.database_postgresql import Scheduled_Tours_Database
 from Code.Tours.Schedule.schedule import Scheduled_Tour
 from Code.Utilities.error_handler import print_exception
 
@@ -18,13 +18,15 @@ class Scheduled_Tour_Controller:
         """Retrieve all the Scheduled_Tours from the database and store them in a list."""
         self.scheduled_tours: dict[int, Scheduled_Tour] = {}
 
-        for record in Scheduled_Tours_Database.get_all_scheduled_tours():
+    async def initialize(self) -> None:
+        """Fetch DB entries."""
+        for record in await Scheduled_Tours_Database.get_all_scheduled_tours():
             id, guild_id, description, host, starts_at, created_at, updated_at = record
             scheduled_tour = Scheduled_Tour(id, guild_id, description, host, starts_at, created_at, updated_at)
             self.scheduled_tours[id] = scheduled_tour
 
     
-    def add_scheduled_tour(self, guild_id: int, description: str, host: str, timestamp: int) -> tuple[bool, str]:
+    async def add_scheduled_tour(self, guild_id: int, description: str, host: str, timestamp: int) -> tuple[bool, str]:
         """
         Create a new Scheduled_Tour and add it into the database and the catalog.
         
@@ -32,7 +34,7 @@ class Scheduled_Tour_Controller:
         """
         try:
             created_at = int(discord.utils.utcnow().timestamp())
-            id = Scheduled_Tours_Database.add_scheduled_tour(guild_id, description, host, timestamp, created_at)
+            id = await Scheduled_Tours_Database.add_scheduled_tour(guild_id, description, host, timestamp, created_at)
             new_scheduled_tour = Scheduled_Tour(id, guild_id, description, host, timestamp, created_at, None)
             self.scheduled_tours[id] = new_scheduled_tour
             return True, new_scheduled_tour.get_log_data()
@@ -42,7 +44,7 @@ class Scheduled_Tour_Controller:
             return False, ''
     
 
-    def delete_scheduled_tour(self, tour_id: int) -> tuple[bool, str]:
+    async def delete_scheduled_tour(self, tour_id: int) -> tuple[bool, str]:
         """
         Delete a Scheduled_Tour from the database and the catalog.
         
@@ -50,7 +52,7 @@ class Scheduled_Tour_Controller:
         """
         try:
             log_data = self.scheduled_tours[tour_id].get_log_data()
-            Scheduled_Tours_Database.delete_scheduled_tour(tour_id)
+            await Scheduled_Tours_Database.delete_scheduled_tour(tour_id)
             del self.scheduled_tours[tour_id]
             return True, log_data
         
@@ -59,7 +61,7 @@ class Scheduled_Tour_Controller:
             return False, ''
         
     
-    def edit_scheduled_tour(self, tour_id: int, description: str = None, host: str = None, timestamp: int = None) -> tuple[bool, str]:
+    async def edit_scheduled_tour(self, tour_id: int, description: str = None, host: str = None, timestamp: int = None) -> tuple[bool, str]:
         """
         Delete a Scheduled_Tour in the database and in the catalog.
 
@@ -80,7 +82,7 @@ class Scheduled_Tour_Controller:
             new_updated_at = int(discord.utils.utcnow().timestamp())
             
             # Apply the changes
-            Scheduled_Tours_Database.edit_scheduled_tour(tour_id, new_description, new_host, new_timestamp, new_updated_at)
+            await Scheduled_Tours_Database.edit_scheduled_tour(tour_id, new_description, new_host, new_timestamp, new_updated_at)
             tour.tour_description = new_description
             tour.tour_host = new_host
             tour.starts_at_timestamp = new_timestamp

@@ -1,19 +1,22 @@
 import difflib
 
 from Code.Utilities.error_handler import print_exception
-from Code.Gamemodes.Gamemodes.database_sqlite3 import Gamemodes_Database
+from Code.Gamemodes.Gamemodes.database_postgresql import Gamemodes_Database
 from Code.Gamemodes.Gamemodes.gamemode import Gamemode
 
 class Gamemodes_Controller:
     """Controller to encapsule the Gamemodes Logic from the rest of the application."""
 
-    def __init__(self, gamemodes_descriptions: dict[str, str]) -> None:
+    def __init__(self) -> None:
         """Retrieve all the Gamemodes from the Database and load them into memory through the Gamemodes's Catalogs (by id and name)."""
         self.gamemodes_by_ids: dict[int, Gamemode] = {}
         self.gamemodes_by_names: dict[str, Gamemode] = {}
 
-        for gamemode_data in Gamemodes_Database.get_all_gamemodes():
-            name = gamemode_data[0]
+    async def initialize(self, gamemodes_descriptions: dict[str, str]) -> None:
+        """Initialize the Gamemodes_Controller by loading all gamemodes from the database."""
+        gamemodes_list = await Gamemodes_Database.get_all_gamemodes()
+        for gamemode_data in gamemodes_list:
+            name: str = gamemode_data[0]
             description = gamemodes_descriptions.get(name.lower(), '')
             self._add_gamemode_to_catalogs(*gamemode_data, description)
             if not description:
@@ -119,7 +122,7 @@ class Gamemodes_Controller:
         return watched_song_selection, random_song_distribution, weighted_song_distribution, equal_song_distribution
 
 
-    def add_gamemode(
+    async def add_gamemode(
         self,
         gamemode_name: str,
         gamemode_size: int,
@@ -148,7 +151,7 @@ class Gamemodes_Controller:
         )
 
         # Add the gamemode to the database
-        gamemode_id = Gamemodes_Database.add_gamemode(
+        gamemode_id = await Gamemodes_Database.add_gamemode(
             name=gamemode_name,
             size=gamemode_size,
             code=gamemode_code,
@@ -177,13 +180,13 @@ class Gamemodes_Controller:
         return True, log_message
 
 
-    def delete_gamemode(self, gamemode: Gamemode) -> bool:
+    async def delete_gamemode(self, gamemode: Gamemode) -> bool:
         """
         Delete the gamemode provided as argument from the database and the catalogs.\n
         Return `True` if the gamemode was deleted successfully, `False` otherwise.
         """
         try:
-            Gamemodes_Database.delete_gamemode(gamemode.name)
+            await Gamemodes_Database.delete_gamemode(gamemode.name)
             del self.gamemodes_by_ids[gamemode.id]
             del self.gamemodes_by_names[gamemode.name.lower()]
             return True
@@ -226,7 +229,7 @@ class Gamemodes_Controller:
 
         return invalid, name, code, random, weighted, equal
 
-    def edit_gamemode(
+    async def edit_gamemode(
         self,
         gamemode_name: str,
         new_name: str | None,
@@ -249,7 +252,7 @@ class Gamemodes_Controller:
         new_equal = new_equal if new_equal is not None else gamemode.equal_song_distribution
 
         try:
-            Gamemodes_Database.edit_gamemode(
+            await Gamemodes_Database.edit_gamemode(
                 id=gamemode.id,
                 new_name=new_name,
                 new_code=new_code,

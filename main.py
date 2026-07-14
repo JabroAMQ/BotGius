@@ -4,6 +4,7 @@ import dotenv
 import discord
 
 from Commands.utilities import load_app_commands, load_controllers
+from Code.Utilities.database_connection_postgreql import close_db_pool
 
 class BotGius(discord.Client):
     """A custom Discord client class for hosting AMQ tours."""
@@ -43,6 +44,11 @@ class BotGius(discord.Client):
     async def on_ready(self):
         """Event handler for when the bot is ready."""
         print(f'Logged in as {self.user} (ID: {self.user.id})')
+
+    async def close(self):
+        """Close the bot and clean up resources."""
+        await close_db_pool()
+        await super().close()
 
 
 dotenv.load_dotenv('.env')
