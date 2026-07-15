@@ -170,10 +170,7 @@ class Roles:
             
         member = guild.get_member(player_id)
         try:
-            if member is None:
-                raise ValueError('Invalid User ID')
-            if drafter_role in member.roles:
+            if member is not None and drafter_role in member.roles:
                 await member.remove_roles(drafter_role)
-
         except Exception as e:
             print(f'Couldn\'t remove drafter role from player {player_id}: {e}')
