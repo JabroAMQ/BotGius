@@ -108,8 +108,8 @@ async def tour_create(interaction: discord.Interaction, timer: int = None, size:
             await new_interaction.followup.send(content=content, ephemeral=True)
 
             # Modify the player's message accordingly
-            players = tour.display_tour_players_and_queue()
-            await tour.players_message.edit(content=players)
+            players = self.tour.display_tour_players_and_queue()
+            await self.tour.players_message.edit(content=players)
 
 
         @discord.ui.button(label='Leave', emoji=leave_emoji, style=discord.ButtonStyle.green)
