@@ -39,7 +39,7 @@ class Others_Commands(Commands):
         async def feedback(interaction: discord.Interaction, image: discord.Attachment = None):
             await interactions.feedback(interaction, image)
 
-        @client.tree.command(name='report', description='Report some toxic behavior that only a few specific hosts would be able to see')
+        @client.tree.command(name='report', description='Report some toxic behavior that all hosts would be able to see')
         @app_commands.guild_only
         @app_commands.describe(image="Optional image to attach with your feedback")
         async def report(interaction: discord.Interaction, image: discord.Attachment = None):
